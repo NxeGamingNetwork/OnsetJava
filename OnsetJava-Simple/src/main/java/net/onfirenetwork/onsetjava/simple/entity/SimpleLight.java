@@ -16,6 +16,7 @@ public class SimpleLight implements Light {
     @Getter
     int id;
     public void remove(){
-
+        dimension.getServer().getLights().remove(this);
+        dimension.getServer().call("DestroyLight", id).get();
     }
 }

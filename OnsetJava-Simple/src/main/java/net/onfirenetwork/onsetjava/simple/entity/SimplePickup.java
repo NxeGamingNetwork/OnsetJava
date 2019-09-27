@@ -15,6 +15,7 @@ public class SimplePickup implements Pickup {
     @Getter
     int id;
     public void remove(){
-
+        dimension.getServer().getPickups().remove(this);
+        dimension.getServer().call("DestroyPickup", id).get();
     }
 }

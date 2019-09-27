@@ -15,6 +15,7 @@ public class SimpleWorldObject implements WorldObject {
     @Getter
     int id;
     public void remove(){
-
+        dimension.getServer().getObjects().remove(this);
+        dimension.getServer().call("DestroyObject", id).get();
     }
 }

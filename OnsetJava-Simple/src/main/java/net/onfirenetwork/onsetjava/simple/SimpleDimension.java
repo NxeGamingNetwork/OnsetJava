@@ -10,6 +10,7 @@ import net.onfirenetwork.onsetjava.api.entity.enums.LightType;
 import net.onfirenetwork.onsetjava.api.entity.enums.VehicleModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.simple.entity.SimpleVehicle;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class SimpleDimension implements Dimension {
 
     @Getter
-    private OnsetServer server;
+    private SimpleOnsetServer server;
     @Getter
     private int id;
 
@@ -27,7 +28,9 @@ public class SimpleDimension implements Dimension {
     }
 
     public Vehicle spawnVehicle(Location location, VehicleModel model){
-        return null;
+        Vehicle vehicle = new SimpleVehicle(this, server.call("CreateVehicle", model.getId(), location.getX(), location.getY(), location.getZ()).get()[0].getAsInt());
+        server.getVehicles().add(vehicle);
+        return vehicle;
     }
     public List<Vehicle> getVehicles(){
         return server.getVehicles().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());

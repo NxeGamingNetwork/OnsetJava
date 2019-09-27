@@ -15,6 +15,7 @@ public class SimpleText3D implements Text3D {
     @Getter
     int id;
     public void remove(){
-
+        dimension.getServer().getText3Ds().remove(this);
+        dimension.getServer().call("DestroyText3D", id).get();
     }
 }

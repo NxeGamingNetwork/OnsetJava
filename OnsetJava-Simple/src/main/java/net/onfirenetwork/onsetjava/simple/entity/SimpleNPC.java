@@ -15,6 +15,7 @@ public class SimpleNPC implements NPC {
     @Getter
     int id;
     public void remove(){
-
+        dimension.getServer().getNPCs().remove(this);
+        dimension.getServer().call("DestroyNPC", id).get();
     }
 }
