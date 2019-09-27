@@ -1,4 +1,4 @@
-package net.onfirenetwork.onsetjava.simple;
+package net.onfirenetwork.onsetjava.simple.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

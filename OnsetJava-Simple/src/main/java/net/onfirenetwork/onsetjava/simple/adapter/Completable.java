@@ -1,4 +1,4 @@
-package net.onfirenetwork.onsetjava.simple;
+package net.onfirenetwork.onsetjava.simple.adapter;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

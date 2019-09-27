@@ -7,7 +7,7 @@ namespace OnsetJavaClient {
             let ret = pcall_array(get_global(params[0]), params.splice(1));
             adapter.call("Return", nonce, ret);
         }
-        if(type === "Register"){
+        if(type === "RegisterEvents"){
             for(let name of params[0]){
                 registerEvent(name);
             }
