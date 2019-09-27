@@ -3,15 +3,17 @@
 namespace OnsetJavaServer {
     export class ActionAdapter {
         private handle: LuaFileHandle;
-        private readHandle: LuaFileHandle;
+        private readHandle?: LuaFileHandle = undefined;
         constructor(command: string, private listener: (type: string, nonce: number, params: any[]) => void){
             this.handle = lua_io_popen(command+" > out", "w");
-            this.readHandle = lua_io_open("out", "r");
+            while(this.readHandle === undefined){
+                this.readHandle = lua_io_open("out", "r");
+            }
             AddEvent("OnGameTick", () => {this.tick();});
         }
         private tick(): void {
             let lines: string[] = [];
-            let iter = this.readHandle.lines();
+            let iter = this.readHandle!!.lines();
             while(true){
                 let line = iter();
                 if(line === undefined){
@@ -28,6 +30,7 @@ namespace OnsetJavaServer {
             }
         }
         public call(type: string, nonce: number, params: any[]): void {
+            print(type);
             let text = JSON.stringify({
                 type: type,
                 nonce: nonce,

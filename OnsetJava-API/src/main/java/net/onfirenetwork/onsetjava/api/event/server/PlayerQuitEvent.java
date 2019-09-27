@@ -10,6 +10,6 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
-public class PlayerSteamAuthEvent extends Event {
+public class PlayerQuitEvent extends Event {
     Player player;
 }

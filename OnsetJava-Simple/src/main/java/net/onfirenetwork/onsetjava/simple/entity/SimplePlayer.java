@@ -11,7 +11,6 @@ import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimplePlayer implements Player {
     @Getter
@@ -22,6 +21,10 @@ public class SimplePlayer implements Player {
     String name;
     @Getter
     boolean voiceEnabled = true;
+    public SimplePlayer(Dimension dimension, int id){
+        this.dimension = (SimpleDimension) dimension;
+        this.id = id;
+    }
     public void setDimension(Dimension dimension){
         this.dimension = (SimpleDimension) dimension;
         this.dimension.getServer().call("SetPlayerDimension", id, dimension.getId()).get();

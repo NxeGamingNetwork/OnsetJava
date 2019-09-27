@@ -4,7 +4,7 @@ declare function load(code: string): [()=>void,string];
 
 namespace OnsetJavaServer {
     let adapter: ActionAdapter;
-    adapter = new ActionAdapter("java -jar D:\\dev\\General\\OnsetJavaAPI\\target\\OnsetJavaAPI-1.0.jar", (type, nonce, params) => {
+    adapter = new ActionAdapter("java -jar D:\\dev\\General\\OnsetJavaAPI\\OnsetJava-Simple\\target\\OnsetJava-Simple-1.0.jar", (type, nonce, params) => {
         if(type === "Execute"){
             let result = load(params[0]);
             pcall(result[0]);
@@ -19,9 +19,7 @@ namespace OnsetJavaServer {
             }
         }
         if(type === "RegisterCommand"){
-            for(let name of params[0]){
-                registerCommand(name);
-            }
+            registerCommand(params[0]);
         }
         if(type === "Forward"){
             CallRemoteEvent(params[0], "Action", params[1]);

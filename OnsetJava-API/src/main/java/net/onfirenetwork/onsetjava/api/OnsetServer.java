@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.api;
 
 import net.onfirenetwork.onsetjava.api.entity.*;
+import net.onfirenetwork.onsetjava.api.event.EventBus;
 
 import java.util.List;
 
@@ -21,4 +22,9 @@ public interface OnsetServer {
     List<Pickup> getPickups();
     Light getLight(int id);
     List<Light> getLights();
+    EventBus getEventBus();
+    Dimension getDimension(int id);
+    List<Dimension> getDimensions();
+    Dimension createDimension();
+    void registerCommand(String name, CommandExecutor executor);
 }

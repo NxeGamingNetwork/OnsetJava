@@ -2,6 +2,7 @@ package net.onfirenetwork.onsetjava.simple.adapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.onfirenetwork.onsetjava.api.OnsetJava;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,8 +22,11 @@ public class ActionAdapter {
         this.listener = listener;
     }
 
-    public void startSync(){
+    public void prepare(){
         shouldExit = false;
+    }
+
+    public void startSync(){
         while (!shouldExit){
             try {
                 while(inputStream.available() < 1){
@@ -42,7 +46,19 @@ public class ActionAdapter {
                         if(line.length() == 0)
                             continue;
                         try {
-                            listener.onAction(gson.fromJson(line, InboundAction.class));
+                            InboundAction action = gson.fromJson(line, InboundAction.class);
+                            if(action.getType().equals("Forward")){
+                                int playerId = action.getParams()[0].getAsInt();
+                                String json = action.getParams()[1].getAsString();
+                                InboundAction clientAction = gson.fromJson(json, InboundAction.class);
+                                new Thread(() -> {
+                                    listener.onClientAction(OnsetJava.getServer().getPlayer(playerId), clientAction);
+                                });
+                            }else{
+                                new Thread(() -> {
+                                    listener.onAction(action);
+                                }).start();
+                            }
                         }catch (Exception ex){}
                     }
                 }
