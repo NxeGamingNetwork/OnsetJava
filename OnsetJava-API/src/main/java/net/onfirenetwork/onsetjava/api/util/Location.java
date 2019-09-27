@@ -16,4 +16,8 @@ public class Location extends Vector3d {
         super(x, y, z);
         this.heading = 0;
     }
+    public Location(Vector3d vector, double heading) {
+        super(vector.getX(), vector.getY(), vector.getZ());
+        this.heading = heading;
+    }
 }
