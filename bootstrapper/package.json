@@ -1,0 +1,16 @@
+{
+  "name": "ofn-roleplay",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Onfire Network",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "npx otb",
+    "build-prod": "npx otb prod",
+    "run": "npx otr run"
+  },
+  "dependencies": {
+    "@onfire-network/onset-typescript-api": "^1.0.12",
+    "@onfire-network/onset-typescript-builder": "^1.0.12"
+  }
+}
