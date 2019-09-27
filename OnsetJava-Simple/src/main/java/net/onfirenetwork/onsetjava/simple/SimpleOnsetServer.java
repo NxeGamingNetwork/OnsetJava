@@ -2,12 +2,11 @@ package net.onfirenetwork.onsetjava.simple;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import lombok.Getter;
 import net.onfirenetwork.onsetjava.api.OnsetServer;
 import net.onfirenetwork.onsetjava.api.entity.*;
-import net.onfirenetwork.onsetjava.simple.adapter.ActionAdapter;
-import net.onfirenetwork.onsetjava.simple.adapter.Completable;
-import net.onfirenetwork.onsetjava.simple.adapter.InboundAction;
-import net.onfirenetwork.onsetjava.simple.adapter.OutboundAction;
+import net.onfirenetwork.onsetjava.api.event.EventBus;
+import net.onfirenetwork.onsetjava.simple.adapter.*;
 import net.onfirenetwork.onsetjava.simple.entity.*;
 
 import java.util.ArrayList;
@@ -28,6 +27,9 @@ public class SimpleOnsetServer implements OnsetServer {
     private List<Text3D> text3ds = new ArrayList<>();
     private List<Pickup> pickups = new ArrayList<>();
     private List<Light> lights = new ArrayList<>();
+    @Getter
+    private EventBus eventBus = new EventBus();
+    private EventBus serializationBus = new EventBus();
 
     public SimpleOnsetServer(){
         adapter = new ActionAdapter(System.in, System.out, action -> {
@@ -39,6 +41,7 @@ public class SimpleOnsetServer implements OnsetServer {
                 processCommand(action);
                 return;
             }
+            serializationBus.fire(new ActionEvent(action));
         });
     }
 

@@ -14,4 +14,6 @@ public class SimplePlayer implements Player {
     SimpleDimension dimension;
     @Getter
     int id;
+    String steamId;
+    String name;
 }
