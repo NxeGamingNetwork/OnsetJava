@@ -1,4 +1,4 @@
-package net.onfirenetwork.onsetjava.api.entity;
+package net.onfirenetwork.onsetjava.api.entity.models;
 
 import lombok.Getter;
 
