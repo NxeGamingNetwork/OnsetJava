@@ -1,4 +1,4 @@
-package net.onfirenetwork.onsetjava.api.entity.models;
+package net.onfirenetwork.onsetjava.api.entity.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -13,9 +13,14 @@ namespace OnsetJavaServer {
             let ret = pcall_array(get_global(params[0]), params.splice(1));
             adapter.call("Return", nonce, ret);
         }
-        if(type === "Register"){
+        if(type === "RegisterEvents"){
             for(let name of params[0]){
                 registerEvent(name);
+            }
+        }
+        if(type === "RegisterCommand"){
+            for(let name of params[0]){
+                registerCommand(name);
             }
         }
         if(type === "Forward"){
@@ -30,6 +35,13 @@ namespace OnsetJavaServer {
     function registerEvent(name: string) {
         AddEvent(name, (...params: any[]) => {
             adapter.call(name, 0, params);
+        });
+    }
+
+    function registerCommand(name: string) {
+        AddCommand(name, (...params: any[]) => {
+            params.unshift(name);
+            adapter.call("Command", 0, params);
         });
     }
     
