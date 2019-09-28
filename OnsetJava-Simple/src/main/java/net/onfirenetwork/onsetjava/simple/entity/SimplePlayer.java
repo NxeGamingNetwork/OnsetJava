@@ -2,7 +2,6 @@ package net.onfirenetwork.onsetjava.simple.entity;
 
 import com.google.gson.JsonElement;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.Dimension;
@@ -10,6 +9,7 @@ import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
+import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
@@ -115,24 +115,23 @@ public class SimplePlayer implements Player {
     public List<WebUI> getWebUIs(){
         return webuis;
     }
-    public WebUI createWebUI(Vector2d position, Vector2d size, int zOrder, int frameRate){
-        WebUI ui = new SimpleWebUI(this, dimension.getServer().callClient(id, "CreateWebUI",position.getX(), position.getY(), size.getX(), size.getY(), zOrder, frameRate).get()[0].getAsInt());
-        webuis.add(ui);
-        return ui;
+    public Completable<WebUI> createWebUI(Vector2d position, Vector2d size, int zOrder, int frameRate){
+        Completable<WebUI> completable = new Completable<>();
+        dimension.getServer().callClient(id, "CreateWebUI",position.getX(), position.getY(), size.getX(), size.getY(), zOrder, frameRate).then(ret -> {
+            WebUI ui = new SimpleWebUI(this, ret[0].getAsInt());
+            webuis.add(ui);
+            completable.complete(ui);
+        });
+        return completable;
     }
-    public WebUI createWebUI(Vector2d position, Vector2d size, int zOrder){
-        return createWebUI(position, size, zOrder, 16);
-    }
-    public WebUI createWebUI(Vector2d position, Vector2d size){
-        return createWebUI(position, size, 0);
-    }
-    public WebUI create3DWebUI(Location location, Vector3d rotation, Vector2d size, int frameRate){
-        WebUI ui = new SimpleWebUI(this, dimension.getServer().callClient(id, "CreateWebUI3D", location.getX(), location.getY(), location.getY(), rotation.getX(), rotation.getY(), rotation.getZ(), size.getX(), size.getY(), frameRate).get()[0].getAsInt());
-        webuis.add(ui);
-        return ui;
-    }
-    public WebUI create3DWebUI(Location location, Vector3d rotation, Vector2d size){
-        return create3DWebUI(location, rotation, size, 16);
+    public Completable<WebUI> create3DWebUI(Location location, Vector3d rotation, Vector2d size, int frameRate){
+        Completable<WebUI> completable = new Completable<>();
+        dimension.getServer().callClient(id, "CreateWebUI3D", location.getX(), location.getY(), location.getY(), rotation.getX(), rotation.getY(), rotation.getZ(), size.getX(), size.getY(), frameRate).then(ret -> {
+            WebUI ui = new SimpleWebUI(this, ret[0].getAsInt());
+            webuis.add(ui);
+            completable.complete(ui);
+        });
+        return completable;
     }
     public Sound getSound(int id){
         return sounds.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
@@ -140,23 +139,22 @@ public class SimplePlayer implements Player {
     public List<Sound> getSounds(){
         return sounds;
     }
-    public Sound createSound(String soundFile, boolean loop){
-        Sound sound = new SimpleSound(this, dimension.getServer().callClient(id, "CreateSound", soundFile, loop).get()[0].getAsInt());
-        sounds.add(sound);
-        return sound;
+    public Completable<Sound> createSound(String soundFile, boolean loop){
+        Completable<Sound> completable = new Completable<>();
+        dimension.getServer().callClient(id, "CreateSound", soundFile, loop).then(ret -> {
+            Sound sound = new SimpleSound(this, ret[0].getAsInt());
+            sounds.add(sound);
+            completable.complete(sound);
+        });
+        return completable;
     }
-    public Sound createSound(String soundFile){
-        return createSound(soundFile, false);
-    }
-    public Sound create3DSound(Location location, String soundFile, double radius, boolean loop){
-        Sound sound = new SimpleSound(this, dimension.getServer().callClient(id, "CreateSound3D", soundFile, location.getX(), location.getY(), location.getZ(), radius, loop).get()[0].getAsInt());
-        sounds.add(sound);
-        return sound;
-    }
-    public Sound create3DSound(Location location, String soundFile, double radius){
-        return create3DSound(location, soundFile, radius, false);
-    }
-    public Sound create3DSound(Location location, String soundFile){
-        return create3DSound(location, soundFile, 2500);
+    public Completable<Sound> create3DSound(Location location, String soundFile, double radius, boolean loop){
+        Completable<Sound> completable = new Completable<>();
+        dimension.getServer().callClient(id, "CreateSound3D", soundFile, location.getX(), location.getY(), location.getZ(), radius, loop).then(ret -> {
+            Sound sound = new SimpleSound(this, ret[0].getAsInt());
+            sounds.add(sound);
+            completable.complete(sound);
+        });
+        return completable;
     }
 }

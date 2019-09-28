@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.enums.WebVisibility;
-import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.SimpleOnsetServer;
 
@@ -28,15 +27,9 @@ public class SimpleWebUI implements WebUI {
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         server.callClient(player.getId(), "ExecuteWebJS", id, js);
     }
-    public void setAlignment(Vector2d alignment){
-        setAlignment(alignment.getX(), alignment.getY());
-    }
     public void setAlignment(double x, double y){
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         server.callClient(player.getId(), "SetWebAlignment", id, x, y);
-    }
-    public void setAnchors(Vector2d min, Vector2d max){
-        setAnchors(min.getX(), min.getY(), max.getX(), max.getY());
     }
     public void setAnchors(double minX, double minY, double maxX, double maxY){
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();

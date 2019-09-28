@@ -45,12 +45,7 @@ public class SimpleDimension implements Dimension {
     public WorldObject spawnObject(Location location, int model, Vector3d rotation, Vector3d scale){
         return null;
     }
-    public WorldObject spawnObject(Location location, int model, Vector3d rotation){
-        return spawnObject(location, model, rotation, null);
-    }
-    public WorldObject spawnObject(Location location, int model){
-        return spawnObject(location, model, null);
-    }
+
     public List<WorldObject> getObjects(){
         return server.getObjects().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
@@ -72,9 +67,7 @@ public class SimpleDimension implements Dimension {
     public Light spawnLight(Location location, LightType type, double intensity, Vector3d rotation){
         return null;
     }
-    public Light spawnLight(Location location, LightType type, double intensity){
-        return spawnLight(location, type, intensity, null);
-    }
+
     public List<Light> getLights(){
         return server.getLights().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }

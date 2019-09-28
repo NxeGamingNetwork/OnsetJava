@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.simple.plugin;
 
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
+import net.onfirenetwork.onsetjava.api.plugin.PluginInfo;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.simple.SimpleOnsetServer;
 
@@ -57,8 +58,9 @@ public class SimplePluginManager implements PluginManager {
                     if (mainClass != null) {
                         Plugin instance = mainClass.newInstance();
                         plugins.add(instance);
+                        PluginInfo info = instance.info();
                         instance.onLoad();
-                        server.print("Loaded "+instance.info().getName()+" ("+instance.info().getVersion()+" by "+instance.info().getAuthor()+")");
+                        server.print("Loaded "+info);
                     }
                 }catch (Exception ex){
                     server.print("Failed to load '"+file.getName()+"'!");

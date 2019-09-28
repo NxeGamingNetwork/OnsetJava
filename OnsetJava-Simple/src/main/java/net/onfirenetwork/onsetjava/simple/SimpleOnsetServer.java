@@ -14,6 +14,7 @@ import net.onfirenetwork.onsetjava.api.event.client.WebReadyEvent;
 import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
+import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.simple.adapter.*;
 import net.onfirenetwork.onsetjava.simple.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.simple.event.ServerEventTransformer;
@@ -208,8 +209,12 @@ public class SimpleOnsetServer implements OnsetServer {
         call("print", message);
     }
 
-    public void shutdown(){
-        call("ServerExit", "");
+    public void shutdown(String message){
+        if(message != null){
+            call("ServerExit", message);
+        }else{
+            call("ServerExit");
+        }
     }
 
     public Player getPlayer(int id){

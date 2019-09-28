@@ -9,7 +9,10 @@ import java.util.List;
 public interface OnsetServer {
     void broadcast(String message);
     void print(String text);
-    void shutdown();
+    void shutdown(String message);
+    default void shutdown(){
+        shutdown(null);
+    }
     Player getPlayer(int id);
     List<Player> getPlayers();
     Vehicle getVehicle(int id);
