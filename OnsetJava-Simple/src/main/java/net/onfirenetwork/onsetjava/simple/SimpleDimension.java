@@ -9,7 +9,7 @@ import net.onfirenetwork.onsetjava.api.enums.LightType;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
-import net.onfirenetwork.onsetjava.simple.entity.SimpleVehicle;
+import net.onfirenetwork.onsetjava.simple.entity.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,14 +36,28 @@ public class SimpleDimension implements Dimension {
     }
 
     public NPC spawnNPC(Location location, CharacterModel model){
-        return null;
+        NPC npc = new SimpleNPC(this, server.call("CreateNPC", model.getId(), location.getX(), location.getY(), location.getZ(), location.getHeading()).get()[0].getAsInt());
+        server.getNPCs().add(npc);
+        return npc;
     }
     public List<NPC> getNPCs(){
         return server.getNPCs().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
 
     public WorldObject spawnObject(Location location, int model, Vector3d rotation, Vector3d scale){
-        return null;
+        int id;
+        if(rotation != null){
+            if(scale != null){
+                id = server.call("CreateObject", model, location.getX(), location.getY(), location.getZ(), rotation.getX(), rotation.getY(), rotation.getZ(), scale.getX(), scale.getY(), scale.getZ()).get()[0].getAsInt();
+            }else{
+                id = server.call("CreateObject", model, location.getX(), location.getY(), location.getZ(), rotation.getX(), rotation.getY(), rotation.getZ()).get()[0].getAsInt();
+            }
+        }else{
+            id = server.call("CreateObject", model, location.getX(), location.getY(), location.getZ()).get()[0].getAsInt();
+        }
+        WorldObject object = new SimpleWorldObject(this, id);
+        server.getObjects().add(object);
+        return object;
     }
 
     public List<WorldObject> getObjects(){
@@ -51,21 +65,33 @@ public class SimpleDimension implements Dimension {
     }
 
     public Text3D spawnText3D(Location location, Vector3d rotation, double size, String text){
-        return null;
+        Text3D text3d = new SimpleText3D(this, server.call("CreateText3D", text, size, location.getX(), location.getY(), location.getZ(), rotation.getX(), rotation.getY(), rotation.getZ()).get()[0].getAsInt());
+        server.getText3Ds().add(text3d);
+        return text3d;
     }
     public List<Text3D> getText3Ds(){
         return server.getText3Ds().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
 
     public Pickup spawnPickup(Location location, int model){
-        return null;
+        Pickup pickup = new SimplePickup(this, server.call("CreatePickup", model, location.getX(), location.getY(), location.getZ()).get()[0].getAsInt());
+        server.getPickups().add(pickup);
+        return pickup;
     }
     public List<Pickup> getPickups(){
         return server.getPickups().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
 
     public Light spawnLight(Location location, LightType type, double intensity, Vector3d rotation){
-        return null;
+        int id;
+        if(rotation != null){
+            id = server.call("CreateLight", type.getValue(), intensity, location.getX(), location.getY(), location.getZ(), rotation.getX(), rotation.getY(), rotation.getZ()).get()[0].getAsInt();
+        }else{
+            id = server.call("CreateLight", type.getValue(), intensity, location.getX(), location.getY(), location.getZ()).get()[0].getAsInt();
+        }
+        Light light = new SimpleLight(this, id);
+        server.getLights().add(light);
+        return light;
     }
 
     public List<Light> getLights(){
