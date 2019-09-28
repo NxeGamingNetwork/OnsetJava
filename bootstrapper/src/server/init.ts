@@ -11,6 +11,9 @@ namespace OnsetJavaServer {
         }
         if(type === "Call"){
             let ret = pcall_array(get_global(params[0]), params.splice(1));
+            if(params[0] === "GetPlayerSteamId"){
+                ret[0] = ret[0].toString();
+            }
             adapter.call("Return", nonce, ret);
         }
         if(type === "RegisterEvents"){

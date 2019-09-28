@@ -1,6 +1,5 @@
 package net.onfirenetwork.onsetjava.simple;
 
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import lombok.Getter;
@@ -10,11 +9,15 @@ import net.onfirenetwork.onsetjava.api.OnsetServer;
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
-import net.onfirenetwork.onsetjava.api.event.server.PlayerJoinEvent;
+import net.onfirenetwork.onsetjava.api.event.server.*;
+import net.onfirenetwork.onsetjava.api.plugin.Plugin;
+import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.simple.adapter.*;
 import net.onfirenetwork.onsetjava.simple.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.simple.event.ServerEventTransformer;
+import net.onfirenetwork.onsetjava.simple.plugin.SimplePluginManager;
 
+import java.io.File;
 import java.util.*;
 
 public class SimpleOnsetServer implements OnsetServer {
@@ -22,7 +25,6 @@ public class SimpleOnsetServer implements OnsetServer {
     private int nextNonce = 1;
     private int nextDimId = 0;
     private ActionAdapter adapter;
-    private OnsetJavaSimple api;
     private Map<Integer, Completable<JsonElement[]>> returnFutures = new HashMap<>();
     @Getter
     private List<Dimension> dimensions = new ArrayList<>();
@@ -39,10 +41,14 @@ public class SimpleOnsetServer implements OnsetServer {
     @Getter
     private List<Light> lights = new ArrayList<>();
     @Getter
-    private EventBus eventBus = new EventBus();
+    private EventBus eventBus;
+    @Getter
+    private PluginManager pluginManager;
     private Map<String, CommandExecutor> commandMap = new HashMap<>();
 
     public SimpleOnsetServer(){
+        eventBus = new EventBus(this::registerHandler);
+        pluginManager = new SimplePluginManager(this);
         ClientEventTransformer clientEventTransformer = new ClientEventTransformer();
         ServerEventTransformer serverEventTransformer = new ServerEventTransformer();
         adapter = new ActionAdapter(System.in, System.out, new ActionAdapterListener() {
@@ -74,15 +80,20 @@ public class SimpleOnsetServer implements OnsetServer {
     public void run(){
         adapter.prepare();
         createDimension();
-        enableEvents("OnPlayerJoin", "OnPlayerQuit", "OnPlayerServerAuth");
-        eventBus.listen(PlayerJoinEvent.class, event -> {
-            String name = event.getPlayer().getName();
-            event.getPlayer().sendMessage("Herzlich Willkommen, "+name+"!");
-        });
-        registerCommand("julian", (command, sender, args) -> {
-            sender.sendMessage("Hallo Julian!");
-        });
+        enableEvents("OnPlayerServerAuth", "OnPlayerQuit");
+        File pluginFolder = new File("java_plugins");
+        if(!pluginFolder.exists()){
+            pluginFolder.mkdir();
+        }else{
+            ((SimplePluginManager) pluginManager).load(pluginFolder);
+        }
+        for(Plugin plugin : pluginManager.getPlugins()){
+            plugin.onEnable();
+        }
         adapter.startSync();
+        for(Plugin plugin : pluginManager.getPlugins()){
+            plugin.onDisable();
+        }
     }
 
     public void stop(){
@@ -165,6 +176,10 @@ public class SimpleOnsetServer implements OnsetServer {
         call("AddPlayerChatAll", message);
     }
 
+    public void print(String message){
+        call("print", message);
+    }
+
     public void shutdown(){
         call("ServerExit", "");
     }
@@ -211,6 +226,33 @@ public class SimpleOnsetServer implements OnsetServer {
 
     public Light getLight(int id){
         return null;
+    }
+
+    public void registerHandler(Class<Event> eventClass){
+        if(eventClass.equals(PlayerJoinEvent.class))
+            enableEvents("OnPlayerJoin");
+        if(eventClass.equals(PlayerEnterVehicleEvent.class))
+            enableEvents("OnPlayerEnterVehicle");
+        if(eventClass.equals(PlayerExitVehicleEvent.class))
+            enableEvents("OnPlayerLeaveVehicle");
+        if(eventClass.equals(PlayerDeathEvent.class))
+            enableEvents("OnPlayerDeath");
+        if(eventClass.equals(PlayerSpawnEvent.class))
+            enableEvents("OnPlayerSpawn");
+        if(eventClass.equals(PlayerPickupEvent.class))
+            enableEvents("OnPlayerPickupHit");
+        if(eventClass.equals(VehiclePickupEvent.class))
+            enableEvents("OnVehiclePickupHit");
+        if(eventClass.equals(PlayerStateChangeEvent.class))
+            enableEvents("OnPlayerStateChange");
+        if(eventClass.equals(NPCDeathEvent.class))
+            enableEvents("OnNPCDeath");
+        if(eventClass.equals(VehicleRespawnEvent.class))
+            enableEvents("OnVehicleRespawn");
+        if(eventClass.equals(PlayerDamageEvent.class))
+            enableEvents("OnPlayerDamage");
+        if(eventClass.equals(PlayerChatEvent.class))
+            enableEvents("OnPlayerChat");
     }
 
 }

@@ -4,6 +4,7 @@ namespace OnsetJavaServer {
     export class ActionAdapter {
         private handle: LuaFileHandle;
         private readHandle?: LuaFileHandle = undefined;
+        private lastIdentifier = 0;
         constructor(command: string, private listener: (type: string, nonce: number, params: any[]) => void){
             this.handle = lua_io_popen(command+" > out", "w");
             while(this.readHandle === undefined){
@@ -25,12 +26,15 @@ namespace OnsetJavaServer {
                         continue;
                     }
                     let json = JSON.parse(line);
+                    if(json.identifier <= this.lastIdentifier){
+                        continue;
+                    }
+                    this.lastIdentifier = json.identifier;
                     this.listener(json.type, json.nonce, json.params);
                 }
             }
         }
         public call(type: string, nonce: number, params: any[]): void {
-            print(type);
             let text = JSON.stringify({
                 type: type,
                 nonce: nonce,

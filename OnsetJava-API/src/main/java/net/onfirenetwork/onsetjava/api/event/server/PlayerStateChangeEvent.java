@@ -5,14 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
-import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.event.Event;
+import net.onfirenetwork.onsetjava.api.event.enums.PlayerState;
 
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
-@AllArgsConstructor
-public class PlayerLeaveVehicleEvent extends Event {
+public class PlayerStateChangeEvent extends Event {
     Player player;
-    Vehicle vehicle;
-    int seat;
+    PlayerState newState;
+    PlayerState oldState;
 }

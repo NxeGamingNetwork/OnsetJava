@@ -2,6 +2,7 @@ package net.onfirenetwork.onsetjava.api;
 
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
+import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 
 import java.util.List;
 
@@ -27,4 +28,5 @@ public interface OnsetServer {
     List<Dimension> getDimensions();
     Dimension createDimension();
     void registerCommand(String name, CommandExecutor executor);
+    PluginManager getPluginManager();
 }
