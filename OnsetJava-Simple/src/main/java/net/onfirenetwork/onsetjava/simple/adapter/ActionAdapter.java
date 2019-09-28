@@ -53,7 +53,7 @@ public class ActionAdapter {
                                 InboundAction clientAction = gson.fromJson(json, InboundAction.class);
                                 new Thread(() -> {
                                     listener.onClientAction(OnsetJava.getServer().getPlayer(playerId), clientAction);
-                                });
+                                }).start();
                             }else{
                                 new Thread(() -> {
                                     listener.onAction(action);

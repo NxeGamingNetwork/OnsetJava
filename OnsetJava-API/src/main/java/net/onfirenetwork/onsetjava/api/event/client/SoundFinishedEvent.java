@@ -1,18 +1,17 @@
-package net.onfirenetwork.onsetjava.api.event.server;
+package net.onfirenetwork.onsetjava.api.event.client;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.event.Event;
-import net.onfirenetwork.onsetjava.api.enums.DamageType;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Getter
 @AllArgsConstructor
-public class PlayerDamageEvent extends Event {
+@Getter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class SoundFinishedEvent extends Event {
     Player player;
-    DamageType damageType;
-    double amount;
+    Sound sound;
 }

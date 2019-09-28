@@ -1,9 +1,9 @@
 package net.onfirenetwork.onsetjava.api;
 
 import net.onfirenetwork.onsetjava.api.entity.*;
-import net.onfirenetwork.onsetjava.api.entity.enums.CharacterModel;
-import net.onfirenetwork.onsetjava.api.entity.enums.LightType;
-import net.onfirenetwork.onsetjava.api.entity.enums.VehicleModel;
+import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
+import net.onfirenetwork.onsetjava.api.enums.LightType;
+import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 

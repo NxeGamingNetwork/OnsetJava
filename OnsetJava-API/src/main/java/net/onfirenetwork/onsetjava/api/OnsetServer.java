@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface OnsetServer {
     void broadcast(String message);
+    void print(String text);
     void shutdown();
     Player getPlayer(int id);
     List<Player> getPlayers();

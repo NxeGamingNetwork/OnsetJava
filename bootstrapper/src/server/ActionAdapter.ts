@@ -25,6 +25,9 @@ namespace OnsetJavaServer {
                     if(line.length === 0){
                         continue;
                     }
+                    if(!line.startsWith("{")){
+                        continue;
+                    }
                     let json = JSON.parse(line);
                     if(json.identifier <= this.lastIdentifier){
                         continue;

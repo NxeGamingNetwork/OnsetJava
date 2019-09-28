@@ -9,6 +9,8 @@ import net.onfirenetwork.onsetjava.api.OnsetServer;
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
+import net.onfirenetwork.onsetjava.api.event.client.SoundFinishedEvent;
+import net.onfirenetwork.onsetjava.api.event.client.WebReadyEvent;
 import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
@@ -45,6 +47,8 @@ public class SimpleOnsetServer implements OnsetServer {
     @Getter
     private PluginManager pluginManager;
     private Map<String, CommandExecutor> commandMap = new HashMap<>();
+    @Getter
+    private List<String> enabledClientEvents = new ArrayList<>();
 
     public SimpleOnsetServer(){
         eventBus = new EventBus(this::registerHandler);
@@ -68,6 +72,10 @@ public class SimpleOnsetServer implements OnsetServer {
                 }
             }
             public void onClientAction(Player player, InboundAction action) {
+                if(action.getType().equals("Return")){
+                    processReturn(action);
+                    return;
+                }
                 Event event = clientEventTransformer.transform(player, action);
                 if(event != null){
                     eventBus.fire(event);
@@ -134,12 +142,19 @@ public class SimpleOnsetServer implements OnsetServer {
         callAction("RegisterEvents", 0, (Object) eventNames);
     }
 
+    public void enableClientEvents(String... eventNames){
+        enabledClientEvents.addAll(Arrays.asList(eventNames));
+        for(Player player : players){
+            callClientAction(player.getId(), "RegisterEvents", 0, (Object) eventNames);
+        }
+    }
+
     public void callAction(String type, int nonce, Object... params){
         adapter.call(new OutboundAction(type, nonce, params));
     }
 
-    public void callClientAction(String type, int nonce, Object... params){
-        adapter.call(new OutboundAction("Forward", 0, new Gson().toJson(new OutboundAction(type, nonce, params))));
+    public void callClientAction(int playerId, String type, int nonce, Object... params){
+        adapter.call(new OutboundAction("Forward", 0, playerId, new Gson().toJson(new OutboundAction(type, nonce, params))));
     }
 
     public Completable<JsonElement[]> call(String name, Object... params){
@@ -152,6 +167,19 @@ public class SimpleOnsetServer implements OnsetServer {
             p[i+1] = params[i];
         }
         callAction("Call", nonce, p);
+        return future;
+    }
+
+    public Completable<JsonElement[]> callClient(int playerId, String name, Object... params){
+        int nonce = nonce();
+        Completable<JsonElement[]> future = new Completable<>();
+        returnFutures.put(nonce, future);
+        Object[] p = new Object[params.length+1];
+        p[0] = name;
+        for(int i=0; i<params.length; i++){
+            p[i+1] = params[i];
+        }
+        callClientAction(playerId, "Call", nonce, p);
         return future;
     }
 
@@ -185,21 +213,11 @@ public class SimpleOnsetServer implements OnsetServer {
     }
 
     public Player getPlayer(int id){
-        for(Player player : players){
-            if(player.getId() == id){
-                return player;
-            }
-        }
-        return null;
+        return players.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
     public Vehicle getVehicle(int id){
-        for(Vehicle vehicle : vehicles){
-            if(vehicle.getId() == id) {
-                return vehicle;
-            }
-        }
-        return null;
+        return vehicles.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
     public List<NPC> getNPCs(){
@@ -210,22 +228,22 @@ public class SimpleOnsetServer implements OnsetServer {
     }
 
     public WorldObject getObject(int id){
-        return null;
+        return objects.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
     public List<Text3D> getText3Ds(){
         return text3ds;
     }
     public Text3D getText3D(int id){
-        return null;
+        return text3ds.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
     public Pickup getPickup(int id){
-        return null;
+        return pickups.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
     public Light getLight(int id){
-        return null;
+        return lights.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
     public void registerHandler(Class<Event> eventClass){
@@ -253,6 +271,9 @@ public class SimpleOnsetServer implements OnsetServer {
             enableEvents("OnPlayerDamage");
         if(eventClass.equals(PlayerChatEvent.class))
             enableEvents("OnPlayerChat");
+        if(eventClass.equals(SoundFinishedEvent.class))
+            enableClientEvents("OnSoundFinished");
+        if(eventClass.equals(WebReadyEvent.class))
+            enableClientEvents("OnWebLoadComplete");
     }
-
 }

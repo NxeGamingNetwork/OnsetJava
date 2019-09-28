@@ -1,25 +1,26 @@
 package net.onfirenetwork.onsetjava.simple.event;
 
 import net.onfirenetwork.onsetjava.api.OnsetJava;
-import net.onfirenetwork.onsetjava.api.OnsetServer;
 import net.onfirenetwork.onsetjava.api.entity.NPC;
 import net.onfirenetwork.onsetjava.api.entity.Pickup;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.event.Event;
-import net.onfirenetwork.onsetjava.api.event.enums.DamageType;
-import net.onfirenetwork.onsetjava.api.event.enums.PlayerState;
+import net.onfirenetwork.onsetjava.api.enums.DamageType;
+import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.event.server.*;
+import net.onfirenetwork.onsetjava.simple.SimpleOnsetServer;
 import net.onfirenetwork.onsetjava.simple.adapter.InboundAction;
 import net.onfirenetwork.onsetjava.simple.entity.SimplePlayer;
 
 public class ServerEventTransformer {
 
     public Event transform(InboundAction action){
-        OnsetServer server = OnsetJava.getServer();
+        SimpleOnsetServer server = (SimpleOnsetServer) OnsetJava.getServer();
         if(action.getType().equals("OnPlayerServerAuth")){
             Player player = new SimplePlayer(OnsetJava.getServer().getDimension(0), action.getParams()[0].getAsInt());
             server.getPlayers().add(player);
+            server.callClientAction(player.getId(), "RegisterEvents", 0, server.getEnabledClientEvents());
             return new PlayerConnectEvent(player);
         }
         if(action.getType().equals("OnPlayerJoin")){

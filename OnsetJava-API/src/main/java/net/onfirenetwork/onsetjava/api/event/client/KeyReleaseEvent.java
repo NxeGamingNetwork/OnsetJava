@@ -5,19 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
-import net.onfirenetwork.onsetjava.api.entity.WorldObject;
 import net.onfirenetwork.onsetjava.api.event.Event;
-import net.onfirenetwork.onsetjava.api.enums.HitType;
-import net.onfirenetwork.onsetjava.api.util.Vector3d;
 
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
-@AllArgsConstructor
-public class PlayerObjectHitEvent extends Event {
+public class KeyReleaseEvent extends Event {
     Player player;
-    WorldObject object;
-    HitType hitType;
-    int hidId;
-    Vector3d position;
-    Vector3d normal;
+    String key;
 }

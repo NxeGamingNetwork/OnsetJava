@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.event.Event;
-import net.onfirenetwork.onsetjava.api.event.enums.HitType;
+import net.onfirenetwork.onsetjava.api.enums.HitType;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
