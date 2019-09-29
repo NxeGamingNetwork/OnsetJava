@@ -1,4 +1,6 @@
 # OnsetJava
+[![Maintainability](https://api.codeclimate.com/v1/badges/d783e4c561d7b5596253/maintainability)](https://codeclimate.com/github/OnfireNetwork/OnsetJava/maintainability)
+
 A java api and simple implementation for Onset
 
 ## Creating a plugin
