@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
+import net.onfirenetwork.onsetjava.api.enums.ExplosionType;
 import net.onfirenetwork.onsetjava.api.enums.LightType;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
@@ -101,4 +102,21 @@ public class SimpleDimension implements Dimension {
     public List<Light> getLights() {
         return server.getLights().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
+
+    public void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius, double radialForce){
+        server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id, sound, camShakeRadius, radialForce);
+    }
+
+    public void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius){
+        server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id, sound, camShakeRadius);
+    }
+
+    public void createExplosion(Location location, ExplosionType type, boolean sound){
+        server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id, sound);
+    }
+
+    public void createExplosion(Location location, ExplosionType type){
+        server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id);
+    }
+
 }

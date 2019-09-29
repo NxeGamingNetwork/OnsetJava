@@ -2,6 +2,7 @@ package net.onfirenetwork.onsetjava.api;
 
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
+import net.onfirenetwork.onsetjava.api.enums.ExplosionType;
 import net.onfirenetwork.onsetjava.api.enums.LightType;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
@@ -49,4 +50,13 @@ public interface Dimension {
     default Light spawnLight(Location location, LightType type, double intensity) {
         return spawnLight(location, type, intensity, null);
     }
+
+    void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius, double radialForce);
+
+    void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius);
+
+    void createExplosion(Location location, ExplosionType type, boolean sound);
+
+    void createExplosion(Location location, ExplosionType type);
+
 }

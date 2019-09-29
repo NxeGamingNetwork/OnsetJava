@@ -165,7 +165,7 @@ public class ServerEventTransformer {
             case "OnPlayerChatCommand": {
                 Player player = server.getPlayer(action.getParams()[0].getAsInt());
                 String command = action.getParams()[1].getAsString();
-                boolean exists = action.getParams()[2].getAsInt() == 1;
+                boolean exists = action.getParams()[2].getAsBoolean();
                 event = new PlayerCommandEvent(player, command, exists);
                 break;
             }
