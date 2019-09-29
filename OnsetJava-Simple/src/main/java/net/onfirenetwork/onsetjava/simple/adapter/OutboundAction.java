@@ -12,7 +12,8 @@ public class OutboundAction {
     String type;
     int nonce;
     Object[] params;
-    public OutboundAction(String type, int nonce, Object... params){
+
+    public OutboundAction(String type, int nonce, Object... params) {
         this.identifier = nextIdentifier;
         nextIdentifier++;
         this.type = type;

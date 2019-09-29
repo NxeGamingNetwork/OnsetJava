@@ -15,7 +15,8 @@ public class PlayerCommandEvent extends Event {
     @Getter
     String command;
     boolean exists;
-    public boolean doesExist(){
+
+    public boolean doesExist() {
         return exists;
     }
 }

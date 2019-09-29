@@ -15,13 +15,12 @@ public enum HitType {
     HIT_NPC(4),
     HIT_OBJECT(5),
     HIT_LANDSCAPE(6),
-    HIT_WATER(7)
-    ;
+    HIT_WATER(7);
     int identifier;
 
-    public static HitType get(int value){
-        for(HitType hitType: values()){
-            if(hitType.identifier == value){
+    public static HitType get(int value) {
+        for (HitType hitType : values()) {
+            if (hitType.identifier == value) {
                 return hitType;
             }
         }

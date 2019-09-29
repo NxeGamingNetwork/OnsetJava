@@ -7,22 +7,38 @@ import net.onfirenetwork.onsetjava.api.util.Location;
 
 public interface NPC extends HitEntity {
     int getId();
+
     Dimension getDimension();
+
     CharacterModel getModel();
+
     Location getLocation();
+
     void setLocation(Location location);
+
     void setHealth(double health);
+
     double getHealth();
+
     void startAnimation(CharacterAnimation animation, boolean loop);
-    default void startAnimation(CharacterAnimation animation){
+
+    default void startAnimation(CharacterAnimation animation) {
         startAnimation(animation, false);
     }
+
     void stopAnimation();
+
     void setTargetLocation(Location location, double speed);
+
     void setTargetLocation(Location location);
+
     void followPlayer(Player player, double speed);
+
     void followPlayer(Player player);
+
     void followVehicle(Vehicle vehicle, double speed);
+
     void followVehicle(Vehicle vehicle);
+
     void remove();
 }

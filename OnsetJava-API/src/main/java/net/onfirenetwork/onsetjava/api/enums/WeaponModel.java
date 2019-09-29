@@ -28,25 +28,25 @@ public class WeaponModel {
     @Getter
     private int id;
 
-    private WeaponModel(int id){
+    private WeaponModel(int id) {
         this.id = id;
     }
 
-    public static WeaponModel[] values(){
+    public static WeaponModel[] values() {
         return new WeaponModel[]{
-            FIST, DEAGLE, M1911, GLOCK, BERETTA, MODERN_SHOTGUN, SHOTGUN, MP5, MAC10, UMP45, M16, AK47, GOLDEN_AK47, G36, VAL, AKS, FAL, MK16, HK416, AWP
+                FIST, DEAGLE, M1911, GLOCK, BERETTA, MODERN_SHOTGUN, SHOTGUN, MP5, MAC10, UMP45, M16, AK47, GOLDEN_AK47, G36, VAL, AKS, FAL, MK16, HK416, AWP
         };
     }
 
-    public boolean equals(Object other){
-        if(other == null)
+    public boolean equals(Object other) {
+        if (other == null)
             return false;
-        if(!(other instanceof WeaponModel))
+        if (!(other instanceof WeaponModel))
             return false;
         return ((WeaponModel) other).id == id;
     }
 
-    public static WeaponModel getModel(int id){
+    public static WeaponModel getModel(int id) {
         return new WeaponModel(id);
     }
 

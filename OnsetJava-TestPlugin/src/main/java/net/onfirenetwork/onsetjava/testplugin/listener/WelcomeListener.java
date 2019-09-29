@@ -5,8 +5,8 @@ import net.onfirenetwork.onsetjava.api.util.Location;
 
 public class WelcomeListener {
 
-    public void onJoin(PlayerJoinEvent e){
-        e.getPlayer().sendMessage("Herzlich Willkommen, "+e.getPlayer().getName()+"!");
+    public void onJoin(PlayerJoinEvent e) {
+        e.getPlayer().sendMessage("Herzlich Willkommen, " + e.getPlayer().getName() + "!");
         e.getPlayer().setLocation(new Location(125773, 80246, 1645, 90));
     }
 

@@ -17,23 +17,23 @@ import java.util.jar.JarFile;
 
 public class Installer {
 
-    public void install(File pluginFolder){
+    public void install(File pluginFolder) {
         File packageFolder = new File("packages/java");
-        if(packageFolder.exists()){
+        if (packageFolder.exists()) {
             deleteRecursive(packageFolder);
         }
         extractBins(packageFolder);
         JsonArray files = new JsonArray();
-        for(File file : getPlugins(pluginFolder)){
+        for (File file : getPlugins(pluginFolder)) {
             String id = SimplePluginManager.makeResourceId(file.getName());
             extract(file, new File(packageFolder, id)).forEach(name -> {
-                files.add(id+"/"+name);
+                files.add(id + "/" + name);
             });
         }
         makePackageConfig(packageFolder, files);
     }
 
-    private void makePackageConfig(File packageFolder, JsonArray files){
+    private void makePackageConfig(File packageFolder, JsonArray files) {
         JsonArray client = new JsonArray();
         client.add("common/json.lua");
         client.add("common/helper.lua");
@@ -58,12 +58,12 @@ public class Installer {
             fos.write(json.getBytes(StandardCharsets.UTF_8));
             fos.flush();
             fos.close();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void extractBins(File packageFolder){
+    private void extractBins(File packageFolder) {
         extractBin(packageFolder, "client/get_global.lua");
         extractBin(packageFolder, "client/pcall.lua");
         extractBin(packageFolder, "client/client.lua");
@@ -74,29 +74,29 @@ public class Installer {
         extractBin(packageFolder, "server/server.lua");
     }
 
-    private void deleteRecursive(File file){
-        if(!file.exists())
+    private void deleteRecursive(File file) {
+        if (!file.exists())
             return;
-        if(file.isFile()){
+        if (file.isFile()) {
             file.delete();
             return;
         }
-        for(File f : file.listFiles()){
+        for (File f : file.listFiles()) {
             deleteRecursive(f);
         }
         file.delete();
     }
 
-    private void extractBin(File packageFolder, String name){
-        extractResource("lua/"+name, new File(packageFolder, name));
+    private void extractBin(File packageFolder, String name) {
+        extractResource("lua/" + name, new File(packageFolder, name));
     }
 
-    private void extractResource(String name, File out){
+    private void extractResource(String name, File out) {
         try {
             mkdir(out.getAbsoluteFile().getParentFile());
             InputStream in = getClass().getClassLoader().getResourceAsStream(name);
             FileOutputStream fos = new FileOutputStream(out);
-            while (in.available() > 0){
+            while (in.available() > 0) {
                 byte[] data = new byte[Math.min(4096, in.available())];
                 in.read(data);
                 fos.write(data);
@@ -104,17 +104,18 @@ public class Installer {
             in.close();
             fos.flush();
             fos.close();
-        }catch (Exception ex){}
+        } catch (Exception ex) {
+        }
     }
 
-    private List<String> extract(File jarFile, File folder){
+    private List<String> extract(File jarFile, File folder) {
         List<String> names = new ArrayList<>();
         try {
             JarFile jf = new JarFile(jarFile);
             Enumeration<JarEntry> en = jf.entries();
             while (en.hasMoreElements()) {
                 JarEntry element = en.nextElement();
-                if(!element.getName().startsWith("files/") || element.isDirectory())
+                if (!element.getName().startsWith("files/") || element.isDirectory())
                     continue;
                 String name = element.getName().substring(6);
                 names.add(name);
@@ -131,31 +132,31 @@ public class Installer {
                 fos.flush();
                 fos.close();
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return names;
     }
 
-    private void mkdir(File file){
-        if(file.exists()){
+    private void mkdir(File file) {
+        if (file.exists()) {
             return;
         }
         File parent = file.getAbsoluteFile().getParentFile();
-        if(!parent.exists()) {
+        if (!parent.exists()) {
             mkdir(parent);
         }
         file.mkdir();
     }
 
-    private List<File> getPlugins(File pluginFolder){
+    private List<File> getPlugins(File pluginFolder) {
         List<File> pluginFiles = new ArrayList<>();
-        if(!pluginFolder.exists())
+        if (!pluginFolder.exists())
             return pluginFiles;
-        for(File file : pluginFolder.listFiles()){
-            if(file.isDirectory())
+        for (File file : pluginFolder.listFiles()) {
+            if (file.isDirectory())
                 continue;
-            if(!file.getName().endsWith(".jar"))
+            if (!file.getName().endsWith(".jar"))
                 continue;
             pluginFiles.add(file);
         }

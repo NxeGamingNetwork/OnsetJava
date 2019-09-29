@@ -14,7 +14,10 @@ import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.api.util.Completable;
-import net.onfirenetwork.onsetjava.simple.adapter.*;
+import net.onfirenetwork.onsetjava.simple.adapter.ActionAdapter;
+import net.onfirenetwork.onsetjava.simple.adapter.ActionAdapterListener;
+import net.onfirenetwork.onsetjava.simple.adapter.InboundAction;
+import net.onfirenetwork.onsetjava.simple.adapter.OutboundAction;
 import net.onfirenetwork.onsetjava.simple.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.simple.event.ServerEventTransformer;
 import net.onfirenetwork.onsetjava.simple.plugin.SimplePluginManager;
@@ -52,7 +55,7 @@ public class SimpleOnsetServer implements OnsetServer {
     @Getter
     private List<String> registeredKeys = new ArrayList<>();
 
-    public SimpleOnsetServer(){
+    public SimpleOnsetServer() {
         eventBus = new EventBus(this::registerHandler);
         pluginManager = new SimplePluginManager(this);
         ClientEventTransformer clientEventTransformer = new ClientEventTransformer();
@@ -68,18 +71,19 @@ public class SimpleOnsetServer implements OnsetServer {
                     return;
                 }
                 Event event = serverEventTransformer.transform(action);
-                if(event != null){
+                if (event != null) {
                     eventBus.fire(event);
                     return;
                 }
             }
+
             public void onClientAction(Player player, InboundAction action) {
-                if(action.getType().equals("Return")){
+                if (action.getType().equals("Return")) {
                     processReturn(action);
                     return;
                 }
                 Event event = clientEventTransformer.transform(player, action);
-                if(event != null){
+                if (event != null) {
                     eventBus.fire(event);
                     return;
                 }
@@ -87,116 +91,116 @@ public class SimpleOnsetServer implements OnsetServer {
         });
     }
 
-    public void run(){
+    public void run() {
         adapter.prepare();
         createDimension();
         enableEvents("OnPlayerServerAuth", "OnPlayerQuit");
         File pluginFolder = new File("java_plugins");
-        if(!pluginFolder.exists()){
+        if (!pluginFolder.exists()) {
             pluginFolder.mkdir();
-        }else{
+        } else {
             ((SimplePluginManager) pluginManager).load(pluginFolder);
         }
-        for(Plugin plugin : pluginManager.getPlugins()){
+        for (Plugin plugin : pluginManager.getPlugins()) {
             plugin.onEnable();
         }
         adapter.startSync();
-        for(Plugin plugin : pluginManager.getPlugins()){
+        for (Plugin plugin : pluginManager.getPlugins()) {
             plugin.onDisable();
         }
     }
 
-    public void stop(){
+    public void stop() {
         adapter.stop();
     }
 
-    public int nonce(){
+    public int nonce() {
         int nonce = nextNonce;
         nextNonce++;
         return nonce;
     }
 
-    public void processReturn(InboundAction action){
-        if(returnFutures.containsKey(action.getNonce())){
+    public void processReturn(InboundAction action) {
+        if (returnFutures.containsKey(action.getNonce())) {
             Completable<JsonElement[]> future = returnFutures.get(action.getNonce());
             returnFutures.remove(action.getNonce());
             future.complete(action.getParams());
         }
     }
 
-    public void processCommand(InboundAction action){
+    public void processCommand(InboundAction action) {
         String command = action.getParams()[0].getAsString().toLowerCase(Locale.GERMAN);
-        if(commandMap.containsKey(command)){
-            String[] args = new String[action.getParams().length-2];
-            for(int i=0; i<args.length; i++){
-                args[i] = action.getParams()[i+2].getAsString();
+        if (commandMap.containsKey(command)) {
+            String[] args = new String[action.getParams().length - 2];
+            for (int i = 0; i < args.length; i++) {
+                args[i] = action.getParams()[i + 2].getAsString();
             }
             commandMap.get(command).onCommand(command, getPlayer(action.getParams()[1].getAsInt()), args);
         }
     }
 
-    public void registerCommand(String name, CommandExecutor executor){
+    public void registerCommand(String name, CommandExecutor executor) {
         commandMap.put(name, executor);
         callAction("RegisterCommand", 0, name);
     }
 
-    public void registerKeys(String... keys){
-        for(String key : keys){
-            if(registeredKeys.contains(key)) {
+    public void registerKeys(String... keys) {
+        for (String key : keys) {
+            if (registeredKeys.contains(key)) {
                 registeredKeys.add(key);
             }
         }
-        for(Player player : players){
+        for (Player player : players) {
             callClientAction(player.getId(), "RegisterKeys", 0, (Object) keys);
         }
     }
 
-    public void enableEvents(String... eventNames){
+    public void enableEvents(String... eventNames) {
         callAction("RegisterEvents", 0, (Object) eventNames);
     }
 
-    public void enableClientEvents(String... eventNames){
+    public void enableClientEvents(String... eventNames) {
         enabledClientEvents.addAll(Arrays.asList(eventNames));
-        for(Player player : players){
+        for (Player player : players) {
             callClientAction(player.getId(), "RegisterEvents", 0, (Object) eventNames);
         }
     }
 
-    public void callAction(String type, int nonce, Object... params){
+    public void callAction(String type, int nonce, Object... params) {
         adapter.call(new OutboundAction(type, nonce, params));
     }
 
-    public void callClientAction(int playerId, String type, int nonce, Object... params){
+    public void callClientAction(int playerId, String type, int nonce, Object... params) {
         adapter.call(new OutboundAction("Forward", 0, playerId, new Gson().toJson(new OutboundAction(type, nonce, params))));
     }
 
-    public Completable<JsonElement[]> call(String name, Object... params){
+    public Completable<JsonElement[]> call(String name, Object... params) {
         int nonce = nonce();
         Completable<JsonElement[]> future = new Completable<>();
         returnFutures.put(nonce, future);
-        Object[] p = new Object[params.length+1];
+        Object[] p = new Object[params.length + 1];
         p[0] = name;
-        for(int i=0; i<params.length; i++){
-            p[i+1] = params[i];
+        for (int i = 0; i < params.length; i++) {
+            p[i + 1] = params[i];
         }
         callAction("Call", nonce, p);
         return future;
     }
 
-    public Completable<JsonElement[]> callClient(int playerId, String name, Object... params){
+    public Completable<JsonElement[]> callClient(int playerId, String name, Object... params) {
         int nonce = nonce();
         Completable<JsonElement[]> future = new Completable<>();
         returnFutures.put(nonce, future);
-        Object[] p = new Object[params.length+1];
+        Object[] p = new Object[params.length + 1];
         p[0] = name;
-        for(int i=0; i<params.length; i++){
-            p[i+1] = params[i];
+        for (int i = 0; i < params.length; i++) {
+            p[i + 1] = params[i];
         }
         callClientAction(playerId, "Call", nonce, p);
         return future;
     }
 
-    public Dimension createDimension(){
+    public Dimension createDimension() {
         int dimId = nextDimId;
         nextDimId++;
         Dimension dimension = new SimpleDimension(this, dimId);
@@ -204,131 +208,133 @@ public class SimpleOnsetServer implements OnsetServer {
         return dimension;
     }
 
-    public Dimension getDimension(int id){
-        for(Dimension dimension : dimensions){
-            if(dimension.getId() == id){
+    public Dimension getDimension(int id) {
+        for (Dimension dimension : dimensions) {
+            if (dimension.getId() == id) {
                 return dimension;
             }
         }
         return null;
     }
 
-    public void broadcast(String message){
+    public void broadcast(String message) {
         call("AddPlayerChatAll", message);
     }
 
-    public void print(String message){
+    public void print(String message) {
         call("print", message);
     }
 
-    public void shutdown(String message){
-        if(message != null){
+    public void shutdown(String message) {
+        if (message != null) {
             call("ServerExit", message);
-        }else{
+        } else {
             call("ServerExit");
         }
     }
 
-    public Player getPlayer(int id){
+    public Player getPlayer(int id) {
         return players.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public Vehicle getVehicle(int id){
+    public Vehicle getVehicle(int id) {
         return vehicles.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public List<NPC> getNPCs(){
+    public List<NPC> getNPCs() {
         return npcs;
     }
-    public NPC getNPC(int id){
+
+    public NPC getNPC(int id) {
         return null;
     }
 
-    public WorldObject getObject(int id){
+    public WorldObject getObject(int id) {
         return objects.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public List<Text3D> getText3Ds(){
+    public List<Text3D> getText3Ds() {
         return text3ds;
     }
-    public Text3D getText3D(int id){
+
+    public Text3D getText3D(int id) {
         return text3ds.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public Pickup getPickup(int id){
+    public Pickup getPickup(int id) {
         return pickups.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public Light getLight(int id){
+    public Light getLight(int id) {
         return lights.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public void registerHandler(Class<Event> eventClass){
+    public void registerHandler(Class<Event> eventClass) {
         //Server
-        if(eventClass.equals(PlayerJoinEvent.class))
+        if (eventClass.equals(PlayerJoinEvent.class))
             enableEvents("OnPlayerJoin");
-        if(eventClass.equals(PlayerEnterVehicleEvent.class))
+        if (eventClass.equals(PlayerEnterVehicleEvent.class))
             enableEvents("OnPlayerEnterVehicle");
-        if(eventClass.equals(PlayerExitVehicleEvent.class))
+        if (eventClass.equals(PlayerExitVehicleEvent.class))
             enableEvents("OnPlayerLeaveVehicle");
-        if(eventClass.equals(PlayerDeathEvent.class))
+        if (eventClass.equals(PlayerDeathEvent.class))
             enableEvents("OnPlayerDeath");
-        if(eventClass.equals(PlayerSpawnEvent.class))
+        if (eventClass.equals(PlayerSpawnEvent.class))
             enableEvents("OnPlayerSpawn");
-        if(eventClass.equals(PlayerPickupEvent.class))
+        if (eventClass.equals(PlayerPickupEvent.class))
             enableEvents("OnPlayerPickupHit");
-        if(eventClass.equals(VehiclePickupEvent.class))
+        if (eventClass.equals(VehiclePickupEvent.class))
             enableEvents("OnVehiclePickupHit");
-        if(eventClass.equals(PlayerStateChangeEvent.class))
+        if (eventClass.equals(PlayerStateChangeEvent.class))
             enableEvents("OnPlayerStateChange");
-        if(eventClass.equals(NPCDeathEvent.class))
+        if (eventClass.equals(NPCDeathEvent.class))
             enableEvents("OnNPCDeath");
-        if(eventClass.equals(VehicleRespawnEvent.class))
+        if (eventClass.equals(VehicleRespawnEvent.class))
             enableEvents("OnVehicleRespawn");
-        if(eventClass.equals(PlayerDamageEvent.class))
+        if (eventClass.equals(PlayerDamageEvent.class))
             enableEvents("OnPlayerDamage");
-        if(eventClass.equals(PlayerChatEvent.class))
+        if (eventClass.equals(PlayerChatEvent.class))
             enableEvents("OnPlayerChat");
-        if(eventClass.equals(PlayerStreamInEvent.class))
+        if (eventClass.equals(PlayerStreamInEvent.class))
             enableEvents("OnPlayerStreamIn");
-        if(eventClass.equals(PlayerStreamOutEvent.class))
+        if (eventClass.equals(PlayerStreamOutEvent.class))
             enableEvents("OnPlayerStreamOut");
-        if(eventClass.equals(VehicleStreamInEvent.class))
+        if (eventClass.equals(VehicleStreamInEvent.class))
             enableEvents("OnVehicleStreamIn");
-        if(eventClass.equals(VehicleStreamOutEvent.class))
+        if (eventClass.equals(VehicleStreamOutEvent.class))
             enableEvents("OnVehicleStreamOut");
-        if(eventClass.equals(PlayerWeaponShotEvent.class))
+        if (eventClass.equals(PlayerWeaponShotEvent.class))
             enableEvents("OnPlayerWeaponShot");
-        if(eventClass.equals(PlayerCommandEvent.class))
+        if (eventClass.equals(PlayerCommandEvent.class))
             enableEvents("OnPlayerChatCommand");
-        if(eventClass.equals(NPCSpawnEvent.class))
+        if (eventClass.equals(NPCSpawnEvent.class))
             enableEvents("OnNPCSpawn");
-        if(eventClass.equals(NPCDamageEvent.class))
+        if (eventClass.equals(NPCDamageEvent.class))
             enableEvents("OnNPCDamage");
-        if(eventClass.equals(NPCReachTargetEvent.class))
+        if (eventClass.equals(NPCReachTargetEvent.class))
             enableEvents("OnNPCReachTarget");
-        if(eventClass.equals(ClientConnectionEvent.class))
+        if (eventClass.equals(ClientConnectionEvent.class))
             enableEvents("OnClientConnectionRequest");
-        if(eventClass.equals(PlayerDownloadFileEvent.class))
+        if (eventClass.equals(PlayerDownloadFileEvent.class))
             enableEvents("OnPlayerDownloadFile");
         //Client
-        if(eventClass.equals(SoundFinishedEvent.class))
+        if (eventClass.equals(SoundFinishedEvent.class))
             enableClientEvents("OnSoundFinished");
-        if(eventClass.equals(WebReadyEvent.class))
+        if (eventClass.equals(WebReadyEvent.class))
             enableClientEvents("OnWebLoadComplete");
-        if(eventClass.equals(PlayerCrouchStateEvent.class))
+        if (eventClass.equals(PlayerCrouchStateEvent.class))
             enableClientEvents("OnPlayerCrouch", "OnPlayerEndCrouch");
-        if(eventClass.equals(PlayerFallStateEvent.class))
+        if (eventClass.equals(PlayerFallStateEvent.class))
             enableClientEvents("OnPlayerFall", "OnPlayerEndFall");
-        if(eventClass.equals(PlayerSwimStateEvent.class))
+        if (eventClass.equals(PlayerSwimStateEvent.class))
             enableClientEvents("OnPlayerEnterWater", "OnPlayerLeaveWater");
-        if(eventClass.equals(PlayerSkydiveEvent.class))
+        if (eventClass.equals(PlayerSkydiveEvent.class))
             enableClientEvents("OnPlayerSkydive");
-        if(eventClass.equals(PlayerSkydiveEndEvent.class))
+        if (eventClass.equals(PlayerSkydiveEndEvent.class))
             enableClientEvents("OnPlayerCancelSkydive", "OnPlayerSkydiveCrash");
-        if(eventClass.equals(CollisionEnterEvent.class))
+        if (eventClass.equals(CollisionEnterEvent.class))
             enableClientEvents("OnCollisionEnter");
-        if(eventClass.equals(CollisionLeaveEvent.class))
+        if (eventClass.equals(CollisionLeaveEvent.class))
             enableClientEvents("OnCollisionLeave");
         if (eventClass.equals(ResolutionChangeEvent.class))
             enableClientEvents("OnResolutionChange");

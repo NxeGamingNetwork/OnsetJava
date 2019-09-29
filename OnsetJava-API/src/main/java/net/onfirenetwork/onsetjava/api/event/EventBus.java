@@ -17,14 +17,14 @@ public class EventBus {
     private HashMap<Class<Event>, List<Consumer<Event>>> listeners = new HashMap<>();
     private Consumer<Class<Event>> registerHandler = null;
 
-    public EventBus(Consumer<Class<Event>> registerHandler){
+    public EventBus(Consumer<Class<Event>> registerHandler) {
         this.registerHandler = registerHandler;
     }
 
     public <T extends Event> void listen(Class<T> type, Consumer<T> listener) {
-        if (!listeners.containsKey(type)){
+        if (!listeners.containsKey(type)) {
             listeners.put((Class<Event>) type, new ArrayList<>());
-            if(registerHandler!=null){
+            if (registerHandler != null) {
                 registerHandler.accept((Class<Event>) type);
             }
         }

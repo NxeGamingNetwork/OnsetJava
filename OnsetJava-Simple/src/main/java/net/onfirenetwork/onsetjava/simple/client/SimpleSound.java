@@ -15,7 +15,8 @@ public class SimpleSound implements Sound {
     Player player;
     @Getter
     int id;
-    public void remove(){
+
+    public void remove() {
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         player.getSounds().remove(this);
         server.callClient(player.getId(), "DestroySound", id);

@@ -1,5 +1,6 @@
 package net.onfirenetwork.onsetjava.simple.plugin;
 
+import lombok.Getter;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginInfo;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
@@ -19,31 +20,32 @@ import java.util.jar.JarFile;
 public class SimplePluginManager implements PluginManager {
 
     private SimpleOnsetServer server;
+    @Getter
     private List<Plugin> plugins = new ArrayList<>();
     private Map<Plugin, File> files = new HashMap<>();
 
-    public SimplePluginManager(SimpleOnsetServer server){
+    public SimplePluginManager(SimpleOnsetServer server) {
         this.server = server;
     }
 
-    public void load(File pluginFolder){
+    public void load(File pluginFolder) {
         new Installer().install(pluginFolder);
         List<File> pluginFiles = new ArrayList<>();
-        for(File file : pluginFolder.listFiles()){
-            if(file.isDirectory())
+        for (File file : pluginFolder.listFiles()) {
+            if (file.isDirectory())
                 continue;
-            if(!file.getName().endsWith(".jar"))
+            if (!file.getName().endsWith(".jar"))
                 continue;
             pluginFiles.add(file);
         }
         try {
             URL[] urls = new URL[pluginFiles.size()];
-            for(int i=0; i<urls.length; i++){
+            for (int i = 0; i < urls.length; i++) {
                 urls[i] = pluginFiles.get(i).toURI().toURL();
             }
             URLClassLoader classLoader = new URLClassLoader(urls);
-            server.print("Found "+pluginFiles.size()+" Plugin Files!");
-            for(File file: pluginFiles){
+            server.print("Found " + pluginFiles.size() + " Plugin Files!");
+            for (File file : pluginFiles) {
                 try {
                     Class<Plugin> mainClass = null;
                     JarFile jf = new JarFile(file);
@@ -63,54 +65,46 @@ public class SimplePluginManager implements PluginManager {
                         files.put(instance, file);
                         PluginInfo info = instance.info();
                         instance.onLoad();
-                        server.print("Loaded "+info);
+                        server.print("Loaded " + info);
                     }
-                }catch (Exception ex){
-                    server.print("Failed to load '"+file.getName()+"'!");
+                } catch (Exception ex) {
+                    server.print("Failed to load '" + file.getName() + "'!");
                 }
             }
-        } catch (MalformedURLException ex) {}
-    }
-
-    public List<Plugin> getPlugins() {
-        return plugins;
+        } catch (MalformedURLException ex) {
+        }
     }
 
     public Plugin getPlugin(String name) {
-        for(Plugin plugin : plugins){
-            if(plugin.info().getName().equalsIgnoreCase(name)){
-                return plugin;
-            }
-        }
-        return null;
+        return plugins.stream().filter(plugin -> plugin.info().getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
-    public File getFile(Plugin plugin){
+    public File getFile(Plugin plugin) {
         return files.get(plugin);
     }
 
-    public String getResourceId(Plugin plugin){
+    public String getResourceId(Plugin plugin) {
         File file = getFile(plugin);
-        if(file == null)
+        if (file == null)
             return null;
         return makeResourceId(file.getName());
     }
 
-    public static String makeResourceId(String fileName){
-        String id = fileName.substring(0, fileName.length()-4);
+    public static String makeResourceId(String fileName) {
+        String id = fileName.substring(0, fileName.length() - 4);
         id = id.toLowerCase(Locale.ENGLISH);
         id = id.replace(".", "-");
-        for(int i=0; i<id.length()-1; i++){
-            if(id.charAt(i) == '-' && Character.isDigit(id.charAt(i+1))){
+        for (int i = 0; i < id.length() - 1; i++) {
+            if (id.charAt(i) == '-' && Character.isDigit(id.charAt(i + 1))) {
                 id = id.substring(0, i);
                 break;
             }
         }
-        id = md5(id).substring(0,6);
+        id = md5(id).substring(0, 6);
         return id;
     }
 
-    private static String md5(String source){
+    private static String md5(String source) {
         try {
             MessageDigest md = MessageDigest.getInstance("md5");
             return Base64.getEncoder().encodeToString(md.digest(source.getBytes()));

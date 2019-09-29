@@ -16,8 +16,8 @@ public class PluginInfo {
     String version;
     String author;
 
-    public String toString(){
-        return name + " ("+version+" by "+author+")";
+    public String toString() {
+        return name + " (" + version + " by " + author + ")";
     }
 
 }

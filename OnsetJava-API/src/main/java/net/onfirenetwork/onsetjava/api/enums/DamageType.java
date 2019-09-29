@@ -13,12 +13,12 @@ public enum DamageType {
     DAMAGE_EXPLOSION(2),
     DAMAGE_FIRE(3),
     DAMAGE_FALL(4),
-    DAMAGE_VEHICLE_COLLISION(5)
-    ;
+    DAMAGE_VEHICLE_COLLISION(5);
     int identifier;
-    public static DamageType get(int value){
-        for(DamageType damageType: values()){
-            if(damageType.identifier == value){
+
+    public static DamageType get(int value) {
+        for (DamageType damageType : values()) {
+            if (damageType.identifier == value) {
                 return damageType;
             }
         }

@@ -8,11 +8,11 @@ public class Completable<T> {
 
     private CompletableFuture<T> future = new CompletableFuture<>();
 
-    public void complete(T value){
+    public void complete(T value) {
         future.complete(value);
     }
 
-    public T get(){
+    public T get() {
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -21,7 +21,7 @@ public class Completable<T> {
         return null;
     }
 
-    public void then(Consumer<T> consumer){
+    public void then(Consumer<T> consumer) {
         future.thenAccept(consumer);
     }
 

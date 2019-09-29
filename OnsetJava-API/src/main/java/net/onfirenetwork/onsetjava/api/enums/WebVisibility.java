@@ -13,9 +13,10 @@ public enum WebVisibility {
     VISIBLE(1),
     NO_INTERACTION(2);
     int identifier;
-    public static WebVisibility get(int value){
-        for(WebVisibility visibility: values()){
-            if(visibility.identifier == value){
+
+    public static WebVisibility get(int value) {
+        for (WebVisibility visibility : values()) {
+            if (visibility.identifier == value) {
                 return visibility;
             }
         }

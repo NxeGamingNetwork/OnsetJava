@@ -4,6 +4,8 @@ import net.onfirenetwork.onsetjava.api.Dimension;
 
 public interface Light {
     int getId();
+
     Dimension getDimension();
+
     void remove();
 }

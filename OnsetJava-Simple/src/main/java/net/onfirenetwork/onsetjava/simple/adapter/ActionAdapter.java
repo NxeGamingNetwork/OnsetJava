@@ -16,73 +16,76 @@ public class ActionAdapter {
     private ActionAdapterListener listener;
     private Gson gson = new GsonBuilder().create();
 
-    public ActionAdapter(InputStream inputStream, OutputStream outputStream, ActionAdapterListener listener){
+    public ActionAdapter(InputStream inputStream, OutputStream outputStream, ActionAdapterListener listener) {
         this.inputStream = inputStream;
         this.outputStream = outputStream;
         this.listener = listener;
     }
 
-    public void prepare(){
+    public void prepare() {
         shouldExit = false;
     }
 
-    public void startSync(){
-        while (!shouldExit){
+    public void startSync() {
+        while (!shouldExit) {
             try {
-                while(inputStream.available() < 1){
-                    if(shouldExit)
+                while (inputStream.available() < 1) {
+                    if (shouldExit)
                         break;
                     Thread.yield();
                 }
-                if(!shouldExit){
+                if (!shouldExit) {
                     StringBuilder sb = new StringBuilder();
-                    while(inputStream.available() > 0){
+                    while (inputStream.available() > 0) {
                         byte[] data = new byte[Math.min(1024, inputStream.available())];
                         inputStream.read(data);
                         sb.append(new String(data, StandardCharsets.UTF_8));
                     }
                     String[] lines = sb.toString().split("\n");
-                    for(String line : lines){
-                        if(line.length() == 0)
+                    for (String line : lines) {
+                        if (line.length() == 0)
                             continue;
                         try {
                             InboundAction action = gson.fromJson(line, InboundAction.class);
-                            if(action.getType().equals("Forward")){
+                            if (action.getType().equals("Forward")) {
                                 int playerId = action.getParams()[0].getAsInt();
                                 String json = action.getParams()[1].getAsString();
                                 InboundAction clientAction = gson.fromJson(json, InboundAction.class);
                                 new Thread(() -> {
                                     listener.onClientAction(OnsetJava.getServer().getPlayer(playerId), clientAction);
                                 }).start();
-                            }else{
+                            } else {
                                 new Thread(() -> {
                                     listener.onAction(action);
                                 }).start();
                             }
-                        }catch (Exception ex){}
+                        } catch (Exception ex) {
+                        }
                     }
                 }
-            }catch (Exception ex){ ex.printStackTrace(); }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
     }
 
-    public void start(){
+    public void start() {
         new Thread(this::startSync).start();
     }
 
-    public void stop(){
+    public void stop() {
         shouldExit = true;
     }
 
-    public void call(OutboundAction action){
-        if(shouldExit)
+    public void call(OutboundAction action) {
+        if (shouldExit)
             return;
         try {
-            String json = gson.toJson(action)+"\n";
+            String json = gson.toJson(action) + "\n";
             outputStream.write(json.getBytes(StandardCharsets.UTF_8));
             outputStream.flush();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

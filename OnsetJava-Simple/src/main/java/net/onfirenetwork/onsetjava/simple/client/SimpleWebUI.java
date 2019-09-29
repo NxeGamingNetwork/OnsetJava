@@ -15,35 +15,43 @@ public class SimpleWebUI implements WebUI {
     @Getter
     int id;
     WebVisibility visibility = WebVisibility.VISIBLE;
-    public SimpleWebUI(Player player, int id){
+
+    public SimpleWebUI(Player player, int id) {
         this.player = player;
         this.id = id;
     }
-    public void setUrl(String url){
+
+    public void setUrl(String url) {
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         server.callClient(player.getId(), "SetWebURL", id, url);
     }
-    public void executeJS(String js){
+
+    public void executeJS(String js) {
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         server.callClient(player.getId(), "ExecuteWebJS", id, js);
     }
-    public void setAlignment(double x, double y){
+
+    public void setAlignment(double x, double y) {
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         server.callClient(player.getId(), "SetWebAlignment", id, x, y);
     }
-    public void setAnchors(double minX, double minY, double maxX, double maxY){
+
+    public void setAnchors(double minX, double minY, double maxX, double maxY) {
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         server.callClient(player.getId(), "SetWebAnchors", id, minX, minY, maxX, maxY);
     }
-    public void setVisibility(WebVisibility visibility){
+
+    public void setVisibility(WebVisibility visibility) {
         this.visibility = visibility;
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         server.callClient(player.getId(), "SetWebVisibility", id, visibility.getIdentifier());
     }
-    public WebVisibility getVisibility(){
+
+    public WebVisibility getVisibility() {
         return visibility;
     }
-    public void remove(){
+
+    public void remove() {
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();
         player.getWebUIs().remove(this);
         server.callClient(player.getId(), "DestroyWebUI", id).get();

@@ -2,7 +2,6 @@ package net.onfirenetwork.onsetjava.simple.entity;
 
 import com.google.gson.JsonElement;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Pickup;
@@ -19,25 +18,31 @@ public class SimplePickup implements Pickup {
     @Getter
     int id;
     Map<String, Object> attributes = new HashMap<>();
-    public SimplePickup(SimpleDimension dimension, int id){
+
+    public SimplePickup(SimpleDimension dimension, int id) {
         this.dimension = dimension;
         this.id = id;
     }
+
     public void setScale(Vector3d scale) {
         dimension.getServer().call("SetPickupScale", id, scale.getX(), scale.getY(), scale.getZ());
     }
+
     public Vector3d getScale() {
         JsonElement[] scale = dimension.getServer().call("GetPickupScale", id).get();
         return new Vector3d(scale[0].getAsDouble(), scale[1].getAsDouble(), scale[2].getAsDouble());
     }
-    public void remove(){
+
+    public void remove() {
         dimension.getServer().getPickups().remove(this);
         dimension.getServer().call("DestroyPickup", id).get();
     }
-    public void setAttribute(String key, Object value){
+
+    public void setAttribute(String key, Object value) {
         attributes.put(key, value);
     }
-    public <T> T getAttribute(String key){
+
+    public <T> T getAttribute(String key) {
         return (T) attributes.get(key);
     }
 }

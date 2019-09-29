@@ -5,7 +5,8 @@ import lombok.Setter;
 
 public class OnsetJava {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private static OnsetServer server = null;
 
 }

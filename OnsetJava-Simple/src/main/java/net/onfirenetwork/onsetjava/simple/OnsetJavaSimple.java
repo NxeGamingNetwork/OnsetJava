@@ -7,9 +7,9 @@ import java.io.File;
 
 public class OnsetJavaSimple {
 
-    public static void main(String [] args){
-        if(args.length==1){
-            if(args[0].equals("runtheserver")){
+    public static void main(String[] args) {
+        if (args.length == 1) {
+            if (args[0].equals("runtheserver")) {
                 SimpleOnsetServer server = new SimpleOnsetServer();
                 OnsetJava.setServer(server);
                 server.run();

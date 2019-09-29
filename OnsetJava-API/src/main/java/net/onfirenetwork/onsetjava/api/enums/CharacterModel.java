@@ -42,24 +42,26 @@ public class CharacterModel {
     @Getter
     private boolean darkSkin;
 
-    private CharacterModel(int id, boolean darkSkin){
-        this.id = id; this.darkSkin = darkSkin;
+    private CharacterModel(int id, boolean darkSkin) {
+        this.id = id;
+        this.darkSkin = darkSkin;
     }
 
-    public boolean equals(Object other){
-        if(other == null)
+    public boolean equals(Object other) {
+        if (other == null)
             return false;
-        if(!(other instanceof CharacterModel))
+        if (!(other instanceof CharacterModel))
             return false;
         return ((CharacterModel) other).id == id;
     }
 
-    public static CharacterModel[] values(){
+    public static CharacterModel[] values() {
         return new CharacterModel[]{
                 ORANGE_SHIRT_1, ORANGE_SHIRT_2, ORANGE_SHIRT_3, ORANGE_SHIRT_4, GRAY_SHIRT, BLUE_SHIRT_1, RED_SHIRT, ORANGE_SHIRT_5, BLUE_SHIRT_2, PURPLE_SUIT_1, PURPLE_SUIT_2, PURPLE_SUIT_3, POLICE, BLACK_SUIT_1, WHITE_SHIRT, BLACK_SUIT_2, DOCTOR, BLACK_SUIT_3, SHIRTLESS_1, SHIRTLESS_2, ZOMBIE_1, ZOMBIE_2, ALIEN_1, ALIEN_2, FBI, SOLDIER_COMMS, SOLDIER_NIGHT_VISION, SOLDIER_GOOGLES, SOLDIER
         };
     }
-    public static CharacterModel getModel(int id){
+
+    public static CharacterModel getModel(int id) {
         return new CharacterModel(id, false);
     }
 }

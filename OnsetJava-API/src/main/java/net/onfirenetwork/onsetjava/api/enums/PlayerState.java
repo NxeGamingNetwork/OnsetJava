@@ -10,15 +10,16 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public enum PlayerState {
     NONE(0),
-	ONFOOT(1),
-	DRIVER(2),
-	PASSENGER(3),
-	ENTER_VEHICLE(4),
-	EXIT_VEHICLE(5);
+    ONFOOT(1),
+    DRIVER(2),
+    PASSENGER(3),
+    ENTER_VEHICLE(4),
+    EXIT_VEHICLE(5);
     int identifier;
-    public static PlayerState get(int value){
-        for(PlayerState state: values()){
-            if(state.identifier == value){
+
+    public static PlayerState get(int value) {
+        for (PlayerState state : values()) {
+            if (state.identifier == value) {
                 return state;
             }
         }

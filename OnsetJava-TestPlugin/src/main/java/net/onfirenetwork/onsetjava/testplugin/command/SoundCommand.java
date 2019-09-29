@@ -5,7 +5,7 @@ import net.onfirenetwork.onsetjava.api.entity.Player;
 
 public class SoundCommand implements CommandExecutor {
     public void onCommand(String cmd, Player player, String[] args) {
-        if(args.length == 0){
+        if (args.length == 0) {
             player.sendMessage("/sound <file/url>");
             return;
         }

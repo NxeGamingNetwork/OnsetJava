@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.event.Event;
 
-@FieldDefaults(level =  AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
 public class PlayerSwimStateEvent extends Event {

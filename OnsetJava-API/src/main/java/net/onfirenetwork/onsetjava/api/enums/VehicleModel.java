@@ -1,7 +1,6 @@
 package net.onfirenetwork.onsetjava.api.enums;
 
 import lombok.Getter;
-import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 
 public class VehicleModel {
 
@@ -32,24 +31,25 @@ public class VehicleModel {
     @Getter
     private int id;
 
-    private VehicleModel(int id){
+    private VehicleModel(int id) {
         this.id = id;
     }
 
-    public boolean equals(Object other){
-        if(other == null)
+    public boolean equals(Object other) {
+        if (other == null)
             return false;
-        if(!(other instanceof VehicleModel))
+        if (!(other instanceof VehicleModel))
             return false;
         return ((VehicleModel) other).id == id;
     }
 
-    public static VehicleModel[] values(){
+    public static VehicleModel[] values() {
         return new VehicleModel[]{
-            SEDAN, SEDAN_TAXI, SEDAN_POLICE, ROLLS_ROYCE, SALOON, NASCAR, PICKUP, AMBULANCE, GARBAGE_TRUCK, HELICOPTER, COUPE, RALLY, HEAVY, HEAVY_CAMO, HEAVY_RESCUE, HEAVY_MILITARY, CARGO_TRUCK, CARGO_TRUCK_CAMO, SEDAN_ONECOLOR, HELICOPTER_ONECOLOR, HUMVEE, LIGHT_TRUCK, LIGHT_TRUCK_CAMO
+                SEDAN, SEDAN_TAXI, SEDAN_POLICE, ROLLS_ROYCE, SALOON, NASCAR, PICKUP, AMBULANCE, GARBAGE_TRUCK, HELICOPTER, COUPE, RALLY, HEAVY, HEAVY_CAMO, HEAVY_RESCUE, HEAVY_MILITARY, CARGO_TRUCK, CARGO_TRUCK_CAMO, SEDAN_ONECOLOR, HELICOPTER_ONECOLOR, HUMVEE, LIGHT_TRUCK, LIGHT_TRUCK_CAMO
         };
     }
-    public static VehicleModel getModel(int id){
+
+    public static VehicleModel getModel(int id) {
         return new VehicleModel(id);
     }
 }

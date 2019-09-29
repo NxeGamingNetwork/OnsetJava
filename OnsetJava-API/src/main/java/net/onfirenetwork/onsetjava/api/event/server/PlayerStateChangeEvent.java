@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
-import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
+import net.onfirenetwork.onsetjava.api.event.Event;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)

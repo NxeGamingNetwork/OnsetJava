@@ -10,12 +10,12 @@ import net.onfirenetwork.onsetjava.testplugin.listener.WelcomeListener;
 
 public class TestPlugin implements Plugin {
 
-    public void onEnable(){
+    public void onEnable() {
         OnsetJava.getServer().getEventBus().listen(new ATMListener());
         OnsetJava.getServer().getEventBus().listen(new WelcomeListener());
         OnsetJava.getServer().registerCommand("sound", new SoundCommand());
-        OnsetJava.getServer().registerCommand("givew", (command,player,args) -> {
-            if(args.length == 0){
+        OnsetJava.getServer().registerCommand("givew", (command, player, args) -> {
+            if (args.length == 0) {
                 player.sendMessage("/givew <id>");
                 return;
             }

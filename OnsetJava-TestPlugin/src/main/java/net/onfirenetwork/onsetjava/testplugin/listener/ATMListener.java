@@ -15,7 +15,7 @@ public class ATMListener {
 
     private Map<Player, WebUI> webUIMap = new HashMap<>();
 
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
         e.getPlayer().createWebUI(new Vector2d(0, 0), new Vector2d(800, 600)).then(webUI -> {
             webUI.setVisibility(WebVisibility.HIDDEN);
             webUI.setAlignment(0.5, 0.5);
@@ -25,16 +25,16 @@ public class ATMListener {
         });
     }
 
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) {
         webUIMap.remove(e.getPlayer());
     }
 
-    public void onKeyPress(KeyPressEvent e){
-        if(e.getKey().equals("E")){
+    public void onKeyPress(KeyPressEvent e) {
+        if (e.getKey().equals("E")) {
             WebUI ui = webUIMap.get(e.getPlayer());
-            if(ui.getVisibility() == WebVisibility.HIDDEN){
+            if (ui.getVisibility() == WebVisibility.HIDDEN) {
                 ui.setVisibility(WebVisibility.VISIBLE);
-            }else {
+            } else {
                 ui.setVisibility(WebVisibility.HIDDEN);
             }
         }
