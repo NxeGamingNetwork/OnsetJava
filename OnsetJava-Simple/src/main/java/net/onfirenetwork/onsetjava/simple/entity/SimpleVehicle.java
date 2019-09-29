@@ -38,9 +38,9 @@ public class SimpleVehicle implements Vehicle {
     }
 
     public Location getLocation() {
-        JsonElement[] loc = dimension.getServer().call("GetVehicleLocation", id).get();
+        Vector3d loc = JsonUtils.toVector(dimension.getServer().call("GetVehicleLocation", id).get());
         double heading = dimension.getServer().call("GetVehicleHeading", id).get()[0].getAsDouble();
-        return new Location(loc[0].getAsDouble(), loc[1].getAsDouble(), loc[2].getAsDouble(), heading);
+        return new Location(loc, heading);
     }
 
     public void setLocation(Location location) {
@@ -49,8 +49,7 @@ public class SimpleVehicle implements Vehicle {
     }
 
     public Vector3d getRotation() {
-        JsonElement[] rot = dimension.getServer().call("GetVehicleRotation", id).get();
-        return new Vector3d(rot[0].getAsDouble(), rot[1].getAsDouble(), rot[2].getAsDouble());
+        return JsonUtils.toVector(dimension.getServer().call("GetVehicleRotation", id).get());
     }
 
     public void setRotation(Vector3d rotation) {
@@ -172,9 +171,7 @@ public class SimpleVehicle implements Vehicle {
 
     public Player getPassenger(int seat) {
         JsonElement vid = dimension.getServer().call("GetVehiclePassenger", id, seat).get()[0];
-        if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
-            return null;
-        return dimension.getServer().getPlayer(vid.getAsInt());
+        return JsonUtils.preCheckAndRun(vid, () -> dimension.getServer().getPlayer(vid.getAsInt()));
     }
 
     public int getSeatCount() {

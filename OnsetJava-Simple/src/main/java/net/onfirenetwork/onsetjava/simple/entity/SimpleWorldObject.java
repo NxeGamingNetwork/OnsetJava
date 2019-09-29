@@ -1,6 +1,5 @@
 package net.onfirenetwork.onsetjava.simple.entity;
 
-import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import net.onfirenetwork.onsetjava.api.entity.WorldObject;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
+import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -30,8 +30,7 @@ public class SimpleWorldObject implements WorldObject {
     }
 
     public Location getLocation() {
-        JsonElement[] ret = dimension.getServer().call("GetObjectLocation", id).get();
-        return new Location(ret[0].getAsDouble(), ret[1].getAsDouble(), ret[2].getAsDouble());
+        return JsonUtils.toVector(dimension.getServer().call("GetObjectLocation", id).get()).toLocation();
     }
 
     public void setRotation(Vector3d rotation) {
@@ -39,8 +38,7 @@ public class SimpleWorldObject implements WorldObject {
     }
 
     public Vector3d getRotation() {
-        JsonElement[] ret = dimension.getServer().call("GetObjectRotation", id).get();
-        return new Vector3d(ret[0].getAsDouble(), ret[1].getAsDouble(), ret[2].getAsDouble());
+        return JsonUtils.toVector(dimension.getServer().call("GetObjectRotation", id).get());
     }
 
     public void setScale(Vector3d scale) {
@@ -48,8 +46,7 @@ public class SimpleWorldObject implements WorldObject {
     }
 
     public Vector3d getScale() {
-        JsonElement[] ret = dimension.getServer().call("GetObjectScale", id).get();
-        return new Vector3d(ret[0].getAsDouble(), ret[1].getAsDouble(), ret[2].getAsDouble());
+        return JsonUtils.toVector(dimension.getServer().call("GetObjectScale", id).get());
     }
 
     public boolean isMoving() {
