@@ -36,18 +36,22 @@ public class EventBus {
             if (m.getParameterCount() == 1) {
                 Class<?> paramType = m.getParameterTypes()[0];
                 if (paramType.getSuperclass().equals(Event.class)) {
-                    m.setAccessible(true);
                     Class<Event> eventType = (Class<Event>) paramType;
-                    listen(eventType, e -> {
-                        try {
-                            m.invoke(instance, e);
-                        } catch (IllegalAccessException | InvocationTargetException ex) {
-                            ex.printStackTrace();
-                        }
-                    });
+                    listen(eventType, toConsumer(m, instance));
                 }
             }
         }
+    }
+
+    private Consumer<Event> toConsumer(Method m, Object instance) {
+        m.setAccessible(true);
+        return e -> {
+            try {
+                m.invoke(instance, e);
+            } catch (IllegalAccessException | InvocationTargetException ex) {
+                ex.printStackTrace();
+            }
+        };
     }
 
     public void fire(Event event) {
