@@ -16,113 +16,119 @@ public class ClientEventTransformer {
 
     public Event transform(Player player, InboundAction action) {
         OnsetServer server = OnsetJava.getServer();
-        if (action.getType().equals("OnKeyPress")) {
-            return new KeyPressEvent(player, action.getParams()[0].getAsString());
+
+        Event event = null;
+
+        switch (action.getType()) {
+            case "OnKeyPress":
+                event = new KeyPressEvent(player, action.getParams()[0].getAsString());
+                break;
+            case "OnKeyRelease":
+                event = new KeyReleaseEvent(player, action.getParams()[0].getAsString());
+                break;
+            case "OnSoundFinished":
+                event = new SoundFinishedEvent(player, player.getSound(action.getParams()[0].getAsInt()));
+                break;
+            case "OnWebLoadComplete":
+                event = new WebReadyEvent(player, player.getWebUI(action.getParams()[0].getAsInt()));
+                break;
+            case "OnPlayerCrouch":
+                event = new PlayerCrouchStateEvent(player, true);
+                break;
+            case "OnPlayerEndCrouch":
+                event = new PlayerCrouchStateEvent(player, false);
+                break;
+            case "OnPlayerFall":
+                event = new PlayerFallStateEvent(player, true);
+                break;
+            case "OnPlayerEndFall":
+                event = new PlayerFallStateEvent(player, false);
+                break;
+            case "OnPlayerEnterWater":
+                event = new PlayerSwimStateEvent(player, true);
+                break;
+            case "OnPlayerLeaveWater":
+                event = new PlayerSwimStateEvent(player, false);
+                break;
+            case "OnPlayerSkydive":
+                event = new PlayerSkydiveEvent(player);
+                break;
+            case "OnPlayerCancelSkydive":
+                event = new PlayerSkydiveEndEvent(player, false);
+                break;
+            case "OnPlayerSkydiveCrash":
+                event = new PlayerSkydiveEndEvent(player, true);
+                break;
+            case "OnCollisionEnter":
+                event = new CollisionEnterEvent(player, action.getParams()[0].getAsInt(), HitType.get(action.getParams()[1].getAsInt()), action.getParams()[2].getAsInt());
+                break;
+            case "OnCollisionLeave":
+                event = new CollisionLeaveEvent(player, action.getParams()[0].getAsInt(), HitType.get(action.getParams()[1].getAsInt()), action.getParams()[2].getAsInt());
+                break;
+            case "OnResolutionChange":
+                event = new ResolutionChangeEvent(player, action.getParams()[0].getAsInt(), action.getParams()[1].getAsInt());
+                break;
+            case "OnPlayerReloaded":
+                event = new PlayerReloadedEvent(player);
+                break;
+            case "OnPlayerParachuteLand":
+                event = new PlayerParachuteLandEvent(player);
+                break;
+            case "OnPlayerParachuteOpen":
+                event = new PlayerParachuteStateEvent(player, true);
+                break;
+            case "OnPlayerParachuteClose":
+                event = new PlayerParachuteStateEvent(player, false);
+                break;
+            case "OnObjectHit":
+                WorldObject object = server.getObject(action.getParams()[0].getAsInt());
+                HitType hitType = HitType.get(action.getParams()[1].getAsInt());
+                HitEntity hitEntity = null;
+                int hitId = action.getParams()[2].getAsInt();
+                switch (hitType) {
+                    case HIT_NPC:
+                        hitEntity = server.getNPC(hitId);
+                        break;
+                    case HIT_OBJECT:
+                        if (hitId > 0) {
+                            hitEntity = server.getObject(hitId);
+                        }
+                        break;
+                    case HIT_VEHICLE:
+                        hitEntity = server.getVehicle(hitId);
+                        break;
+                    case HIT_PLAYER:
+                        hitEntity = server.getPlayer(hitId);
+                        break;
+                }
+                Location hitLocation = new Location(action.getParams()[3].getAsDouble(), action.getParams()[4].getAsDouble(), action.getParams()[5].getAsDouble());
+                Vector3d normal = new Vector3d(action.getParams()[6].getAsDouble(), action.getParams()[7].getAsDouble(), action.getParams()[8].getAsDouble());
+                event = new ObjectHitEvent(object, hitType, hitEntity, hitLocation, normal);
+                break;
+            case "OnPlayerBeginEditObject":
+                event = new PlayerBeginEditObjectEvent(player, server.getObject(action.getParams()[0].getAsInt()));
+                break;
+            case "OnPlayerEndEditObject":
+                event = new PlayerEndEditObjectEvent(player, server.getObject(action.getParams()[0].getAsInt()));
+                break;
+            case "OnLightStreamIn":
+                event = new LightStreamInEvent(player, server.getLight(action.getParams()[0].getAsInt()));
+                break;
+            case "OnNPCStreamIn":
+                event = new NPCStreamInEvent(player, server.getNPC(action.getParams()[0].getAsInt()));
+                break;
+            case "OnObjectStreamIn":
+                event = new ObjectStreamInEvent(player, server.getObject(action.getParams()[0].getAsInt()));
+                break;
+            case "OnPickupStreamIn":
+                event = new PickupStreamInEvent(player, server.getPickup(action.getParams()[0].getAsInt()));
+                break;
+            case "OnText3DStreamIn":
+                event = new Text3DStreamInEvent(player, server.getText3D(action.getParams()[0].getAsInt()));
+                break;
         }
-        if (action.getType().equals("OnKeyRelease")) {
-            return new KeyReleaseEvent(player, action.getParams()[0].getAsString());
-        }
-        if (action.getType().equals("OnSoundFinished")) {
-            return new SoundFinishedEvent(player, player.getSound(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnWebLoadComplete")) {
-            return new WebReadyEvent(player, player.getWebUI(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnPlayerCrouch")) {
-            return new PlayerCrouchStateEvent(player, true);
-        }
-        if (action.getType().equals("OnPlayerEndCrouch")) {
-            return new PlayerCrouchStateEvent(player, false);
-        }
-        if (action.getType().equals("OnPlayerFall")) {
-            return new PlayerFallStateEvent(player, true);
-        }
-        if (action.getType().equals("OnPlayerEndFall")) {
-            return new PlayerFallStateEvent(player, false);
-        }
-        if (action.getType().equals("OnPlayerEnterWater")) {
-            return new PlayerSwimStateEvent(player, true);
-        }
-        if (action.getType().equals("OnPlayerLeaveWater")) {
-            return new PlayerSwimStateEvent(player, false);
-        }
-        if (action.getType().equals("OnPlayerSkydive")) {
-            return new PlayerSkydiveEvent(player);
-        }
-        if (action.getType().equals("OnPlayerCancelSkydive")) {
-            return new PlayerSkydiveEndEvent(player, false);
-        }
-        if (action.getType().equals("OnPlayerSkydiveCrash")) {
-            return new PlayerSkydiveEndEvent(player, true);
-        }
-        if (action.getType().equals("OnCollisionEnter")) {
-            return new CollisionEnterEvent(player, action.getParams()[0].getAsInt(), HitType.get(action.getParams()[1].getAsInt()), action.getParams()[2].getAsInt());
-        }
-        if (action.getType().equals("OnCollisionLeave")) {
-            return new CollisionLeaveEvent(player, action.getParams()[0].getAsInt(), HitType.get(action.getParams()[1].getAsInt()), action.getParams()[2].getAsInt());
-        }
-        if (action.getType().equals("OnResolutionChange")) {
-            return new ResolutionChangeEvent(player, action.getParams()[0].getAsInt(), action.getParams()[1].getAsInt());
-        }
-        if (action.getType().equals("OnPlayerReloaded")) {
-            return new PlayerReloadedEvent(player);
-        }
-        if (action.getType().equals("OnPlayerParachuteLand")) {
-            return new PlayerParachuteLandEvent(player);
-        }
-        if (action.getType().equals("OnPlayerParachuteOpen")) {
-            return new PlayerParachuteStateEvent(player, true);
-        }
-        if (action.getType().equals("OnPlayerParachuteClose")) {
-            return new PlayerParachuteStateEvent(player, false);
-        }
-        if (action.getType().equals("OnObjectHit")) {
-            WorldObject object = server.getObject(action.getParams()[0].getAsInt());
-            HitType hitType = HitType.get(action.getParams()[1].getAsInt());
-            HitEntity hitEntity = null;
-            int hitId = action.getParams()[2].getAsInt();
-            switch (hitType){
-                case HIT_NPC:
-                    hitEntity = server.getNPC(hitId);
-                    break;
-                case HIT_OBJECT:
-                    if(hitId > 0){
-                        hitEntity = server.getObject(hitId);
-                    }
-                    break;
-                case HIT_VEHICLE:
-                    hitEntity = server.getVehicle(hitId);
-                    break;
-                case HIT_PLAYER:
-                    hitEntity = server.getPlayer(hitId);
-                    break;
-            }
-            Location hitLocation = new Location(action.getParams()[3].getAsDouble(), action.getParams()[4].getAsDouble(), action.getParams()[5].getAsDouble());
-            Vector3d normal = new Vector3d(action.getParams()[6].getAsDouble(), action.getParams()[7].getAsDouble(), action.getParams()[8].getAsDouble());
-            return new ObjectHitEvent(object, hitType, hitEntity, hitLocation, normal);
-        }
-        if (action.getType().equals("OnPlayerBeginEditObject")) {
-            return new PlayerBeginEditObjectEvent(player, server.getObject(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnPlayerEndEditObject")) {
-            return new PlayerEndEditObjectEvent(player, server.getObject(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnLightStreamIn")) {
-            return new LightStreamInEvent(player, server.getLight(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnNPCStreamIn")) {
-            return new NPCStreamInEvent(player, server.getNPC(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnObjectStreamIn")) {
-            return new ObjectStreamInEvent(player, server.getObject(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnPickupStreamIn")) {
-            return new PickupStreamInEvent(player, server.getPickup(action.getParams()[0].getAsInt()));
-        }
-        if (action.getType().equals("OnText3DStreamIn")) {
-            return new Text3DStreamInEvent(player, server.getText3D(action.getParams()[0].getAsInt()));
-        }
-        return null;
+
+        return event;
     }
 
 }
