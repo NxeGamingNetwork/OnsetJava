@@ -7,10 +7,7 @@ import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
-import net.onfirenetwork.onsetjava.api.util.Completable;
-import net.onfirenetwork.onsetjava.api.util.Location;
-import net.onfirenetwork.onsetjava.api.util.Vector2d;
-import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.*;
 
 import java.util.List;
 
@@ -34,6 +31,8 @@ public interface Player extends HitEntity {
     double getArmor();
 
     void setArmor(double armor);
+
+    NetworkStats getNetworkStats();
 
     Location getLocation();
 

@@ -225,12 +225,40 @@ public class SimpleOnsetServer implements OnsetServer {
         call("print", message);
     }
 
+    public int getTickCount() {
+        return call("GetTickCount").get()[0].getAsInt();
+    }
+
+    public int getGameVersion() {
+        return call("GetGameVersion").get()[0].getAsInt();
+    }
+
+    public String getGameVersionString() {
+        return call("GetGameVersionString").get()[0].getAsString();
+    }
+
+    public int getServerTickRate() {
+        return call("GetServerTickRate").get()[0].getAsInt();
+    }
+
     public void shutdown(String message) {
         if (message != null) {
             call("ServerExit", message);
         } else {
             call("ServerExit");
         }
+    }
+
+    public String getName() {
+        return call("GetServerName").get()[0].getAsString();
+    }
+
+    public void setName(String name) {
+        call("SetServerName", name);
+    }
+
+    public int getMaxPlayers() {
+        return call("GetMaxPlayers").get()[0].getAsInt();
     }
 
     public Player getPlayer(int id) {

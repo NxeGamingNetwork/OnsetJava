@@ -11,11 +11,25 @@ public interface OnsetServer {
 
     void print(String text);
 
+    int getTickCount();
+
+    int getGameVersion();
+
+    String getGameVersionString();
+
+    int getServerTickRate();
+
     void shutdown(String message);
 
     default void shutdown() {
         shutdown(null);
     }
+
+    String getName();
+
+    void setName(String name);
+
+    int getMaxPlayers();
 
     Player getPlayer(int id);
 

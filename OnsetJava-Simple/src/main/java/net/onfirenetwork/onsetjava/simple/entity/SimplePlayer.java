@@ -13,10 +13,7 @@ import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
-import net.onfirenetwork.onsetjava.api.util.Completable;
-import net.onfirenetwork.onsetjava.api.util.Location;
-import net.onfirenetwork.onsetjava.api.util.Vector2d;
-import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.*;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.client.SimpleSound;
 import net.onfirenetwork.onsetjava.simple.client.SimpleWebUI;
@@ -100,6 +97,10 @@ public class SimplePlayer implements Player {
 
     public void setArmor(double armor) {
         dimension.getServer().call("SetPlayerArmor", id, armor);
+    }
+
+    public NetworkStats getNetworkStats() {
+        return new NetworkStats(dimension.getServer().call("GetPlayerNetworkStats", id).get()[0].getAsJsonObject());
     }
 
     public void exitVehicle() {
