@@ -338,5 +338,27 @@ public class SimpleOnsetServer implements OnsetServer {
             enableClientEvents("OnCollisionLeave");
         if (eventClass.equals(ResolutionChangeEvent.class))
             enableClientEvents("OnResolutionChange");
+        if (eventClass.equals(PlayerReloadedEvent.class))
+            enableClientEvents("OnPlayerReloaded");
+        if (eventClass.equals(PlayerParachuteLandEvent.class))
+            enableClientEvents("OnPlayerParachuteLand");
+        if (eventClass.equals(PlayerParachuteStateEvent.class))
+            enableClientEvents("OnPlayerParachuteOpen", "OnPlayerParachuteClose");
+        if (eventClass.equals(ObjectHitEvent.class))
+            enableClientEvents("OnObjectHit");
+        if (eventClass.equals(PlayerBeginEditObjectEvent.class))
+            enableClientEvents("OnPlayerBeginEditObject");
+        if (eventClass.equals(PlayerEndEditObjectEvent.class))
+            enableClientEvents("OnPlayerEndEditObject");
+        if (eventClass.equals(LightStreamInEvent.class))
+            enableClientEvents("OnLightStreamIn");
+        if (eventClass.equals(NPCStreamInEvent.class))
+            enableClientEvents("OnNPCStreamIn");
+        if (eventClass.equals(ObjectStreamInEvent.class))
+            enableClientEvents("OnObjectStreamIn");
+        if (eventClass.equals(PickupStreamInEvent.class))
+            enableClientEvents("OnPickupStreamIn");
+        if (eventClass.equals(Text3DStreamInEvent.class))
+            enableClientEvents("OnText3DStreamIn");
     }
 }

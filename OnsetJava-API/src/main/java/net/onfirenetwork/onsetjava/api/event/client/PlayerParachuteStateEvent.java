@@ -10,6 +10,7 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
-public class RenderHUDEvent extends Event {
+public class PlayerParachuteStateEvent extends Event {
     Player player;
+    boolean open;
 }
