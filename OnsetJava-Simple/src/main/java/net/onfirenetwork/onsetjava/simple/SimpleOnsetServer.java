@@ -14,6 +14,8 @@ import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.api.util.Completable;
+import net.onfirenetwork.onsetjava.api.util.NetworkStats;
+import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.simple.adapter.ActionAdapter;
 import net.onfirenetwork.onsetjava.simple.adapter.ActionAdapterListener;
 import net.onfirenetwork.onsetjava.simple.adapter.InboundAction;
@@ -21,6 +23,7 @@ import net.onfirenetwork.onsetjava.simple.adapter.OutboundAction;
 import net.onfirenetwork.onsetjava.simple.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.simple.event.ServerEventTransformer;
 import net.onfirenetwork.onsetjava.simple.plugin.SimplePluginManager;
+import org.javatuples.Triplet;
 
 import java.io.File;
 import java.util.*;
@@ -114,13 +117,13 @@ public class SimpleOnsetServer implements OnsetServer {
         adapter.stop();
     }
 
-    public int nonce() {
+    private int nonce() {
         int nonce = nextNonce;
         nextNonce++;
         return nonce;
     }
 
-    public void processReturn(InboundAction action) {
+    private void processReturn(InboundAction action) {
         if (returnFutures.containsKey(action.getNonce())) {
             Completable<JsonElement[]> future = returnFutures.get(action.getNonce());
             returnFutures.remove(action.getNonce());
@@ -128,7 +131,7 @@ public class SimpleOnsetServer implements OnsetServer {
         }
     }
 
-    public void processCommand(InboundAction action) {
+    private void processCommand(InboundAction action) {
         String command = action.getParams()[0].getAsString().toLowerCase(Locale.GERMAN);
         if (commandMap.containsKey(command)) {
             String[] args = new String[action.getParams().length - 2];
@@ -174,7 +177,7 @@ public class SimpleOnsetServer implements OnsetServer {
         adapter.call(new OutboundAction("Forward", 0, playerId, new Gson().toJson(new OutboundAction(type, nonce, params))));
     }
 
-    public Completable<JsonElement[]> call(String name, Object... params) {
+    private Triplet<Integer, Object[], Completable<JsonElement[]>> prepareCall(String name, Object... params) {
         int nonce = nonce();
         Completable<JsonElement[]> future = new Completable<>();
         returnFutures.put(nonce, future);
@@ -183,21 +186,19 @@ public class SimpleOnsetServer implements OnsetServer {
         for (int i = 0; i < params.length; i++) {
             p[i + 1] = params[i];
         }
-        callAction("Call", nonce, p);
-        return future;
+        return Triplet.with(nonce, p, future);
+    }
+
+    public Completable<JsonElement[]> call(String name, Object... params) {
+        Triplet<Integer, Object[], Completable<JsonElement[]>> tuple = prepareCall(name, params);
+        callAction("Call", tuple.getValue0(), tuple.getValue1());
+        return tuple.getValue2();
     }
 
     public Completable<JsonElement[]> callClient(int playerId, String name, Object... params) {
-        int nonce = nonce();
-        Completable<JsonElement[]> future = new Completable<>();
-        returnFutures.put(nonce, future);
-        Object[] p = new Object[params.length + 1];
-        p[0] = name;
-        for (int i = 0; i < params.length; i++) {
-            p[i + 1] = params[i];
-        }
-        callClientAction(playerId, "Call", nonce, p);
-        return future;
+        Triplet<Integer, Object[], Completable<JsonElement[]>> tuple = prepareCall(name, params);
+        callClientAction(playerId, "Call", tuple.getValue0(), tuple.getValue1());
+        return tuple.getValue2();
     }
 
     public Dimension createDimension() {
@@ -221,8 +222,28 @@ public class SimpleOnsetServer implements OnsetServer {
         call("AddPlayerChatAll", message);
     }
 
+    public void broadcastRange(Vector2d location, int range, String message) {
+        call("AddPlayerChatRange", location.getX(), location.getY(), range, message);
+    }
+
     public void print(String message) {
         call("print", message);
+    }
+
+    public int getTickCount() {
+        return call("GetTickCount").get()[0].getAsInt();
+    }
+
+    public int getGameVersion() {
+        return call("GetGameVersion").get()[0].getAsInt();
+    }
+
+    public String getGameVersionString() {
+        return call("GetGameVersionString").get()[0].getAsString();
+    }
+
+    public int getServerTickRate() {
+        return call("GetServerTickRate").get()[0].getAsInt();
     }
 
     public void shutdown(String message) {
@@ -231,6 +252,22 @@ public class SimpleOnsetServer implements OnsetServer {
         } else {
             call("ServerExit");
         }
+    }
+
+    public String getName() {
+        return call("GetServerName").get()[0].getAsString();
+    }
+
+    public void setName(String name) {
+        call("SetServerName", name);
+    }
+
+    public int getMaxPlayers() {
+        return call("GetMaxPlayers").get()[0].getAsInt();
+    }
+
+    public NetworkStats getNetworkStats() {
+        return new NetworkStats(call("GetNetworkStats").get()[0].getAsJsonObject());
     }
 
     public Player getPlayer(int id) {
@@ -269,96 +306,96 @@ public class SimpleOnsetServer implements OnsetServer {
         return lights.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public void registerHandler(Class<Event> eventClass) {
+    private void registerHandler(Class<Event> eventClass) {
         //Server
         if (eventClass.equals(PlayerJoinEvent.class))
             enableEvents("OnPlayerJoin");
-        if (eventClass.equals(PlayerEnterVehicleEvent.class))
+        else if (eventClass.equals(PlayerEnterVehicleEvent.class))
             enableEvents("OnPlayerEnterVehicle");
-        if (eventClass.equals(PlayerExitVehicleEvent.class))
+        else if (eventClass.equals(PlayerExitVehicleEvent.class))
             enableEvents("OnPlayerLeaveVehicle");
-        if (eventClass.equals(PlayerDeathEvent.class))
+        else if (eventClass.equals(PlayerDeathEvent.class))
             enableEvents("OnPlayerDeath");
-        if (eventClass.equals(PlayerSpawnEvent.class))
+        else if (eventClass.equals(PlayerSpawnEvent.class))
             enableEvents("OnPlayerSpawn");
-        if (eventClass.equals(PlayerPickupEvent.class))
+        else if (eventClass.equals(PlayerPickupEvent.class))
             enableEvents("OnPlayerPickupHit");
-        if (eventClass.equals(VehiclePickupEvent.class))
+        else if (eventClass.equals(VehiclePickupEvent.class))
             enableEvents("OnVehiclePickupHit");
-        if (eventClass.equals(PlayerStateChangeEvent.class))
+        else if (eventClass.equals(PlayerStateChangeEvent.class))
             enableEvents("OnPlayerStateChange");
-        if (eventClass.equals(NPCDeathEvent.class))
+        else if (eventClass.equals(NPCDeathEvent.class))
             enableEvents("OnNPCDeath");
-        if (eventClass.equals(VehicleRespawnEvent.class))
+        else if (eventClass.equals(VehicleRespawnEvent.class))
             enableEvents("OnVehicleRespawn");
-        if (eventClass.equals(PlayerDamageEvent.class))
+        else if (eventClass.equals(PlayerDamageEvent.class))
             enableEvents("OnPlayerDamage");
-        if (eventClass.equals(PlayerChatEvent.class))
+        else if (eventClass.equals(PlayerChatEvent.class))
             enableEvents("OnPlayerChat");
-        if (eventClass.equals(PlayerStreamInEvent.class))
+        else if (eventClass.equals(PlayerStreamInEvent.class))
             enableEvents("OnPlayerStreamIn");
-        if (eventClass.equals(PlayerStreamOutEvent.class))
+        else if (eventClass.equals(PlayerStreamOutEvent.class))
             enableEvents("OnPlayerStreamOut");
-        if (eventClass.equals(VehicleStreamInEvent.class))
+        else if (eventClass.equals(VehicleStreamInEvent.class))
             enableEvents("OnVehicleStreamIn");
-        if (eventClass.equals(VehicleStreamOutEvent.class))
+        else if (eventClass.equals(VehicleStreamOutEvent.class))
             enableEvents("OnVehicleStreamOut");
-        if (eventClass.equals(PlayerWeaponShotEvent.class))
+        else if (eventClass.equals(PlayerWeaponShotEvent.class))
             enableEvents("OnPlayerWeaponShot");
-        if (eventClass.equals(PlayerCommandEvent.class))
+        else if (eventClass.equals(PlayerCommandEvent.class))
             enableEvents("OnPlayerChatCommand");
-        if (eventClass.equals(NPCSpawnEvent.class))
+        else if (eventClass.equals(NPCSpawnEvent.class))
             enableEvents("OnNPCSpawn");
-        if (eventClass.equals(NPCDamageEvent.class))
+        else if (eventClass.equals(NPCDamageEvent.class))
             enableEvents("OnNPCDamage");
-        if (eventClass.equals(NPCReachTargetEvent.class))
+        else if (eventClass.equals(NPCReachTargetEvent.class))
             enableEvents("OnNPCReachTarget");
-        if (eventClass.equals(ClientConnectionEvent.class))
+        else if (eventClass.equals(ClientConnectionEvent.class))
             enableEvents("OnClientConnectionRequest");
-        if (eventClass.equals(PlayerDownloadFileEvent.class))
+        else if (eventClass.equals(PlayerDownloadFileEvent.class))
             enableEvents("OnPlayerDownloadFile");
         //Client
-        if (eventClass.equals(SoundFinishedEvent.class))
+        else if (eventClass.equals(SoundFinishedEvent.class))
             enableClientEvents("OnSoundFinished");
-        if (eventClass.equals(WebReadyEvent.class))
+        else if (eventClass.equals(WebReadyEvent.class))
             enableClientEvents("OnWebLoadComplete");
-        if (eventClass.equals(PlayerCrouchStateEvent.class))
+        else if (eventClass.equals(PlayerCrouchStateEvent.class))
             enableClientEvents("OnPlayerCrouch", "OnPlayerEndCrouch");
-        if (eventClass.equals(PlayerFallStateEvent.class))
+        else if (eventClass.equals(PlayerFallStateEvent.class))
             enableClientEvents("OnPlayerFall", "OnPlayerEndFall");
-        if (eventClass.equals(PlayerSwimStateEvent.class))
+        else if (eventClass.equals(PlayerSwimStateEvent.class))
             enableClientEvents("OnPlayerEnterWater", "OnPlayerLeaveWater");
-        if (eventClass.equals(PlayerSkydiveEvent.class))
+        else if (eventClass.equals(PlayerSkydiveEvent.class))
             enableClientEvents("OnPlayerSkydive");
-        if (eventClass.equals(PlayerSkydiveEndEvent.class))
+        else if (eventClass.equals(PlayerSkydiveEndEvent.class))
             enableClientEvents("OnPlayerCancelSkydive", "OnPlayerSkydiveCrash");
-        if (eventClass.equals(CollisionEnterEvent.class))
+        else if (eventClass.equals(CollisionEnterEvent.class))
             enableClientEvents("OnCollisionEnter");
-        if (eventClass.equals(CollisionLeaveEvent.class))
+        else if (eventClass.equals(CollisionLeaveEvent.class))
             enableClientEvents("OnCollisionLeave");
-        if (eventClass.equals(ResolutionChangeEvent.class))
+        else if (eventClass.equals(ResolutionChangeEvent.class))
             enableClientEvents("OnResolutionChange");
-        if (eventClass.equals(PlayerReloadedEvent.class))
+        else if (eventClass.equals(PlayerReloadedEvent.class))
             enableClientEvents("OnPlayerReloaded");
-        if (eventClass.equals(PlayerParachuteLandEvent.class))
+        else if (eventClass.equals(PlayerParachuteLandEvent.class))
             enableClientEvents("OnPlayerParachuteLand");
-        if (eventClass.equals(PlayerParachuteStateEvent.class))
+        else if (eventClass.equals(PlayerParachuteStateEvent.class))
             enableClientEvents("OnPlayerParachuteOpen", "OnPlayerParachuteClose");
-        if (eventClass.equals(ObjectHitEvent.class))
+        else if (eventClass.equals(ObjectHitEvent.class))
             enableClientEvents("OnObjectHit");
-        if (eventClass.equals(PlayerBeginEditObjectEvent.class))
+        else if (eventClass.equals(PlayerBeginEditObjectEvent.class))
             enableClientEvents("OnPlayerBeginEditObject");
-        if (eventClass.equals(PlayerEndEditObjectEvent.class))
+        else if (eventClass.equals(PlayerEndEditObjectEvent.class))
             enableClientEvents("OnPlayerEndEditObject");
-        if (eventClass.equals(LightStreamInEvent.class))
+        else if (eventClass.equals(LightStreamInEvent.class))
             enableClientEvents("OnLightStreamIn");
-        if (eventClass.equals(NPCStreamInEvent.class))
+        else if (eventClass.equals(NPCStreamInEvent.class))
             enableClientEvents("OnNPCStreamIn");
-        if (eventClass.equals(ObjectStreamInEvent.class))
+        else if (eventClass.equals(ObjectStreamInEvent.class))
             enableClientEvents("OnObjectStreamIn");
-        if (eventClass.equals(PickupStreamInEvent.class))
+        else if (eventClass.equals(PickupStreamInEvent.class))
             enableClientEvents("OnPickupStreamIn");
-        if (eventClass.equals(Text3DStreamInEvent.class))
+        else if (eventClass.equals(Text3DStreamInEvent.class))
             enableClientEvents("OnText3DStreamIn");
     }
 }

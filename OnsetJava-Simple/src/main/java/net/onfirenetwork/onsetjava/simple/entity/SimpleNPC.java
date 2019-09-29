@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.NPC;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
@@ -85,6 +86,11 @@ public class SimpleNPC implements NPC {
     public void remove() {
         dimension.getServer().getNPCs().remove(this);
         dimension.getServer().call("DestroyNPC", id).get();
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension.getServer().call("SetNPCDimension", id, dimension.getId());
+        this.dimension = (SimpleDimension) dimension;
     }
 
     public void setAttribute(String key, Object value) {

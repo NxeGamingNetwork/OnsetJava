@@ -61,6 +61,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
             <groupId>net.onfirenetwork</groupId>
             <artifactId>OnsetJava-API</artifactId>
             <version>1.0</version>

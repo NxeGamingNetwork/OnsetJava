@@ -32,6 +32,8 @@ public interface Vehicle extends HitEntity {
 
     VehicleModel getModel();
 
+    String getModelName();
+
     void setRespawnParams(boolean enabled, int time, boolean repairOnRespawn);
 
     default void setRespawnParams(boolean enabled, int time) {
@@ -93,4 +95,12 @@ public interface Vehicle extends HitEntity {
     void setDamage(int index, double damage);
 
     void setNitro(boolean nitro);
+
+    Player getDriver();
+
+    Player getPassenger(int seat);
+
+    int getSeatCount();
+
+    void setDimension(Dimension dimension);
 }

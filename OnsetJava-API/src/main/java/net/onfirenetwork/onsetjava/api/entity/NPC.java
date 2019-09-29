@@ -41,4 +41,6 @@ public interface NPC extends HitEntity {
     void followVehicle(Vehicle vehicle);
 
     void remove();
+
+    void setDimension(Dimension dimension);
 }

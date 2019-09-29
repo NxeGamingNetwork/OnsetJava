@@ -4,9 +4,11 @@ import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
+import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
@@ -36,9 +38,9 @@ public class SimpleVehicle implements Vehicle {
     }
 
     public Location getLocation() {
-        JsonElement[] loc = dimension.getServer().call("GetVehicleLocation", id).get();
+        Vector3d loc = JsonUtils.toVector(dimension.getServer().call("GetVehicleLocation", id).get());
         double heading = dimension.getServer().call("GetVehicleHeading", id).get()[0].getAsDouble();
-        return new Location(loc[0].getAsDouble(), loc[1].getAsDouble(), loc[2].getAsDouble(), heading);
+        return new Location(loc, heading);
     }
 
     public void setLocation(Location location) {
@@ -47,8 +49,7 @@ public class SimpleVehicle implements Vehicle {
     }
 
     public Vector3d getRotation() {
-        JsonElement[] rot = dimension.getServer().call("GetVehicleRotation", id).get();
-        return new Vector3d(rot[0].getAsDouble(), rot[1].getAsDouble(), rot[2].getAsDouble());
+        return JsonUtils.toVector(dimension.getServer().call("GetVehicleRotation", id).get());
     }
 
     public void setRotation(Vector3d rotation) {
@@ -73,6 +74,10 @@ public class SimpleVehicle implements Vehicle {
 
     public void enterPlayer(Player player) {
         player.enterVehicle(this);
+    }
+
+    public String getModelName() {
+        return dimension.getServer().call("GetVehicleModelName", id).get()[0].getAsString();
     }
 
     public void setRespawnParams(boolean enabled, int time, boolean repairOnRespawn) {
@@ -157,6 +162,25 @@ public class SimpleVehicle implements Vehicle {
 
     public void setNitro(boolean nitro) {
         dimension.getServer().call("AttachVehicleNitro", id, nitro);
+    }
+
+    public Player getDriver() {
+        JsonElement vid = dimension.getServer().call("GetVehicleDriver", id).get()[0];
+        return JsonUtils.preCheckAndRun(vid, () -> dimension.getServer().getPlayer(vid.getAsInt()));
+    }
+
+    public Player getPassenger(int seat) {
+        JsonElement vid = dimension.getServer().call("GetVehiclePassenger", id, seat).get()[0];
+        return JsonUtils.preCheckAndRun(vid, () -> dimension.getServer().getPlayer(vid.getAsInt()));
+    }
+
+    public int getSeatCount() {
+        return dimension.getServer().call("GetVehicleNumberOfSeats", id).get()[0].getAsInt();
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension.getServer().call("SetVehicleDimension", id, dimension.getId());
+        this.dimension = (SimpleDimension) dimension;
     }
 
     public void setAttribute(String key, Object value) {

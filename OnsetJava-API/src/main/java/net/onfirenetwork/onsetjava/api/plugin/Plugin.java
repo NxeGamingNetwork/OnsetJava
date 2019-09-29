@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.api.plugin;
 
 import net.onfirenetwork.onsetjava.api.OnsetJava;
+import net.onfirenetwork.onsetjava.api.OnsetServer;
 
 import java.io.File;
 
@@ -32,4 +33,7 @@ public interface Plugin {
         return "http://asset/java/" + getResourcePath(name);
     }
 
+    default OnsetServer getServer() {
+        return OnsetJava.getServer();
+    }
 }

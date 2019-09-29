@@ -14,4 +14,8 @@ public class Vector3d {
     double x;
     double y;
     double z;
+
+    public Location toLocation() {
+        return new Location(x, y, z);
+    }
 }

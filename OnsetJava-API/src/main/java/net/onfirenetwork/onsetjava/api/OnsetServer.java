@@ -3,19 +3,39 @@ package net.onfirenetwork.onsetjava.api;
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
+import net.onfirenetwork.onsetjava.api.util.NetworkStats;
+import net.onfirenetwork.onsetjava.api.util.Vector2d;
 
 import java.util.List;
 
 public interface OnsetServer {
     void broadcast(String message);
 
+    void broadcastRange(Vector2d location, int range, String message);
+
     void print(String text);
+
+    int getTickCount();
+
+    int getGameVersion();
+
+    String getGameVersionString();
+
+    int getServerTickRate();
 
     void shutdown(String message);
 
     default void shutdown() {
         shutdown(null);
     }
+
+    String getName();
+
+    void setName(String name);
+
+    int getMaxPlayers();
+
+    NetworkStats getNetworkStats();
 
     Player getPlayer(int id);
 

@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.api.entity;
 
 import net.onfirenetwork.onsetjava.api.Dimension;
+import net.onfirenetwork.onsetjava.api.client.PlayerGraphics;
 import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.TextBox;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
@@ -8,10 +9,7 @@ import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
-import net.onfirenetwork.onsetjava.api.util.Completable;
-import net.onfirenetwork.onsetjava.api.util.Location;
-import net.onfirenetwork.onsetjava.api.util.Vector2d;
-import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -37,6 +35,8 @@ public interface Player extends HitEntity {
 
     void setArmor(double armor);
 
+    NetworkStats getNetworkStats();
+
     Location getLocation();
 
     void setLocation(Location location);
@@ -56,6 +56,8 @@ public interface Player extends HitEntity {
     void setSpawnLocation(Location location);
 
     Vehicle getVehicle();
+
+    int getVehicleSeat();
 
     void kick(String message);
 
@@ -123,6 +125,8 @@ public interface Player extends HitEntity {
 
     void setWeaponSlot(int slot);
 
+    WeaponModel getEquippedWeapon();
+
     void setSpectate(boolean spectate);
 
     void resetCamera();
@@ -174,4 +178,18 @@ public interface Player extends HitEntity {
     void setAttribute(String key, Object value);
 
     <T> T getAttribute(String key);
+
+    boolean isPlayerStreamedIn(Player otherPlayer);
+
+    boolean isVehicleStreamedIn(Vehicle vehicle);
+
+    boolean isNPCStreamedIn(NPC npc);
+
+    boolean isObjectStreamedIn(WorldObject object);
+
+    List<Player> getStreamedPlayers();
+
+    List<Vehicle> getStreamedVehicles();
+
+    PlayerGraphics getGraphics();
 }
