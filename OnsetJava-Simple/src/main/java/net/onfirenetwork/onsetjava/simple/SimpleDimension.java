@@ -55,7 +55,7 @@ public class SimpleDimension implements Dimension {
         }else{
             id = server.call("CreateObject", model, location.getX(), location.getY(), location.getZ()).get()[0].getAsInt();
         }
-        WorldObject object = new SimpleWorldObject(this, id);
+        WorldObject object = new SimpleWorldObject(this, id, model);
         server.getObjects().add(object);
         return object;
     }
