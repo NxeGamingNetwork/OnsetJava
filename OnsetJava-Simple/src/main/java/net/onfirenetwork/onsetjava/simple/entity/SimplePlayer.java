@@ -1,6 +1,5 @@
 package net.onfirenetwork.onsetjava.simple.entity;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +20,7 @@ import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.client.SimplePlayerGraphics;
 import net.onfirenetwork.onsetjava.simple.client.SimpleSound;
 import net.onfirenetwork.onsetjava.simple.client.SimpleWebUI;
+import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
 import java.util.*;
 
@@ -130,9 +130,7 @@ public class SimplePlayer implements Player {
 
     public Vehicle getVehicle() {
         JsonElement vid = dimension.getServer().call("GetPlayerVehicle", id).get()[0];
-        if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
-            return null;
-        return dimension.getServer().getVehicle(vid.getAsInt());
+        return JsonUtils.preCheckAndRun(vid, () -> dimension.getServer().getVehicle(vid.getAsInt()));
     }
 
     public int getVehicleSeat() {

@@ -8,6 +8,7 @@ import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
+import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
@@ -166,9 +167,7 @@ public class SimpleVehicle implements Vehicle {
 
     public Player getDriver() {
         JsonElement vid = dimension.getServer().call("GetVehicleDriver", id).get()[0];
-        if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
-            return null;
-        return dimension.getServer().getPlayer(vid.getAsInt());
+        return JsonUtils.preCheckAndRun(vid, () -> dimension.getServer().getPlayer(vid.getAsInt()));
     }
 
     public Player getPassenger(int seat) {
