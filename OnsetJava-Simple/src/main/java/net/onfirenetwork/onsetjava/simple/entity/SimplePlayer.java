@@ -6,30 +6,32 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.client.Sound;
+import net.onfirenetwork.onsetjava.api.client.TextBox;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
+import net.onfirenetwork.onsetjava.api.entity.NPC;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
+import net.onfirenetwork.onsetjava.api.entity.WorldObject;
 import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
-import net.onfirenetwork.onsetjava.api.util.Completable;
-import net.onfirenetwork.onsetjava.api.util.Location;
-import net.onfirenetwork.onsetjava.api.util.Vector2d;
-import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.*;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
+import net.onfirenetwork.onsetjava.simple.client.SimplePlayerGraphics;
 import net.onfirenetwork.onsetjava.simple.client.SimpleSound;
+import net.onfirenetwork.onsetjava.simple.client.SimpleTextBox;
 import net.onfirenetwork.onsetjava.simple.client.SimpleWebUI;
+import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimplePlayer implements Player {
     @Getter
     SimpleDimension dimension;
+    @Getter
+    SimplePlayerGraphics graphics;
     @Getter
     int id;
     @Getter
@@ -40,6 +42,8 @@ public class SimplePlayer implements Player {
     boolean voiceEnabled = true;
     List<WebUI> webuis = new ArrayList<>();
     List<Sound> sounds = new ArrayList<>();
+    @Getter
+    List<TextBox> textBoxes = new ArrayList<>();
     Map<String, Object> attributes = new HashMap<>();
 
     public SimplePlayer(Dimension dimension, int id) {
@@ -69,6 +73,10 @@ public class SimplePlayer implements Player {
     public void setName(String name) {
         this.name = name;
         dimension.getServer().call("SetPlayerName", id, name);
+    }
+
+    public NetworkStats getNetworkStats() {
+        return new NetworkStats(dimension.getServer().call("GetPlayerNetworkStats", id).get()[0].getAsJsonObject());
     }
 
     public Location getLocation() {
@@ -112,6 +120,10 @@ public class SimplePlayer implements Player {
 
     public void enterVehicle(Vehicle vehicle, int seat) {
         dimension.getServer().call("SetPlayerInVehicle", id, vehicle.getId(), seat).get();
+    }
+
+    public int getVehicleSeat() {
+        return dimension.getServer().call("GetPlayerVehicleSeat", id).get()[0].getAsInt();
     }
 
     public void setVoiceEnabled(boolean enable) {
@@ -238,6 +250,10 @@ public class SimplePlayer implements Player {
         dimension.getServer().call("EquipPlayerWeaponSlot", id, slot);
     }
 
+    public WeaponModel getEquippedWeapon() {
+        return WeaponModel.getModel(dimension.getServer().call("GetPlayerEquippedWeapon", id).get()[0].getAsInt());
+    }
+
     public void setSpectate(boolean spectate) {
         dimension.getServer().call("SetPlayerSpectate", id, spectate);
     }
@@ -297,6 +313,40 @@ public class SimplePlayer implements Player {
 
     public double getHeadSize() {
         return dimension.getServer().call("GetPlayerHeadSize", id).get()[0].getAsDouble();
+    }
+
+    public Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification){
+        Completable<TextBox> completable = new Completable<>();
+        dimension.getServer().callClient(id, "CreateTextBox", x, y, text, justification.name().toLowerCase(Locale.ENGLISH)).then(ret -> {
+            TextBox textBox = new SimpleTextBox(this, ret[0].getAsInt());
+            textBoxes.add(textBox);
+            completable.complete(textBox);
+        });
+        return completable;
+    }
+
+    public boolean isPlayerStreamedIn(Player otherPlayer) {
+        return dimension.getServer().call("IsPlayerStreamedIn", id, otherPlayer.getId()).get()[0].getAsBoolean();
+    }
+
+    public boolean isVehicleStreamedIn(Vehicle vehicle) {
+        return dimension.getServer().call("IsVehicleStreamedIn", id, vehicle.getId()).get()[0].getAsBoolean();
+    }
+
+    public boolean isNPCStreamedIn(NPC npc) {
+        return dimension.getServer().call("IsNPCStreamedIn", id, npc.getId()).get()[0].getAsBoolean();
+    }
+
+    public boolean isObjectStreamedIn(WorldObject object) {
+        return dimension.getServer().call("IsObjectStreamedIn", id, object.getId()).get()[0].getAsBoolean();
+    }
+
+    public List<Player> getStreamedPlayers() {
+        return JsonUtils.toList(dimension.getServer().call("GetStreamedPlayersForPlayer", id).get()[0].getAsJsonArray(), e -> dimension.getServer().getPlayer(e.getAsInt()));
+    }
+
+    public List<Vehicle> getStreamedVehicles() {
+        return JsonUtils.toList(dimension.getServer().call("GetStreamedVehiclesForPlayer", id).get()[0].getAsJsonArray(), e -> dimension.getServer().getVehicle(e.getAsInt()));
     }
 
     public void setAttribute(String key, Object value) {
