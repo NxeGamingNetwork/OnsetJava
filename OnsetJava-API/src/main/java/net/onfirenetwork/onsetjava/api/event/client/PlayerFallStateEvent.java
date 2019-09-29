@@ -1,4 +1,4 @@
-package net.onfirenetwork.onsetjava.api.event.server;
+package net.onfirenetwork.onsetjava.api.event.client;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -7,15 +7,10 @@ import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.event.Event;
 
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PlayerChatCommandEvent extends Event {
-    @Getter
+@Getter
+@AllArgsConstructor
+public class PlayerFallStateEvent extends Event {
     Player player;
-    @Getter
-    String command;
-    boolean exists;
-    public boolean doesExist(){
-        return exists;
-    }
+    boolean falling;
 }

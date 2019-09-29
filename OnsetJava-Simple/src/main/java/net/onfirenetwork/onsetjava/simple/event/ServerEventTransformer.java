@@ -141,7 +141,7 @@ public class ServerEventTransformer {
             Player player = server.getPlayer(action.getParams()[0].getAsInt());
             String command = action.getParams()[1].getAsString();
             boolean exists = action.getParams()[2].getAsInt() == 1;
-            return new PlayerChatCommandEvent(player, command, exists);
+            return new PlayerCommandEvent(player, command, exists);
         }
         if(action.getType().equals("OnNPCSpawn")){
             NPC npc = server.getNPC(action.getParams()[0].getAsInt());
@@ -161,6 +161,12 @@ public class ServerEventTransformer {
             String address = action.getParams()[0].getAsString();
             int port = action.getParams()[0].getAsInt();
             return new ClientConnectionEvent(address, port);
+        }
+        if(action.getType().equals("OnPlayerDownloadFile")){
+            Player player = server.getPlayer(action.getParams()[0].getAsInt());
+            String fileName = action.getParams()[1].getAsString();
+            String checkSum = action.getParams()[2].getAsString();
+            return new PlayerDownloadFileEvent(player, fileName, checkSum);
         }
         return null;
     }

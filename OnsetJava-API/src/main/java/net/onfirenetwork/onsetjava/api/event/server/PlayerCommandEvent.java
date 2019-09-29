@@ -7,11 +7,15 @@ import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.event.Event;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Getter
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PlayerCommandEvent extends Event {
+    @Getter
     Player player;
+    @Getter
     String command;
     boolean exists;
+    public boolean doesExist(){
+        return exists;
+    }
 }

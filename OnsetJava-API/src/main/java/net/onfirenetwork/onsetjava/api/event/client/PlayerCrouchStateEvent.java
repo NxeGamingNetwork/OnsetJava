@@ -10,6 +10,7 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
-public class PlayerCrouchEvent extends Event {
+public class PlayerCrouchStateEvent extends Event {
     Player player;
+    boolean crouching;
 }

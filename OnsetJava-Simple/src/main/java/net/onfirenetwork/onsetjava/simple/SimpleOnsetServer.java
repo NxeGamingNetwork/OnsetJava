@@ -9,8 +9,7 @@ import net.onfirenetwork.onsetjava.api.OnsetServer;
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
-import net.onfirenetwork.onsetjava.api.event.client.SoundFinishedEvent;
-import net.onfirenetwork.onsetjava.api.event.client.WebReadyEvent;
+import net.onfirenetwork.onsetjava.api.event.client.*;
 import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
@@ -287,7 +286,7 @@ public class SimpleOnsetServer implements OnsetServer {
             enableEvents("OnVehicleStreamOut");
         if(eventClass.equals(PlayerWeaponShotEvent.class))
             enableEvents("OnPlayerWeaponShot");
-        if(eventClass.equals(PlayerChatCommandEvent.class))
+        if(eventClass.equals(PlayerCommandEvent.class))
             enableEvents("OnPlayerChatCommand");
         if(eventClass.equals(NPCSpawnEvent.class))
             enableEvents("OnNPCSpawn");
@@ -297,10 +296,22 @@ public class SimpleOnsetServer implements OnsetServer {
             enableEvents("OnNPCReachTarget");
         if(eventClass.equals(ClientConnectionEvent.class))
             enableEvents("OnClientConnectionRequest");
+        if(eventClass.equals(PlayerDownloadFileEvent.class))
+            enableEvents("OnPlayerDownloadFile");
         //Client
         if(eventClass.equals(SoundFinishedEvent.class))
             enableClientEvents("OnSoundFinished");
         if(eventClass.equals(WebReadyEvent.class))
             enableClientEvents("OnWebLoadComplete");
+        if(eventClass.equals(PlayerCrouchStateEvent.class))
+            enableClientEvents("OnPlayerCrouch", "OnPlayerEndCrouch");
+        if(eventClass.equals(PlayerFallStateEvent.class))
+            enableClientEvents("OnPlayerFall", "OnPlayerEndFall");
+        if(eventClass.equals(PlayerSwimStateEvent.class))
+            enableClientEvents("OnPlayerEnterWater", "OnPlayerLeaveWater");
+        if(eventClass.equals(PlayerSkydiveEvent.class))
+            enableClientEvents("OnPlayerSkydive");
+        if(eventClass.equals(PlayerSkydiveEndEvent.class))
+            enableClientEvents("OnPlayerCancelSkydive", "OnPlayerSkydiveCrash");
     }
 }
