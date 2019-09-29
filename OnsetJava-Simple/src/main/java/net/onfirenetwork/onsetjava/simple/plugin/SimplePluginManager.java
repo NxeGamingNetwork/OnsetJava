@@ -56,7 +56,7 @@ public class SimplePluginManager implements PluginManager {
                         }
                     }
                     if (mainClass != null) {
-                        Plugin instance = mainClass.newInstance();
+                        Plugin instance = mainClass.getConstructor().newInstance();
                         plugins.add(instance);
                         files.put(instance, file);
                         PluginInfo info = instance.info();
