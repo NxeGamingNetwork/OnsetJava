@@ -313,5 +313,11 @@ public class SimpleOnsetServer implements OnsetServer {
             enableClientEvents("OnPlayerSkydive");
         if(eventClass.equals(PlayerSkydiveEndEvent.class))
             enableClientEvents("OnPlayerCancelSkydive", "OnPlayerSkydiveCrash");
+        if(eventClass.equals(CollisionEnterEvent.class))
+            enableClientEvents("OnCollisionEnter");
+        if(eventClass.equals(CollisionLeaveEvent.class))
+            enableClientEvents("OnCollisionLeave");
+        if (eventClass.equals(ResolutionChangeEvent.class))
+            enableClientEvents("OnResolutionChange");
     }
 }

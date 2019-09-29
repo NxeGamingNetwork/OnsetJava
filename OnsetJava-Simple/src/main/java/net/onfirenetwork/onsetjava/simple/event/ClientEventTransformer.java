@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.simple.event;
 
 import net.onfirenetwork.onsetjava.api.entity.Player;
+import net.onfirenetwork.onsetjava.api.enums.HitType;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.client.*;
 import net.onfirenetwork.onsetjava.simple.adapter.InboundAction;
@@ -46,6 +47,15 @@ public class ClientEventTransformer {
         }
         if(action.getType().equals("OnPlayerSkydiveCrash")){
             return new PlayerSkydiveEndEvent(player, true);
+        }
+        if(action.getType().equals("OnCollisionEnter")){
+            return new CollisionEnterEvent(player, action.getParams()[0].getAsInt(), HitType.get(action.getParams()[1].getAsInt()), action.getParams()[2].getAsInt());
+        }
+        if (action.getType().equals("OnCollisionLeave")){
+            return new CollisionLeaveEvent(player, action.getParams()[0].getAsInt(), HitType.get(action.getParams()[1].getAsInt()), action.getParams()[2].getAsInt());
+        }
+        if (action.getType().equals("OnResolutionChange")){
+            return new ResolutionChangeEvent(player, action.getParams()[0].getAsInt(), action.getParams()[1].getAsInt());
         }
         return null;
     }
