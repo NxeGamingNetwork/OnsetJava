@@ -158,22 +158,22 @@ public class SimpleOnsetServer implements OnsetServer {
         }
     }
 
-    private void enableEvents(String... eventNames) {
+    public void enableEvents(String... eventNames) {
         callAction("RegisterEvents", 0, (Object) eventNames);
     }
 
-    private void enableClientEvents(String... eventNames) {
+    public void enableClientEvents(String... eventNames) {
         enabledClientEvents.addAll(Arrays.asList(eventNames));
         for (Player player : players) {
             callClientAction(player.getId(), "RegisterEvents", 0, (Object) eventNames);
         }
     }
 
-    private void callAction(String type, int nonce, Object... params) {
+    public void callAction(String type, int nonce, Object... params) {
         adapter.call(new OutboundAction(type, nonce, params));
     }
 
-    private void callClientAction(int playerId, String type, int nonce, Object... params) {
+    public void callClientAction(int playerId, String type, int nonce, Object... params) {
         adapter.call(new OutboundAction("Forward", 0, playerId, new Gson().toJson(new OutboundAction(type, nonce, params))));
     }
 
