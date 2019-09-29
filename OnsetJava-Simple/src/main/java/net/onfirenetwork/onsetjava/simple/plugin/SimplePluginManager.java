@@ -10,6 +10,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -104,7 +106,18 @@ public class SimplePluginManager implements PluginManager {
                 break;
             }
         }
+        id = md5(id).substring(0,6);
         return id;
+    }
+
+    private static String md5(String source){
+        try {
+            MessageDigest md = MessageDigest.getInstance("md5");
+            return Base64.getEncoder().encodeToString(md.digest(source.getBytes()));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -5,10 +5,10 @@ import lombok.Getter;
 public class WeaponModel {
 
     public static final WeaponModel FIST = new WeaponModel(1);
-    public static final WeaponModel PISTOL_1 = new WeaponModel(2);
-    public static final WeaponModel PISTOL_2 = new WeaponModel(3);
+    public static final WeaponModel DEAGLE = new WeaponModel(2);
+    public static final WeaponModel M1911 = new WeaponModel(3);
     public static final WeaponModel GLOCK = new WeaponModel(4);
-    public static final WeaponModel PISTOL_4 = new WeaponModel(5);
+    public static final WeaponModel BERETTA = new WeaponModel(5);
     public static final WeaponModel MODERN_SHOTGUN = new WeaponModel(6);
     public static final WeaponModel SHOTGUN = new WeaponModel(7);
     public static final WeaponModel MP5 = new WeaponModel(8);
@@ -18,11 +18,11 @@ public class WeaponModel {
     public static final WeaponModel AK47 = new WeaponModel(12);
     public static final WeaponModel GOLDEN_AK47 = new WeaponModel(13);
     public static final WeaponModel G36 = new WeaponModel(14);
-    public static final WeaponModel RIFLE_4 = new WeaponModel(15);
+    public static final WeaponModel VAL = new WeaponModel(15);
     public static final WeaponModel AKS = new WeaponModel(16);
-    public static final WeaponModel RIFLE_6 = new WeaponModel(17);
+    public static final WeaponModel FAL = new WeaponModel(17);
     public static final WeaponModel MK16 = new WeaponModel(18);
-    public static final WeaponModel RIFLE_8 = new WeaponModel(19);
+    public static final WeaponModel HK416 = new WeaponModel(19);
     public static final WeaponModel AWP = new WeaponModel(20);
 
     @Getter
@@ -34,7 +34,7 @@ public class WeaponModel {
 
     public static WeaponModel[] values(){
         return new WeaponModel[]{
-            FIST, PISTOL_1, PISTOL_2, GLOCK, PISTOL_4, MODERN_SHOTGUN, SHOTGUN, MP5, MAC10, UMP45, M16, AK47, GOLDEN_AK47, G36, RIFLE_4, AKS, RIFLE_6, MK16, RIFLE_8, AWP
+            FIST, DEAGLE, M1911, GLOCK, BERETTA, MODERN_SHOTGUN, SHOTGUN, MP5, MAC10, UMP45, M16, AK47, GOLDEN_AK47, G36, VAL, AKS, FAL, MK16, HK416, AWP
         };
     }
 

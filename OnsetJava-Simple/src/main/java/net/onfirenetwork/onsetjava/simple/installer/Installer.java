@@ -26,8 +26,8 @@ public class Installer {
         JsonArray files = new JsonArray();
         for(File file : getPlugins(pluginFolder)){
             String id = SimplePluginManager.makeResourceId(file.getName());
-            extract(file, new File(packageFolder, "plugin/"+id)).forEach(name -> {
-                files.add("plugin/"+id+"/"+name);
+            extract(file, new File(packageFolder, id)).forEach(name -> {
+                files.add(id+"/"+name);
             });
         }
         makePackageConfig(packageFolder, files);
