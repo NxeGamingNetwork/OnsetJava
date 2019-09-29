@@ -335,18 +335,10 @@ public class SimplePlayer implements Player {
     }
 
     public List<Player> getStreamedPlayers() {
-        List<Player> players = new ArrayList<>();
-        dimension.getServer().call("GetStreamedPlayersForPlayer", id).get()[0].getAsJsonArray().forEach(element -> {
-            players.add(dimension.getServer().getPlayer(element.getAsInt()));
-        });
-        return players;
+        return JsonUtils.toList(dimension.getServer().call("GetStreamedPlayersForPlayer", id).get()[0].getAsJsonArray(), e -> dimension.getServer().getPlayer(e.getAsInt()));
     }
 
     public List<Vehicle> getStreamedVehicles() {
-        List<Vehicle> vehicles = new ArrayList<>();
-        dimension.getServer().call("GetStreamedVehiclesForPlayer", id).get()[0].getAsJsonArray().forEach(element -> {
-            vehicles.add(dimension.getServer().getVehicle(element.getAsInt()));
-        });
-        return vehicles;
+        return JsonUtils.toList(dimension.getServer().call("GetStreamedVehiclesForPlayer", id).get()[0].getAsJsonArray(), e -> dimension.getServer().getVehicle(e.getAsInt()));
     }
 }
