@@ -163,4 +163,12 @@ public interface Player extends HitEntity {
     boolean isPlayerStreamedIn(Player otherPlayer);
 
     boolean isVehicleStreamedIn(Vehicle vehicle);
+
+    boolean isNPCStreamedIn(NPC npc);
+
+    boolean isObjectStreamedIn(WorldObject object);
+
+    List<Player> getStreamedPlayers();
+
+    List<Vehicle> getStreamedVehicles();
 }

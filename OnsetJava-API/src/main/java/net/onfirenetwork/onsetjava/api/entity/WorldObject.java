@@ -46,4 +46,8 @@ public interface WorldObject extends HitEntity {
     void remove();
 
     void setDimension(Dimension dimension);
+
+    boolean isAttached();
+
+    void setRotateAxis(Vector3d rotateAxis);
 }

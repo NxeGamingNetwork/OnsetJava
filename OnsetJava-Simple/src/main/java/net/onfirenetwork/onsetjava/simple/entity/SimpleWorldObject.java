@@ -97,4 +97,12 @@ public class SimpleWorldObject implements WorldObject {
         this.dimension.getServer().call("SetObjectDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
     }
+
+    public boolean isAttached() {
+        return dimension.getServer().call("IsObjectAttached", id).get()[0].getAsBoolean();
+    }
+
+    public void setRotateAxis(Vector3d rotateAxis) {
+        dimension.getServer().call("SetObjectRotateAxis", id, rotateAxis.getX(), rotateAxis.getY(), rotateAxis.getZ());
+    }
 }

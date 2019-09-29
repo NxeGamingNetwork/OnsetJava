@@ -1,5 +1,6 @@
 package net.onfirenetwork.onsetjava.simple.entity;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -7,8 +8,10 @@ import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
+import net.onfirenetwork.onsetjava.api.entity.NPC;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
+import net.onfirenetwork.onsetjava.api.entity.WorldObject;
 import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
@@ -319,5 +322,29 @@ public class SimplePlayer implements Player {
 
     public boolean isVehicleStreamedIn(Vehicle vehicle) {
         return dimension.getServer().call("IsVehicleStreamedIn", id, vehicle.getId()).get()[0].getAsBoolean();
+    }
+
+    public boolean isNPCStreamedIn(NPC npc) {
+        return dimension.getServer().call("IsNPCStreamedIn", id, npc.getId()).get()[0].getAsBoolean();
+    }
+
+    public boolean isObjectStreamedIn(WorldObject object) {
+        return dimension.getServer().call("IsObjectStreamedIn", id, object.getId()).get()[0].getAsBoolean();
+    }
+
+    public List<Player> getStreamedPlayers() {
+        List<Player> players = new ArrayList<>();
+        dimension.getServer().call("GetStreamedPlayersForPlayer", id).get()[0].getAsJsonArray().forEach(element -> {
+            players.add(dimension.getServer().getPlayer(element.getAsInt()));
+        });
+        return players;
+    }
+
+    public List<Vehicle> getStreamedVehicles() {
+        List<Vehicle> vehicles = new ArrayList<>();
+        dimension.getServer().call("GetStreamedVehiclesForPlayer", id).get()[0].getAsJsonArray().forEach(element -> {
+            vehicles.add(dimension.getServer().getVehicle(element.getAsInt()));
+        });
+        return vehicles;
     }
 }

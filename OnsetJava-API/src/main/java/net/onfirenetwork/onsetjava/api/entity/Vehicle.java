@@ -32,6 +32,8 @@ public interface Vehicle extends HitEntity {
 
     VehicleModel getModel();
 
+    String getModelName();
+
     void setRespawnParams(boolean enabled, int time, boolean repairOnRespawn);
 
     default void setRespawnParams(boolean enabled, int time) {

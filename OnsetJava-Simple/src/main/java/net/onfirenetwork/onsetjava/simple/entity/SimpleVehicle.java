@@ -76,6 +76,10 @@ public class SimpleVehicle implements Vehicle {
         player.enterVehicle(this);
     }
 
+    public String getModelName() {
+        return dimension.getServer().call("GetVehicleModelName", id).get()[0].getAsString();
+    }
+
     public void setRespawnParams(boolean enabled, int time, boolean repairOnRespawn) {
         dimension.getServer().call("SetVehicleRespawnParams", id, enabled, time, repairOnRespawn);
     }
