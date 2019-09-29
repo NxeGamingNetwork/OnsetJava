@@ -3,6 +3,10 @@ package net.onfirenetwork.onsetjava.api.entity;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
+import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
+import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
+import net.onfirenetwork.onsetjava.api.enums.PlayerState;
+import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -59,4 +63,34 @@ public interface Player extends HitEntity {
     default Completable<Sound> create3DSound(Location location, String soundFile){
         return create3DSound(location, soundFile, 2500);
     }
+    boolean isTalking();
+    PlayerState getState();
+    int getMovementMode();
+    double getSpeed();
+    boolean isAiming();
+    boolean isReloading();
+    void setWeaponStat(WeaponModel weapon, int index, double value);
+    void setWeapon(int slot, WeaponModel model, int ammo, boolean equip);
+    WeaponModel getWeapon(int slot);
+    WeaponModel getWeapon();
+    int getWeaponSlot();
+    void setWeaponSlot(int slot);
+    void setSpectate(boolean spectate);
+    void resetCamera();
+    boolean isDead();
+    void setRespawnTime(int time);
+    int getRespawnTime();
+    void setModel(CharacterModel model);
+    CharacterModel getModel();
+    String getAddress();
+    int getPing();
+    String getLocale();
+    String getGUID();
+    void startAnimation(CharacterAnimation animation);
+    void stopAnimation();
+    void setParachute(boolean parachute);
+    void setHeadSize(double size);
+    double getHeadSize();
+    void setAttribute(String key, Object value);
+    <T> T getAttribute(String key);
 }

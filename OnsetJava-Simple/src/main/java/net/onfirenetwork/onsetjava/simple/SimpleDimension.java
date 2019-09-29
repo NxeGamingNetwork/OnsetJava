@@ -27,7 +27,7 @@ public class SimpleDimension implements Dimension {
     }
 
     public Vehicle spawnVehicle(Location location, VehicleModel model){
-        Vehicle vehicle = new SimpleVehicle(this, server.call("CreateVehicle", model.getId(), location.getX(), location.getY(), location.getZ()).get()[0].getAsInt());
+        Vehicle vehicle = new SimpleVehicle(this, server.call("CreateVehicle", model.getId(), location.getX(), location.getY(), location.getZ()).get()[0].getAsInt(), model);
         server.getVehicles().add(vehicle);
         return vehicle;
     }
@@ -36,7 +36,7 @@ public class SimpleDimension implements Dimension {
     }
 
     public NPC spawnNPC(Location location, CharacterModel model){
-        NPC npc = new SimpleNPC(this, server.call("CreateNPC", model.getId(), location.getX(), location.getY(), location.getZ(), location.getHeading()).get()[0].getAsInt());
+        NPC npc = new SimpleNPC(this, server.call("CreateNPC", model.getId(), location.getX(), location.getY(), location.getZ(), location.getHeading()).get()[0].getAsInt(), model);
         server.getNPCs().add(npc);
         return npc;
     }

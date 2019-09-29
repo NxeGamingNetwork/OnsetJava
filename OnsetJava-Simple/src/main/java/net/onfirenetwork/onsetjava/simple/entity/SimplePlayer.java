@@ -9,6 +9,10 @@ import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
+import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
+import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
+import net.onfirenetwork.onsetjava.api.enums.PlayerState;
+import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -18,7 +22,9 @@ import net.onfirenetwork.onsetjava.simple.client.SimpleSound;
 import net.onfirenetwork.onsetjava.simple.client.SimpleWebUI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimplePlayer implements Player {
@@ -26,13 +32,15 @@ public class SimplePlayer implements Player {
     SimpleDimension dimension;
     @Getter
     int id;
+    @Getter
+    CharacterModel model = CharacterModel.ORANGE_SHIRT_1;
     String steamId;
     String name;
     @Getter
     boolean voiceEnabled = true;
     List<WebUI> webuis = new ArrayList<>();
     List<Sound> sounds = new ArrayList<>();
-
+    Map<String, Object> attributes = new HashMap<>();
     public SimplePlayer(Dimension dimension, int id){
         this.dimension = (SimpleDimension) dimension;
         this.id = id;
@@ -156,5 +164,93 @@ public class SimplePlayer implements Player {
             completable.complete(sound);
         });
         return completable;
+    }
+    public boolean isTalking(){
+        return dimension.getServer().call("IsPlayerTalking", id).get()[0].getAsBoolean();
+    }
+    public PlayerState getState(){
+        return PlayerState.get(dimension.getServer().call("GetPlayerState", id).get()[0].getAsInt());
+    }
+    public int getMovementMode(){
+        return dimension.getServer().call("GetPlayerMovementMode", id).get()[0].getAsInt();
+    }
+    public double getSpeed(){
+        return dimension.getServer().call("GetPlayerMovementSpeed", id).get()[0].getAsDouble();
+    }
+    public boolean isAiming(){
+        return dimension.getServer().call("IsPlayerAiming", id).get()[0].getAsBoolean();
+    }
+    public boolean isReloading(){
+        return dimension.getServer().call("IsPlayerReloading", id).get()[0].getAsBoolean();
+    }
+    public void setWeaponStat(WeaponModel weapon, int index, double value){
+        dimension.getServer().call("SetPlayerWeaponStat", id, weapon.getId(), index, value);
+    }
+    public void setWeapon(int slot, WeaponModel weapon, int ammo, boolean equip){
+        dimension.getServer().call("SetPlayerWeapon", id, weapon.getId(), ammo, equip, slot);
+    }
+    public WeaponModel getWeapon(int slot){
+        return WeaponModel.getModel(dimension.getServer().call("GetPlayerWeapon", id, slot).get()[0].getAsInt());
+    }
+    public WeaponModel getWeapon(){
+        return WeaponModel.getModel(dimension.getServer().call("GetPlayerWeapon", id).get()[0].getAsInt());
+    }
+    public int getWeaponSlot(){
+        return dimension.getServer().call("GetPlayerEquippedWeaponSlot", id).get()[0].getAsInt();
+    }
+    public void setWeaponSlot(int slot){
+        dimension.getServer().call("EquipPlayerWeaponSlot", id, slot);
+    }
+    public void setSpectate(boolean spectate){
+        dimension.getServer().call("SetPlayerSpectate", id, spectate);
+    }
+    public void resetCamera(){
+        dimension.getServer().call("ResetPlayerCamera", id);
+    }
+    public boolean isDead(){
+        return dimension.getServer().call("IsPlayerDead", id).get()[0].getAsBoolean();
+    }
+    public void setRespawnTime(int time){
+        dimension.getServer().call("SetPlayerRespawnTime", id, time);
+    }
+    public int getRespawnTime(){
+        return dimension.getServer().call("GetPlayerRespawnTime", id).get()[0].getAsInt();
+    }
+    public void setModel(CharacterModel model){
+        this.model = model;
+        dimension.getServer().call("SetPlayerModel", id, model.getId());
+    }
+    public String getAddress(){
+        return dimension.getServer().call("GetPlayerIP", id).get()[0].getAsString();
+    }
+    public int getPing(){
+        return dimension.getServer().call("GetPlayerPing", id).get()[0].getAsInt();
+    }
+    public String getLocale(){
+        return dimension.getServer().call("GetPlayerLocale", id).get()[0].getAsString();
+    }
+    public String getGUID(){
+        return dimension.getServer().call("GetPlayerGUID", id).get()[0].getAsString();
+    }
+    public void startAnimation(CharacterAnimation animation){
+        dimension.getServer().call("SetPlayerAnimation", id, animation.name());
+    }
+    public void stopAnimation(){
+        dimension.getServer().call("SetPlayerAnimation", id, "STOP");
+    }
+    public void setParachute(boolean parachute){
+        dimension.getServer().call("AttachPlayerParachute", id, parachute);
+    }
+    public void setHeadSize(double size){
+        dimension.getServer().call("SetPlayerHeadSize", id, size);
+    }
+    public double getHeadSize(){
+        return dimension.getServer().call("GetPlayerHeadSize", id).get()[0].getAsDouble();
+    }
+    public void setAttribute(String key, Object value){
+        attributes.put(key, value);
+    }
+    public <T> T getAttribute(String key){
+        return (T) attributes.get(key);
     }
 }

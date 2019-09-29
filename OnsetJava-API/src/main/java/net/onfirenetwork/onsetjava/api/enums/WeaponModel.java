@@ -34,7 +34,7 @@ public class WeaponModel {
 
     public static WeaponModel[] values(){
         return new WeaponModel[]{
-
+            FIST, PISTOL_1, PISTOL_2, GLOCK, PISTOL_4, MODERN_SHOTGUN, SHOTGUN, MP5, MAC10, UMP45, M16, AK47, GOLDEN_AK47, G36, RIFLE_4, AKS, RIFLE_6, MK16, RIFLE_8, AWP
         };
     }
 
