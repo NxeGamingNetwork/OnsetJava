@@ -2,6 +2,7 @@ package net.onfirenetwork.onsetjava.api.entity;
 
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.client.Sound;
+import net.onfirenetwork.onsetjava.api.client.TextBox;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
 import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
@@ -13,6 +14,7 @@ import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface Player extends HitEntity {
     int getId();
@@ -152,6 +154,22 @@ public interface Player extends HitEntity {
     void setHeadSize(double size);
 
     double getHeadSize();
+
+    Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification);
+
+    default Completable<TextBox> createTextBox(double x, double y, String text){
+        return createTextBox(x, y, text, TextBox.Justification.LEFT);
+    }
+
+    default Completable<TextBox> createTextBox(Vector2d position, String text, TextBox.Justification justification){
+        return createTextBox(position.getX(), position.getY(), text, justification);
+    }
+
+    default Completable<TextBox> createTextBox(Vector2d position, String text){
+        return createTextBox(position, text, TextBox.Justification.LEFT);
+    }
+
+    List<TextBox> getTextBoxes();
 
     void setAttribute(String key, Object value);
 

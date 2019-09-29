@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.client.Sound;
+import net.onfirenetwork.onsetjava.api.client.TextBox;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
@@ -19,12 +20,11 @@ import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.client.SimpleSound;
+import net.onfirenetwork.onsetjava.simple.client.SimpleTextBox;
 import net.onfirenetwork.onsetjava.simple.client.SimpleWebUI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimplePlayer implements Player {
@@ -40,6 +40,7 @@ public class SimplePlayer implements Player {
     boolean voiceEnabled = true;
     List<WebUI> webuis = new ArrayList<>();
     List<Sound> sounds = new ArrayList<>();
+    List<TextBox> textBoxes = new ArrayList<>();
     Map<String, Object> attributes = new HashMap<>();
 
     public SimplePlayer(Dimension dimension, int id) {
@@ -297,6 +298,20 @@ public class SimplePlayer implements Player {
 
     public double getHeadSize() {
         return dimension.getServer().call("GetPlayerHeadSize", id).get()[0].getAsDouble();
+    }
+
+    public Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification){
+        Completable<TextBox> completable = new Completable<>();
+        dimension.getServer().callClient(id, "CreateTextBox", x, y, text, justification.name().toLowerCase(Locale.ENGLISH)).then(ret -> {
+            TextBox textBox = new SimpleTextBox(this, ret[0].getAsInt());
+            textBoxes.add(textBox);
+            completable.complete(textBox);
+        });
+        return completable;
+    }
+
+    public List<TextBox> getTextBoxes(){
+        return textBoxes;
     }
 
     public void setAttribute(String key, Object value) {
