@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.WorldObject;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
@@ -90,5 +91,12 @@ public class SimpleWorldObject implements WorldObject {
     public void remove() {
         dimension.getServer().getObjects().remove(this);
         dimension.getServer().call("DestroyObject", id).get();
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension.getObjects().remove(this);
+        this.dimension.getServer().call("SetObjectDimension", id, dimension.getId());
+        this.dimension = (SimpleDimension) dimension;
+        this.dimension.getObjects().add(this);
     }
 }

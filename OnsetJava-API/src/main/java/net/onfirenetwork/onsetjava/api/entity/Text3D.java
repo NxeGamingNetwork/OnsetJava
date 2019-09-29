@@ -8,4 +8,6 @@ public interface Text3D {
     Dimension getDimension();
 
     void remove();
+
+    void setDimension(Dimension dimension);
 }

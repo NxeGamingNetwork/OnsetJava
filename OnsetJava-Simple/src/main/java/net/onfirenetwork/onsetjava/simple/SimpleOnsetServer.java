@@ -14,6 +14,8 @@ import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.api.util.Completable;
+import net.onfirenetwork.onsetjava.api.util.NetworkStats;
+import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.simple.adapter.ActionAdapter;
 import net.onfirenetwork.onsetjava.simple.adapter.ActionAdapterListener;
 import net.onfirenetwork.onsetjava.simple.adapter.InboundAction;
@@ -221,6 +223,10 @@ public class SimpleOnsetServer implements OnsetServer {
         call("AddPlayerChatAll", message);
     }
 
+    public void broadcastRange(Vector2d location, int range, String message) {
+        call("AddPlayerChatRange", location.getX(), location.getY(), range, message);
+    }
+
     public void print(String message) {
         call("print", message);
     }
@@ -259,6 +265,10 @@ public class SimpleOnsetServer implements OnsetServer {
 
     public int getMaxPlayers() {
         return call("GetMaxPlayers").get()[0].getAsInt();
+    }
+
+    public NetworkStats getNetworkStats() {
+        return new NetworkStats(call("GetNetworkStats").get()[0].getAsJsonObject());
     }
 
     public Player getPlayer(int id) {

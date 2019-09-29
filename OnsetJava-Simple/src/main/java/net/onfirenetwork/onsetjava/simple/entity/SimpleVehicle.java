@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
@@ -157,6 +158,31 @@ public class SimpleVehicle implements Vehicle {
 
     public void setNitro(boolean nitro) {
         dimension.getServer().call("AttachVehicleNitro", id, nitro);
+    }
+
+    public Player getDriver() {
+        JsonElement vid = dimension.getServer().call("GetVehicleDriver", id).get()[0];
+        if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
+            return null;
+        return dimension.getServer().getPlayer(vid.getAsInt());
+    }
+
+    public Player getPassenger(int seat) {
+        JsonElement vid = dimension.getServer().call("GetVehiclePassenger", id, seat).get()[0];
+        if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
+            return null;
+        return dimension.getServer().getPlayer(vid.getAsInt());
+    }
+
+    public int getSeatCount() {
+        return dimension.getServer().call("GetVehicleNumberOfSeats", id).get()[0].getAsInt();
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension.getVehicles().remove(this);
+        this.dimension.getServer().call("SetVehicleDimension", id, dimension.getId());
+        this.dimension = (SimpleDimension) dimension;
+        this.dimension.getVehicles().add(this);
     }
 
     public void setAttribute(String key, Object value) {

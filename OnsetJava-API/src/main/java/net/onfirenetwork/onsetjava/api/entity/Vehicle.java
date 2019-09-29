@@ -93,4 +93,12 @@ public interface Vehicle extends HitEntity {
     void setDamage(int index, double damage);
 
     void setNitro(boolean nitro);
+
+    Player getDriver();
+
+    Player getPassenger(int seat);
+
+    int getSeatCount();
+
+    void setDimension(Dimension dimension);
 }

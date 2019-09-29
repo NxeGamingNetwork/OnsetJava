@@ -44,4 +44,6 @@ public interface WorldObject extends HitEntity {
     void setAnimatedTexture(String file, int rows, int columns);
 
     void remove();
+
+    void setDimension(Dimension dimension);
 }

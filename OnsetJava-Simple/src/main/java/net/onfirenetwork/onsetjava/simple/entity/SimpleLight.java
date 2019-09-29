@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.Light;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 
@@ -18,5 +19,12 @@ public class SimpleLight implements Light {
     public void remove() {
         dimension.getServer().getLights().remove(this);
         dimension.getServer().call("DestroyLight", id).get();
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension.getLights().remove(this);
+        this.dimension.getServer().call("SetLightDimension", id, dimension.getId());
+        this.dimension = (SimpleDimension) dimension;
+        this.dimension.getLights().add(this);
     }
 }

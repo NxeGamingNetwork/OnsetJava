@@ -13,4 +13,6 @@ public interface Pickup {
     Vector3d getScale();
 
     void remove();
+
+    void setDimension(Dimension dimension);
 }

@@ -3,11 +3,15 @@ package net.onfirenetwork.onsetjava.api;
 import net.onfirenetwork.onsetjava.api.entity.*;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
+import net.onfirenetwork.onsetjava.api.util.NetworkStats;
+import net.onfirenetwork.onsetjava.api.util.Vector2d;
 
 import java.util.List;
 
 public interface OnsetServer {
     void broadcast(String message);
+
+    void broadcastRange(Vector2d location, int range, String message);
 
     void print(String text);
 
@@ -30,6 +34,8 @@ public interface OnsetServer {
     void setName(String name);
 
     int getMaxPlayers();
+
+    NetworkStats getNetworkStats();
 
     Player getPlayer(int id);
 

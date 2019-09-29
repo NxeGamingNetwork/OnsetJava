@@ -8,4 +8,6 @@ public interface Light {
     Dimension getDimension();
 
     void remove();
+
+    void setDimension(Dimension dimension);
 }

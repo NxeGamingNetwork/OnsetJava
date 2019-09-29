@@ -18,10 +18,7 @@ import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.client.SimpleSound;
 import net.onfirenetwork.onsetjava.simple.client.SimpleWebUI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimplePlayer implements Player {
@@ -45,8 +42,10 @@ public class SimplePlayer implements Player {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension = (SimpleDimension) dimension;
+        this.dimension.getPlayers().remove(this);
         this.dimension.getServer().call("SetPlayerDimension", id, dimension.getId()).get();
+        this.dimension = (SimpleDimension) dimension;
+        this.dimension.getPlayers().add(this);
     }
 
     public String getSteamId() {
@@ -129,6 +128,10 @@ public class SimplePlayer implements Player {
         if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
             return null;
         return dimension.getServer().getVehicle(vid.getAsInt());
+    }
+
+    public int getVehicleSeat() {
+        return dimension.getServer().call("GetPlayerVehicleSeat", id).get()[0].getAsInt();
     }
 
     public void kick(String message) {
@@ -239,6 +242,10 @@ public class SimplePlayer implements Player {
         dimension.getServer().call("EquipPlayerWeaponSlot", id, slot);
     }
 
+    public WeaponModel getEquippedWeapon() {
+        return WeaponModel.getModel(dimension.getServer().call("GetPlayerEquippedWeapon", id).get()[0].getAsInt());
+    }
+
     public void setSpectate(boolean spectate) {
         dimension.getServer().call("SetPlayerSpectate", id, spectate);
     }
@@ -306,5 +313,13 @@ public class SimplePlayer implements Player {
 
     public <T> T getAttribute(String key) {
         return (T) attributes.get(key);
+    }
+
+    public boolean isPlayerStreamedIn(Player otherPlayer) {
+        return dimension.getServer().call("IsPlayerStreamedIn", id, otherPlayer.getId()).get()[0].getAsBoolean();
+    }
+
+    public boolean isVehicleStreamedIn(Vehicle vehicle) {
+        return dimension.getServer().call("IsVehicleStreamedIn", id, vehicle.getId()).get()[0].getAsBoolean();
     }
 }

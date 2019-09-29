@@ -54,6 +54,8 @@ public interface Player extends HitEntity {
 
     Vehicle getVehicle();
 
+    int getVehicleSeat();
+
     void kick(String message);
 
     WebUI getWebUI(int id);
@@ -120,6 +122,8 @@ public interface Player extends HitEntity {
 
     void setWeaponSlot(int slot);
 
+    WeaponModel getEquippedWeapon();
+
     void setSpectate(boolean spectate);
 
     void resetCamera();
@@ -155,4 +159,8 @@ public interface Player extends HitEntity {
     void setAttribute(String key, Object value);
 
     <T> T getAttribute(String key);
+
+    boolean isPlayerStreamedIn(Player otherPlayer);
+
+    boolean isVehicleStreamedIn(Vehicle vehicle);
 }
