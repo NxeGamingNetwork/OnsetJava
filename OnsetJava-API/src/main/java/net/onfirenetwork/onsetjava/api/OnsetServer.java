@@ -32,5 +32,6 @@ public interface OnsetServer {
     List<Dimension> getDimensions();
     Dimension createDimension();
     void registerCommand(String name, CommandExecutor executor);
+    void registerKeys(String... keys);
     PluginManager getPluginManager();
 }

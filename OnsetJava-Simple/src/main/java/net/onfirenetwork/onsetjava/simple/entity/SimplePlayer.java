@@ -114,9 +114,6 @@ public class SimplePlayer implements Player {
     public void kick(String message){
         dimension.getServer().call("KickPlayer", id, message);
     }
-    public void registerKeys(String... keys){
-        dimension.getServer().callClientAction(id, "RegisterKeys", 0, (Object) keys);
-    }
     public WebUI getWebUI(int id){
         return webuis.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }

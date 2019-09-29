@@ -23,6 +23,7 @@ public class ServerEventTransformer {
             Player player = new SimplePlayer(OnsetJava.getServer().getDimension(0), action.getParams()[0].getAsInt());
             server.getPlayers().add(player);
             server.callClientAction(player.getId(), "RegisterEvents", 0, server.getEnabledClientEvents());
+            server.callClientAction(player.getId(), "RegisterKeys", 0, server.getRegisteredKeys());
             return new PlayerConnectEvent(player);
         }
         if(action.getType().equals("OnPlayerJoin")){

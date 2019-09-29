@@ -16,7 +16,6 @@ public class ATMListener {
     private Map<Player, WebUI> webUIMap = new HashMap<>();
 
     public void onJoin(PlayerJoinEvent e){
-        e.getPlayer().registerKeys("E");
         e.getPlayer().createWebUI(new Vector2d(0, 0), new Vector2d(800, 600)).then(webUI -> {
             webUI.setVisibility(WebVisibility.HIDDEN);
             webUI.setAlignment(0.5, 0.5);

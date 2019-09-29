@@ -36,7 +36,6 @@ public interface Player extends HitEntity {
     void setSpawnLocation(Location location);
     Vehicle getVehicle();
     void kick(String message);
-    void registerKeys(String... keys);
     WebUI getWebUI(int id);
     List<WebUI> getWebUIs();
     Completable<WebUI> createWebUI(Vector2d position, Vector2d size, int zOrder, int frameRate);

@@ -49,6 +49,8 @@ public class SimpleOnsetServer implements OnsetServer {
     private Map<String, CommandExecutor> commandMap = new HashMap<>();
     @Getter
     private List<String> enabledClientEvents = new ArrayList<>();
+    @Getter
+    private List<String> registeredKeys = new ArrayList<>();
 
     public SimpleOnsetServer(){
         eventBus = new EventBus(this::registerHandler);
@@ -136,6 +138,17 @@ public class SimpleOnsetServer implements OnsetServer {
     public void registerCommand(String name, CommandExecutor executor){
         commandMap.put(name, executor);
         callAction("RegisterCommand", 0, name);
+    }
+
+    public void registerKeys(String... keys){
+        for(String key : keys){
+            if(registeredKeys.contains(key)) {
+                registeredKeys.add(key);
+            }
+        }
+        for(Player player : players){
+            callClientAction(player.getId(), "RegisterKeys", 0, (Object) keys);
+        }
     }
 
     public void enableEvents(String... eventNames){

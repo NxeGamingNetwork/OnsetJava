@@ -11,6 +11,7 @@ public class TestPlugin implements Plugin {
     public void onEnable(){
         OnsetJava.getServer().getEventBus().listen(new ATMListener());
         OnsetJava.getServer().registerCommand("sound", new SoundCommand());
+        OnsetJava.getServer().registerKeys("E");
     }
 
     public PluginInfo info() {
