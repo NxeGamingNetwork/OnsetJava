@@ -4,7 +4,7 @@ declare function load(code: string): [()=>void,string];
 
 namespace OnsetJavaServer {
     let adapter: ActionAdapter;
-    adapter = new ActionAdapter("java -jar D:\\dev\\General\\OnsetJavaAPI\\OnsetJava-Simple\\target\\OnsetJava-Simple-1.0.jar", (type, nonce, params) => {
+    adapter = new ActionAdapter("java -jar OnsetJava-Simple-1.0.jar runtheserver", (type, nonce, params) => {
         if(type === "Execute"){
             let result = load(params[0]);
             pcall(result[0]);

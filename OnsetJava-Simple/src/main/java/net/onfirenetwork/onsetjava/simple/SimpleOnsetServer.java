@@ -289,6 +289,14 @@ public class SimpleOnsetServer implements OnsetServer {
             enableEvents("OnPlayerWeaponShot");
         if(eventClass.equals(PlayerChatCommandEvent.class))
             enableEvents("OnPlayerChatCommand");
+        if(eventClass.equals(NPCSpawnEvent.class))
+            enableEvents("OnNPCSpawn");
+        if(eventClass.equals(NPCDamageEvent.class))
+            enableEvents("OnNPCDamage");
+        if(eventClass.equals(NPCReachTargetEvent.class))
+            enableEvents("OnNPCReachTarget");
+        if(eventClass.equals(ClientConnectionEvent.class))
+            enableEvents("OnClientConnectionRequest");
         //Client
         if(eventClass.equals(SoundFinishedEvent.class))
             enableClientEvents("OnSoundFinished");

@@ -143,6 +143,25 @@ public class ServerEventTransformer {
             boolean exists = action.getParams()[2].getAsInt() == 1;
             return new PlayerChatCommandEvent(player, command, exists);
         }
+        if(action.getType().equals("OnNPCSpawn")){
+            NPC npc = server.getNPC(action.getParams()[0].getAsInt());
+            return new NPCSpawnEvent(npc);
+        }
+        if(action.getType().equals("OnNPCDamage")){
+            NPC npc = server.getNPC(action.getParams()[0].getAsInt());
+            DamageType type = DamageType.get(action.getParams()[1].getAsInt());
+            double amount = action.getParams()[2].getAsDouble();
+            return new NPCDamageEvent(npc, type, amount);
+        }
+        if(action.getType().equals("OnNPCReachTarget")){
+            NPC npc = server.getNPC(action.getParams()[0].getAsInt());
+            return new NPCReachTargetEvent(npc);
+        }
+        if(action.getType().equals("OnClientConnectionRequest")){
+            String address = action.getParams()[0].getAsString();
+            int port = action.getParams()[0].getAsInt();
+            return new ClientConnectionEvent(address, port);
+        }
         return null;
     }
 
