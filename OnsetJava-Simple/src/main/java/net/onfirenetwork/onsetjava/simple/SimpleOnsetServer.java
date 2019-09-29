@@ -23,6 +23,7 @@ import net.onfirenetwork.onsetjava.simple.adapter.OutboundAction;
 import net.onfirenetwork.onsetjava.simple.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.simple.event.ServerEventTransformer;
 import net.onfirenetwork.onsetjava.simple.plugin.SimplePluginManager;
+import org.javatuples.Triplet;
 
 import java.io.File;
 import java.util.*;
@@ -116,13 +117,13 @@ public class SimpleOnsetServer implements OnsetServer {
         adapter.stop();
     }
 
-    public int nonce() {
+    private int nonce() {
         int nonce = nextNonce;
         nextNonce++;
         return nonce;
     }
 
-    public void processReturn(InboundAction action) {
+    private void processReturn(InboundAction action) {
         if (returnFutures.containsKey(action.getNonce())) {
             Completable<JsonElement[]> future = returnFutures.get(action.getNonce());
             returnFutures.remove(action.getNonce());
@@ -130,7 +131,7 @@ public class SimpleOnsetServer implements OnsetServer {
         }
     }
 
-    public void processCommand(InboundAction action) {
+    private void processCommand(InboundAction action) {
         String command = action.getParams()[0].getAsString().toLowerCase(Locale.GERMAN);
         if (commandMap.containsKey(command)) {
             String[] args = new String[action.getParams().length - 2];
@@ -157,26 +158,26 @@ public class SimpleOnsetServer implements OnsetServer {
         }
     }
 
-    public void enableEvents(String... eventNames) {
+    private void enableEvents(String... eventNames) {
         callAction("RegisterEvents", 0, (Object) eventNames);
     }
 
-    public void enableClientEvents(String... eventNames) {
+    private void enableClientEvents(String... eventNames) {
         enabledClientEvents.addAll(Arrays.asList(eventNames));
         for (Player player : players) {
             callClientAction(player.getId(), "RegisterEvents", 0, (Object) eventNames);
         }
     }
 
-    public void callAction(String type, int nonce, Object... params) {
+    private void callAction(String type, int nonce, Object... params) {
         adapter.call(new OutboundAction(type, nonce, params));
     }
 
-    public void callClientAction(int playerId, String type, int nonce, Object... params) {
+    private void callClientAction(int playerId, String type, int nonce, Object... params) {
         adapter.call(new OutboundAction("Forward", 0, playerId, new Gson().toJson(new OutboundAction(type, nonce, params))));
     }
 
-    public Completable<JsonElement[]> call(String name, Object... params) {
+    private Triplet<Integer, Object[], Completable<JsonElement[]>> prepareCall(String name, Object... params) {
         int nonce = nonce();
         Completable<JsonElement[]> future = new Completable<>();
         returnFutures.put(nonce, future);
@@ -185,21 +186,19 @@ public class SimpleOnsetServer implements OnsetServer {
         for (int i = 0; i < params.length; i++) {
             p[i + 1] = params[i];
         }
-        callAction("Call", nonce, p);
-        return future;
+        return Triplet.with(nonce, p, future);
+    }
+
+    public Completable<JsonElement[]> call(String name, Object... params) {
+        Triplet<Integer, Object[], Completable<JsonElement[]>> tuple = prepareCall(name, params);
+        callAction("Call", tuple.getValue0(), tuple.getValue1());
+        return tuple.getValue2();
     }
 
     public Completable<JsonElement[]> callClient(int playerId, String name, Object... params) {
-        int nonce = nonce();
-        Completable<JsonElement[]> future = new Completable<>();
-        returnFutures.put(nonce, future);
-        Object[] p = new Object[params.length + 1];
-        p[0] = name;
-        for (int i = 0; i < params.length; i++) {
-            p[i + 1] = params[i];
-        }
-        callClientAction(playerId, "Call", nonce, p);
-        return future;
+        Triplet<Integer, Object[], Completable<JsonElement[]>> tuple = prepareCall(name, params);
+        callClientAction(playerId, "Call", tuple.getValue0(), tuple.getValue1());
+        return tuple.getValue2();
     }
 
     public Dimension createDimension() {
@@ -307,7 +306,7 @@ public class SimpleOnsetServer implements OnsetServer {
         return lights.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
-    public void registerHandler(Class<Event> eventClass) {
+    private void registerHandler(Class<Event> eventClass) {
         //Server
         if (eventClass.equals(PlayerJoinEvent.class))
             enableEvents("OnPlayerJoin");

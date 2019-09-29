@@ -1,6 +1,8 @@
 package net.onfirenetwork.onsetjava.simple.plugin;
 
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginInfo;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
@@ -17,16 +19,13 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+@RequiredArgsConstructor
 public class SimplePluginManager implements PluginManager {
-
+    @NonNull
     private SimpleOnsetServer server;
     @Getter
     private List<Plugin> plugins = new ArrayList<>();
     private Map<Plugin, File> files = new HashMap<>();
-
-    public SimplePluginManager(SimpleOnsetServer server) {
-        this.server = server;
-    }
 
     public void load(File pluginFolder) {
         new Installer().install(pluginFolder);
