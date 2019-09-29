@@ -40,10 +40,8 @@ public class SimplePickup implements Pickup {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension.getPickups().remove(this);
         this.dimension.getServer().call("SetPickupDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
-        this.dimension.getPickups().add(this);
     }
 
     public void setAttribute(String key, Object value) {

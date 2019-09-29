@@ -94,9 +94,7 @@ public class SimpleWorldObject implements WorldObject {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension.getObjects().remove(this);
         this.dimension.getServer().call("SetObjectDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
-        this.dimension.getObjects().add(this);
     }
 }

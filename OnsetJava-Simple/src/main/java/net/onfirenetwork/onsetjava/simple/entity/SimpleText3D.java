@@ -22,9 +22,7 @@ public class SimpleText3D implements Text3D {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension.getText3Ds().remove(this);
         this.dimension.getServer().call("SetText3DDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
-        this.dimension.getText3Ds().add(this);
     }
 }

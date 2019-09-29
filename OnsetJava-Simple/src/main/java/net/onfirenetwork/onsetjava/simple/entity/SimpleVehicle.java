@@ -179,10 +179,8 @@ public class SimpleVehicle implements Vehicle {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension.getVehicles().remove(this);
         this.dimension.getServer().call("SetVehicleDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
-        this.dimension.getVehicles().add(this);
     }
 
     public void setAttribute(String key, Object value) {

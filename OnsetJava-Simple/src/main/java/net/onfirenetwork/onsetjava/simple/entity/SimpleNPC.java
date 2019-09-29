@@ -89,10 +89,8 @@ public class SimpleNPC implements NPC {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension.getNPCs().remove(this);
         this.dimension.getServer().call("SetNPCDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
-        this.dimension.getNPCs().add(this);
     }
 
     public void setAttribute(String key, Object value) {

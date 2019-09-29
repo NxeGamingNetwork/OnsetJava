@@ -42,10 +42,8 @@ public class SimplePlayer implements Player {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension.getPlayers().remove(this);
         this.dimension.getServer().call("SetPlayerDimension", id, dimension.getId()).get();
         this.dimension = (SimpleDimension) dimension;
-        this.dimension.getPlayers().add(this);
     }
 
     public String getSteamId() {

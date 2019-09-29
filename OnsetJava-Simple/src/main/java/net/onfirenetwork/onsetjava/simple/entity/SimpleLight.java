@@ -22,9 +22,7 @@ public class SimpleLight implements Light {
     }
 
     public void setDimension(Dimension dimension) {
-        this.dimension.getLights().remove(this);
         this.dimension.getServer().call("SetLightDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
-        this.dimension.getLights().add(this);
     }
 }
