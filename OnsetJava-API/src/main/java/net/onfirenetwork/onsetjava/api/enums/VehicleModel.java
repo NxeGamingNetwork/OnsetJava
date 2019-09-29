@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.api.enums;
 
 import lombok.Getter;
+import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 
 public class VehicleModel {
 
@@ -33,6 +34,14 @@ public class VehicleModel {
 
     private VehicleModel(int id){
         this.id = id;
+    }
+
+    public boolean equals(Object other){
+        if(other == null)
+            return false;
+        if(!(other instanceof VehicleModel))
+            return false;
+        return ((VehicleModel) other).id == id;
     }
 
     public static VehicleModel[] values(){

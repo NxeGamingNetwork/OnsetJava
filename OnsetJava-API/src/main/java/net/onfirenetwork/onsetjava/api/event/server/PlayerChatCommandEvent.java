@@ -7,10 +7,15 @@ import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.event.Event;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Getter
 @AllArgsConstructor
-public class PlayerStreamOutEvent extends Event {
-    Player streamed;
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class PlayerChatCommandEvent extends Event {
+    @Getter
     Player player;
+    @Getter
+    String command;
+    boolean exists;
+    public boolean doesExist(){
+        return exists;
+    }
 }

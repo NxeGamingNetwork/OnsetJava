@@ -12,6 +12,6 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 @Getter
 @AllArgsConstructor
 public class VehicleStreamOutEvent extends Event {
-    Vehicle vehicle;
+    Vehicle streamed;
     Player player;
 }

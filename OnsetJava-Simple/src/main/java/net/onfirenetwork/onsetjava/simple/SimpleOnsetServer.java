@@ -252,6 +252,7 @@ public class SimpleOnsetServer implements OnsetServer {
     }
 
     public void registerHandler(Class<Event> eventClass){
+        //Server
         if(eventClass.equals(PlayerJoinEvent.class))
             enableEvents("OnPlayerJoin");
         if(eventClass.equals(PlayerEnterVehicleEvent.class))
@@ -276,6 +277,19 @@ public class SimpleOnsetServer implements OnsetServer {
             enableEvents("OnPlayerDamage");
         if(eventClass.equals(PlayerChatEvent.class))
             enableEvents("OnPlayerChat");
+        if(eventClass.equals(PlayerStreamInEvent.class))
+            enableEvents("OnPlayerStreamIn");
+        if(eventClass.equals(PlayerStreamOutEvent.class))
+            enableEvents("OnPlayerStreamOut");
+        if(eventClass.equals(VehicleStreamInEvent.class))
+            enableEvents("OnVehicleStreamIn");
+        if(eventClass.equals(VehicleStreamOutEvent.class))
+            enableEvents("OnVehicleStreamOut");
+        if(eventClass.equals(PlayerWeaponShotEvent.class))
+            enableEvents("OnPlayerWeaponShot");
+        if(eventClass.equals(PlayerChatCommandEvent.class))
+            enableEvents("OnPlayerChatCommand");
+        //Client
         if(eventClass.equals(SoundFinishedEvent.class))
             enableClientEvents("OnSoundFinished");
         if(eventClass.equals(WebReadyEvent.class))

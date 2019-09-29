@@ -11,6 +11,6 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 @Getter
 @AllArgsConstructor
 public class PlayerStreamInEvent extends Event {
+    Player streamed;
     Player player;
-    Player otherPlayer;
 }

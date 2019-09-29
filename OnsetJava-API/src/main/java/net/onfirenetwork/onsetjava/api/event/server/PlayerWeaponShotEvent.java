@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import net.onfirenetwork.onsetjava.api.entity.HitEntity;
 import net.onfirenetwork.onsetjava.api.entity.Player;
+import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.enums.HitType;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -15,10 +17,10 @@ import net.onfirenetwork.onsetjava.api.util.Vector3d;
 @AllArgsConstructor
 public class PlayerWeaponShotEvent extends Event {
     Player player;
-    int weapon;
+    WeaponModel weapon;
     HitType hitType;
-    int hitId;
-    Vector3d hitPosition;
+    HitEntity hitEntity;
+    Vector3d hitLocation;
     Vector2d startPosition;
-    Vector3d normalPosition;
+    Vector3d hitNormal;
 }

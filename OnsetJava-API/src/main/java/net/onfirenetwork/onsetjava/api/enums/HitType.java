@@ -18,4 +18,13 @@ public enum HitType {
     HIT_WATER(7)
     ;
     int identifier;
+
+    public static HitType get(int value){
+        for(HitType hitType: values()){
+            if(hitType.identifier == value){
+                return hitType;
+            }
+        }
+        return null;
+    }
 }

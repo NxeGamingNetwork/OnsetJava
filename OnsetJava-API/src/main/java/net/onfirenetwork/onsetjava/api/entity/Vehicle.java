@@ -3,7 +3,7 @@ package net.onfirenetwork.onsetjava.api.entity;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.util.Location;
 
-public interface Vehicle {
+public interface Vehicle extends HitEntity {
     int getId();
     Dimension getDimension();
     void remove();

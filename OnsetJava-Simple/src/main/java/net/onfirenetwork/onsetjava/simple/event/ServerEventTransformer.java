@@ -1,14 +1,16 @@
 package net.onfirenetwork.onsetjava.simple.event;
 
 import net.onfirenetwork.onsetjava.api.OnsetJava;
-import net.onfirenetwork.onsetjava.api.entity.NPC;
-import net.onfirenetwork.onsetjava.api.entity.Pickup;
-import net.onfirenetwork.onsetjava.api.entity.Player;
-import net.onfirenetwork.onsetjava.api.entity.Vehicle;
+import net.onfirenetwork.onsetjava.api.entity.*;
+import net.onfirenetwork.onsetjava.api.enums.HitType;
+import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.enums.DamageType;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.event.server.*;
+import net.onfirenetwork.onsetjava.api.util.Location;
+import net.onfirenetwork.onsetjava.api.util.Vector2d;
+import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.SimpleOnsetServer;
 import net.onfirenetwork.onsetjava.simple.adapter.InboundAction;
 import net.onfirenetwork.onsetjava.simple.entity.SimplePlayer;
@@ -88,6 +90,58 @@ public class ServerEventTransformer {
             PlayerState newState = PlayerState.get(action.getParams()[1].getAsInt());
             PlayerState oldState = PlayerState.get(action.getParams()[2].getAsInt());
             return new PlayerStateChangeEvent(player, newState, oldState);
+        }
+        if(action.getType().equals("OnPlayerStreamIn")){
+            Player streamed = server.getPlayer(action.getParams()[0].getAsInt());
+            Player player = server.getPlayer(action.getParams()[1].getAsInt());
+            return new PlayerStreamInEvent(streamed, player);
+        }
+        if(action.getType().equals("OnPlayerStreamOut")){
+            Player streamed = server.getPlayer(action.getParams()[0].getAsInt());
+            Player player = server.getPlayer(action.getParams()[1].getAsInt());
+            return new PlayerStreamOutEvent(streamed, player);
+        }
+        if(action.getType().equals("OnVehicleStreamIn")){
+            Vehicle streamed = server.getVehicle(action.getParams()[0].getAsInt());
+            Player player = server.getPlayer(action.getParams()[1].getAsInt());
+            return new VehicleStreamInEvent(streamed, player);
+        }
+        if(action.getType().equals("OnVehicleStreamOut")){
+            Vehicle streamed = server.getVehicle(action.getParams()[0].getAsInt());
+            Player player = server.getPlayer(action.getParams()[1].getAsInt());
+            return new VehicleStreamOutEvent(streamed, player);
+        }
+        if(action.getType().equals("OnPlayerWeaponShot")){
+            Player player = server.getPlayer(action.getParams()[0].getAsInt());
+            WeaponModel weapon = WeaponModel.getModel(action.getParams()[1].getAsInt());
+            HitType hitType = HitType.get(action.getParams()[2].getAsInt());
+            HitEntity hitEntity = null;
+            int hitId = action.getParams()[3].getAsInt();
+            switch (hitType){
+                case HIT_NPC:
+                    hitEntity = server.getNPC(hitId);
+                    break;
+                case HIT_VEHICLE:
+                    hitEntity = server.getVehicle(hitId);
+                    break;
+                case HIT_OBJECT:
+                    if(hitId > 0)
+                        hitEntity = server.getObject(hitId);
+                    break;
+                case HIT_PLAYER:
+                    hitEntity = server.getPlayer(hitId);
+                    break;
+            }
+            Location location = new Location(action.getParams()[4].getAsInt(), action.getParams()[5].getAsInt(), action.getParams()[6].getAsInt());
+            Vector2d start = new Vector2d(action.getParams()[7].getAsInt(), action.getParams()[8].getAsInt());
+            Vector3d normal = new Vector3d(action.getParams()[9].getAsInt(), action.getParams()[10].getAsInt(), action.getParams()[11].getAsInt());
+            return new PlayerWeaponShotEvent(player, weapon, hitType, hitEntity, location, start, normal);
+        }
+        if(action.getType().equals("OnPlayerChatCommand")){
+            Player player = server.getPlayer(action.getParams()[0].getAsInt());
+            String command = action.getParams()[1].getAsString();
+            boolean exists = action.getParams()[2].getAsInt() == 1;
+            return new PlayerChatCommandEvent(player, command, exists);
         }
         return null;
     }

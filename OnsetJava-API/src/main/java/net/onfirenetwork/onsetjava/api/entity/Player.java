@@ -10,7 +10,7 @@ import net.onfirenetwork.onsetjava.api.util.Vector3d;
 
 import java.util.List;
 
-public interface Player {
+public interface Player extends HitEntity {
     int getId();
     Dimension getDimension();
     void setDimension(Dimension dimension);
