@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.api.entity;
 
 import net.onfirenetwork.onsetjava.api.Dimension;
+import net.onfirenetwork.onsetjava.api.client.PlayerGraphics;
 import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
 import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
@@ -171,4 +172,6 @@ public interface Player extends HitEntity {
     List<Player> getStreamedPlayers();
 
     List<Vehicle> getStreamedVehicles();
+
+    PlayerGraphics getGraphics();
 }

@@ -18,6 +18,7 @@ import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.util.*;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
+import net.onfirenetwork.onsetjava.simple.client.SimplePlayerGraphics;
 import net.onfirenetwork.onsetjava.simple.client.SimpleSound;
 import net.onfirenetwork.onsetjava.simple.client.SimpleWebUI;
 
@@ -27,6 +28,8 @@ import java.util.*;
 public class SimplePlayer implements Player {
     @Getter
     SimpleDimension dimension;
+    @Getter
+    SimplePlayerGraphics graphics;
     @Getter
     int id;
     @Getter
@@ -42,6 +45,7 @@ public class SimplePlayer implements Player {
     public SimplePlayer(Dimension dimension, int id) {
         this.dimension = (SimpleDimension) dimension;
         this.id = id;
+        this.graphics = new SimplePlayerGraphics(this);
     }
 
     public void setDimension(Dimension dimension) {
