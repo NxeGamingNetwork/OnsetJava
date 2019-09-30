@@ -103,19 +103,19 @@ public class SimpleDimension implements Dimension {
         return server.getLights().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
 
-    public void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius, double radialForce){
+    public void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius, double radialForce) {
         server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id, sound, camShakeRadius, radialForce);
     }
 
-    public void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius){
+    public void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius) {
         server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id, sound, camShakeRadius);
     }
 
-    public void createExplosion(Location location, ExplosionType type, boolean sound){
+    public void createExplosion(Location location, ExplosionType type, boolean sound) {
         server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id, sound);
     }
 
-    public void createExplosion(Location location, ExplosionType type){
+    public void createExplosion(Location location, ExplosionType type) {
         server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id);
     }
 

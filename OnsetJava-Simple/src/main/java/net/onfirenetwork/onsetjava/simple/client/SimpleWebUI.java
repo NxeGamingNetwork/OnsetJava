@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
-import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.enums.WebVisibility;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
@@ -25,7 +24,7 @@ public class SimpleWebUI implements WebUI {
     }
 
     public void setUrl(String url) {
-        call( "SetWebURL", id, url);
+        call("SetWebURL", id, url);
     }
 
     public void executeJS(String js) {
@@ -37,7 +36,7 @@ public class SimpleWebUI implements WebUI {
     }
 
     public void setAnchors(double minX, double minY, double maxX, double maxY) {
-        call( "SetWebAnchors", id, minX, minY, maxX, maxY);
+        call("SetWebAnchors", id, minX, minY, maxX, maxY);
     }
 
     public void loadFile(String file) {

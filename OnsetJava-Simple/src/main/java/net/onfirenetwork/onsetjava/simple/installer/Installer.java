@@ -150,7 +150,7 @@ public class Installer {
         return pluginFiles;
     }
 
-    private void transfer(InputStream in, OutputStream out){
+    private void transfer(InputStream in, OutputStream out) {
         try {
             byte[] buffer = new byte[4096];
             int read;
@@ -160,7 +160,9 @@ public class Installer {
             }
             in.close();
             out.close();
-        }catch (Exception ex){ex.printStackTrace();}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

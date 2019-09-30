@@ -314,7 +314,7 @@ public class SimplePlayer implements Player {
         return dimension.getServer().call("GetPlayerHeadSize", id).get()[0].getAsDouble();
     }
 
-    public Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification){
+    public Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification) {
         Completable<TextBox> completable = new Completable<>();
         dimension.getServer().callClient(id, "CreateTextBox", x, y, text, justification.name().toLowerCase(Locale.ENGLISH)).then(ret -> {
             TextBox textBox = new SimpleTextBox(this, ret[0].getAsInt());
@@ -357,19 +357,19 @@ public class SimplePlayer implements Player {
         return playerVehicle;
     }
 
-    public void setWaypoint(int slot, Location location, String text){
+    public void setWaypoint(int slot, Location location, String text) {
         dimension.getServer().callClient(id, "SetWaypoint", slot, text, location.getX(), location.getY(), location.getZ());
     }
 
-    public void removeWaypoint(int slot){
+    public void removeWaypoint(int slot) {
         dimension.getServer().callClient(id, "SetWaypoint", slot, "", 0, 0, 0);
     }
 
-    public void showWeaponInfo(boolean show){
+    public void showWeaponInfo(boolean show) {
         dimension.getServer().callClient(id, "ShowWeaponHUD", show);
     }
 
-    public void showHealthInfo(boolean show){
+    public void showHealthInfo(boolean show) {
         dimension.getServer().callClient(id, "ShowHealthHUD", show);
     }
 

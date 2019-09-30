@@ -14,7 +14,7 @@ public class TestPlugin implements Plugin {
         getServer().getEventBus().listen(new WelcomeListener());
         getServer().registerCommand("sound", new SoundCommand());
         getServer().registerCommand("givew", new GiveWeaponCommand());
-        getServer().registerCommand("dbg", (cmd,player,args) -> {
+        getServer().registerCommand("dbg", (cmd, player, args) -> {
 
         });
         getServer().registerKeys("E");
