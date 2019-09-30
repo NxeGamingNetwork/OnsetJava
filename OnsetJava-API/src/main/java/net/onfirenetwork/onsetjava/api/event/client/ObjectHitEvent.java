@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.entity.HitEntity;
-import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.WorldObject;
 import net.onfirenetwork.onsetjava.api.enums.HitType;
 import net.onfirenetwork.onsetjava.api.event.Event;

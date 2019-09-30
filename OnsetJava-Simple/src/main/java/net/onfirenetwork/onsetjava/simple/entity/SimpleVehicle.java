@@ -8,10 +8,10 @@ import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
-import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
+import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -181,6 +181,10 @@ public class SimpleVehicle implements Vehicle {
     public void setDimension(Dimension dimension) {
         this.dimension.getServer().call("SetVehicleDimension", id, dimension.getId());
         this.dimension = (SimpleDimension) dimension;
+    }
+
+    public Vector3d getVelocity() {
+        return JsonUtils.toVector(dimension.getServer().call("GetVehicleVelocity", id).get());
     }
 
     public void setAttribute(String key, Object value) {

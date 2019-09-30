@@ -14,16 +14,20 @@ public class SimpleTextBox implements TextBox {
     Player player;
     @Getter
     int id;
-    public void setText(String text){
+
+    public void setText(String text) {
         ((SimpleDimension) player.getDimension()).getServer().callClient(player.getId(), "SetTextBoxText", id, text);
     }
-    public void setAlignment(double x, double y){
+
+    public void setAlignment(double x, double y) {
         ((SimpleDimension) player.getDimension()).getServer().callClient(player.getId(), "SetTextBoxAlignment", id, x, y);
     }
-    public void setAnchors(double minX, double minY, double maxX, double maxY){
+
+    public void setAnchors(double minX, double minY, double maxX, double maxY) {
         ((SimpleDimension) player.getDimension()).getServer().callClient(player.getId(), "SetTextBoxAnchors", id, minX, minY, maxX, maxY);
     }
-    public void remove(){
+
+    public void remove() {
         player.getTextBoxes().remove(this);
         ((SimpleDimension) player.getDimension()).getServer().callClient(player.getId(), "DestroyTextBox", id).get();
     }

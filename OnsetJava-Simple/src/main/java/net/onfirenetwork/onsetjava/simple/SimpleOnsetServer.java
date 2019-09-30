@@ -356,7 +356,7 @@ public class SimpleOnsetServer implements OnsetServer {
             enableEvents("OnClientConnectionRequest");
         else if (eventClass.equals(PlayerDownloadFileEvent.class))
             enableEvents("OnPlayerDownloadFile");
-        //Client
+            //Client
         else if (eventClass.equals(SoundFinishedEvent.class))
             enableClientEvents("OnSoundFinished");
         else if (eventClass.equals(WebReadyEvent.class))

@@ -7,7 +7,6 @@ import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginInfo;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.simple.SimpleOnsetServer;
-import net.onfirenetwork.onsetjava.simple.installer.Installer;
 
 import java.io.File;
 import java.net.MalformedURLException;

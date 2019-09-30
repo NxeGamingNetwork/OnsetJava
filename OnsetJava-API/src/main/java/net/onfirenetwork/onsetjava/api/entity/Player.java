@@ -9,7 +9,6 @@ import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.util.*;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public interface Player extends HitEntity {
     int getId();
@@ -158,15 +157,15 @@ public interface Player extends HitEntity {
 
     Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification);
 
-    default Completable<TextBox> createTextBox(double x, double y, String text){
+    default Completable<TextBox> createTextBox(double x, double y, String text) {
         return createTextBox(x, y, text, TextBox.Justification.LEFT);
     }
 
-    default Completable<TextBox> createTextBox(Vector2d position, String text, TextBox.Justification justification){
+    default Completable<TextBox> createTextBox(Vector2d position, String text, TextBox.Justification justification) {
         return createTextBox(position.getX(), position.getY(), text, justification);
     }
 
-    default Completable<TextBox> createTextBox(Vector2d position, String text){
+    default Completable<TextBox> createTextBox(Vector2d position, String text) {
         return createTextBox(position, text, TextBox.Justification.LEFT);
     }
 
@@ -191,6 +190,8 @@ public interface Player extends HitEntity {
     PlayerGraphics getGraphics();
 
     PlayerInput getInput();
+
+    PlayerVehicle getClientVehicle(Vehicle vehicle);
 
     void setWaypoint(int slot, Location location, String text);
 

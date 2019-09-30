@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.Dimension;
+import net.onfirenetwork.onsetjava.api.client.PlayerVehicle;
 import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.TextBox;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
@@ -44,6 +45,7 @@ public class SimplePlayer implements Player {
     @Getter
     List<TextBox> textBoxes = new ArrayList<>();
     Map<String, Object> attributes = new HashMap<>();
+    Map<Vehicle, PlayerVehicle> playerVehicles = new HashMap<>();
 
     public SimplePlayer(Dimension dimension, int id) {
         this.dimension = (SimpleDimension) dimension;
@@ -79,9 +81,9 @@ public class SimplePlayer implements Player {
     }
 
     public Location getLocation() {
-        JsonElement[] loc = dimension.getServer().call("GetPlayerLocation", id).get();
+        Vector3d loc = JsonUtils.toVector(dimension.getServer().call("GetPlayerLocation", id).get());
         double heading = dimension.getServer().call("GetPlayerHeading", id).get()[0].getAsDouble();
-        return new Location(loc[0].getAsDouble(), loc[1].getAsDouble(), loc[2].getAsDouble(), heading);
+        return new Location(loc, heading);
     }
 
     public void setLocation(Location location) {
@@ -136,9 +138,7 @@ public class SimplePlayer implements Player {
 
     public Vehicle getVehicle() {
         JsonElement vid = dimension.getServer().call("GetPlayerVehicle", id).get()[0];
-        if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
-            return null;
-        return dimension.getServer().getVehicle(vid.getAsInt());
+        return JsonUtils.preCheckAndRun(vid, () -> dimension.getServer().getVehicle(vid.getAsInt()));
     }
 
     public void kick(String message) {
@@ -314,7 +314,7 @@ public class SimplePlayer implements Player {
         return dimension.getServer().call("GetPlayerHeadSize", id).get()[0].getAsDouble();
     }
 
-    public Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification){
+    public Completable<TextBox> createTextBox(double x, double y, String text, TextBox.Justification justification) {
         Completable<TextBox> completable = new Completable<>();
         dimension.getServer().callClient(id, "CreateTextBox", x, y, text, justification.name().toLowerCase(Locale.ENGLISH)).then(ret -> {
             TextBox textBox = new SimpleTextBox(this, ret[0].getAsInt());
@@ -348,19 +348,28 @@ public class SimplePlayer implements Player {
         return JsonUtils.toList(dimension.getServer().call("GetStreamedVehiclesForPlayer", id).get()[0].getAsJsonArray(), e -> dimension.getServer().getVehicle(e.getAsInt()));
     }
 
-    public void setWaypoint(int slot, Location location, String text){
+    public PlayerVehicle getClientVehicle(Vehicle vehicle) {
+        if (playerVehicles.containsKey(vehicle)) {
+            return playerVehicles.get(vehicle);
+        }
+        SimplePlayerVehicle playerVehicle = new SimplePlayerVehicle(this, vehicle);
+        playerVehicles.put(vehicle, playerVehicle);
+        return playerVehicle;
+    }
+
+    public void setWaypoint(int slot, Location location, String text) {
         dimension.getServer().callClient(id, "SetWaypoint", slot, text, location.getX(), location.getY(), location.getZ());
     }
 
-    public void removeWaypoint(int slot){
+    public void removeWaypoint(int slot) {
         dimension.getServer().callClient(id, "SetWaypoint", slot, "", 0, 0, 0);
     }
 
-    public void showWeaponInfo(boolean show){
+    public void showWeaponInfo(boolean show) {
         dimension.getServer().callClient(id, "ShowWeaponHUD", show);
     }
 
-    public void showHealthInfo(boolean show){
+    public void showHealthInfo(boolean show) {
         dimension.getServer().callClient(id, "ShowHealthHUD", show);
     }
 

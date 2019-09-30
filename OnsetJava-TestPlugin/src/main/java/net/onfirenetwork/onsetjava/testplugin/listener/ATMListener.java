@@ -17,7 +17,7 @@ public class ATMListener {
     private TestPlugin plugin;
     private Map<Player, WebUI> webUIMap = new HashMap<>();
 
-    public ATMListener(TestPlugin plugin){
+    public ATMListener(TestPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -39,7 +39,7 @@ public class ATMListener {
 
     public void onKeyPress(KeyPressEvent e) {
         if (e.getKey().equals("E")) {
-            e.getPlayer().sendMessage("Ctrl: "+e.isCtrlPressed()+" | Shift: "+e.isShiftPressed());
+            e.getPlayer().sendMessage("Ctrl: " + e.isCtrlPressed() + " | Shift: " + e.isShiftPressed());
             WebUI ui = webUIMap.get(e.getPlayer());
             if (ui.getVisibility() == WebVisibility.HIDDEN) {
                 ui.setVisibility(WebVisibility.VISIBLE);
