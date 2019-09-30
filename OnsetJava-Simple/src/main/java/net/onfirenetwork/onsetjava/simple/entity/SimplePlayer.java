@@ -79,9 +79,9 @@ public class SimplePlayer implements Player {
     }
 
     public Location getLocation() {
-        JsonElement[] loc = dimension.getServer().call("GetPlayerLocation", id).get();
+        Vector3d loc = JsonUtils.toVector(dimension.getServer().call("GetPlayerLocation", id).get());
         double heading = dimension.getServer().call("GetPlayerHeading", id).get()[0].getAsDouble();
-        return new Location(loc[0].getAsDouble(), loc[1].getAsDouble(), loc[2].getAsDouble(), heading);
+        return new Location(loc, heading);
     }
 
     public void setLocation(Location location) {
@@ -136,9 +136,7 @@ public class SimplePlayer implements Player {
 
     public Vehicle getVehicle() {
         JsonElement vid = dimension.getServer().call("GetPlayerVehicle", id).get()[0];
-        if (vid == null || vid.isJsonNull() || vid.getAsInt() == 0)
-            return null;
-        return dimension.getServer().getVehicle(vid.getAsInt());
+        return JsonUtils.preCheckAndRun(vid, () -> dimension.getServer().getVehicle(vid.getAsInt()));
     }
 
     public void kick(String message) {
