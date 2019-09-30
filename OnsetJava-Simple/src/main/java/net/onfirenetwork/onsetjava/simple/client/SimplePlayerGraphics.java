@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.client.PlayerGraphics;
+import net.onfirenetwork.onsetjava.api.enums.PostEffect;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -123,6 +124,16 @@ public class SimplePlayerGraphics implements PlayerGraphics {
 
     public void stopCameraShake(){
         call("StopCameraShake");
+    }
+
+    public void setPostEffect(PostEffect effect, float... value){
+        Object[] params = new Object[2+value.length];
+        params[0] = effect.getCategory();
+        params[1] = effect.getSetting();
+        for(int i=0; i<value.length; i++){
+            params[i+2] = value[i];
+        }
+        call("SetPostEffect", params);
     }
 
     private Completable<JsonElement[]> call(String name, Object... params) {

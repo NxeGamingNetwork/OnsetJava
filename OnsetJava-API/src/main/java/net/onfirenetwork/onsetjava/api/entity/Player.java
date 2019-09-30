@@ -192,4 +192,13 @@ public interface Player extends HitEntity {
     List<Vehicle> getStreamedVehicles();
 
     PlayerGraphics getGraphics();
+
+    void setWaypoint(int slot, Location location, String text);
+
+    void removeWaypoint(int slot);
+
+    void showWeaponInfo(boolean show);
+
+    void showHealthInfo(boolean show);
+
 }

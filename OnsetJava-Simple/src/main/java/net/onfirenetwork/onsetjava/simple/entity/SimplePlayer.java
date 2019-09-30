@@ -349,6 +349,22 @@ public class SimplePlayer implements Player {
         return JsonUtils.toList(dimension.getServer().call("GetStreamedVehiclesForPlayer", id).get()[0].getAsJsonArray(), e -> dimension.getServer().getVehicle(e.getAsInt()));
     }
 
+    public void setWaypoint(int slot, Location location, String text){
+        dimension.getServer().callClient(id, "SetWaypoint", slot, text, location.getX(), location.getY(), location.getZ());
+    }
+
+    public void removeWaypoint(int slot){
+        dimension.getServer().callClient(id, "SetWaypoint", slot, "", 0, 0, 0);
+    }
+
+    public void showWeaponInfo(boolean show){
+        dimension.getServer().callClient(id, "ShowWeaponHUD", show);
+    }
+
+    public void showHealthInfo(boolean show){
+        dimension.getServer().callClient(id, "ShowHealthHUD", show);
+    }
+
     public void setAttribute(String key, Object value) {
         attributes.put(key, value);
     }

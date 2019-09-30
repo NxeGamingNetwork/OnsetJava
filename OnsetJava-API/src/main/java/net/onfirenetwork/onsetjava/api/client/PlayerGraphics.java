@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.api.client;
 
 import net.onfirenetwork.onsetjava.api.entity.Player;
+import net.onfirenetwork.onsetjava.api.enums.PostEffect;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -52,5 +53,8 @@ public interface PlayerGraphics {
     void playCameraShake(double duration);
 
     void stopCameraShake();
+
+    void setPostEffect(PostEffect effect, float... value);
+
 
 }
