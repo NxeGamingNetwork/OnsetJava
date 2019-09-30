@@ -14,6 +14,9 @@ public class TestPlugin implements Plugin {
         getServer().getEventBus().listen(new WelcomeListener());
         getServer().registerCommand("sound", new SoundCommand());
         getServer().registerCommand("givew", new GiveWeaponCommand());
+        getServer().registerCommand("dist", (command, player, args) -> {
+            player.sendMessage("Distance: "+player.getGraphics().getCameraDistance());
+        });
         getServer().registerKeys("E");
     }
 

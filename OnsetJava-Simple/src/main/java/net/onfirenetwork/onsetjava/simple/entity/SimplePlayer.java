@@ -31,7 +31,7 @@ public class SimplePlayer implements Player {
     @Getter
     SimpleDimension dimension;
     @Getter
-    SimplePlayerGraphics graphics;
+    SimplePlayerGraphics graphics = new SimplePlayerGraphics(this);
     @Getter
     int id;
     @Getter

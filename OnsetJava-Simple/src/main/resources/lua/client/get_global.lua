@@ -1,4 +1,7 @@
 function get_global(unused, name)
+    if _ENV[name] ~= nil then
+        return _ENV[name]
+    end
     if name == "CreateSound" then
         return CreateSound
     end
