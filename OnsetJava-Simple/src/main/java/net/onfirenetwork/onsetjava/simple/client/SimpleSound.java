@@ -10,7 +10,6 @@ import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.SimpleOnsetServer;
 
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimpleSound implements Sound {
     Player player;
@@ -20,6 +19,11 @@ public class SimpleSound implements Sound {
     float volume = 1;
     @Getter
     float pitch = 1;
+
+    public SimpleSound(Player player, int id){
+        this.player = player;
+        this.id = id;
+    }
 
     public void setVolume(float volume){
         SimpleOnsetServer server = ((SimpleDimension) player.getDimension()).getServer();

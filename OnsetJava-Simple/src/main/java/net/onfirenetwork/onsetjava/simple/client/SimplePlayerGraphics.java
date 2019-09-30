@@ -35,23 +35,6 @@ public class SimplePlayerGraphics implements PlayerGraphics {
         call("SetPlayerFOV", fov);
     }
 
-    public void showChat(boolean show) {
-        call("ShowChat", show);
-    }
-
-    public void setChatLocation(Vector2d location) {
-        this.chatLocation = location;
-        call("SetChatLocation", location.getX(), location.getY());
-    }
-
-    public Vector2d getChatLocation() {
-        if (chatLocation == null) {
-            JsonElement[] returns = call("GetChatLocation").get();
-            chatLocation = new Vector2d(returns[0].getAsInt(), returns[1].getAsInt());
-        }
-        return chatLocation;
-    }
-
     public Vector2d getScreenSize() {
         JsonElement[] returns = call("GetScreenSize").get();
         return new Vector2d(returns[0].getAsInt(), returns[1].getAsInt());

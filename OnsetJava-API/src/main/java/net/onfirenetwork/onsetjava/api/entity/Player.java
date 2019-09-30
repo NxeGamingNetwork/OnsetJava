@@ -1,10 +1,7 @@
 package net.onfirenetwork.onsetjava.api.entity;
 
 import net.onfirenetwork.onsetjava.api.Dimension;
-import net.onfirenetwork.onsetjava.api.client.PlayerGraphics;
-import net.onfirenetwork.onsetjava.api.client.Sound;
-import net.onfirenetwork.onsetjava.api.client.TextBox;
-import net.onfirenetwork.onsetjava.api.client.WebUI;
+import net.onfirenetwork.onsetjava.api.client.*;
 import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
 import net.onfirenetwork.onsetjava.api.enums.PlayerState;
@@ -192,6 +189,8 @@ public interface Player extends HitEntity {
     List<Vehicle> getStreamedVehicles();
 
     PlayerGraphics getGraphics();
+
+    PlayerInput getInput();
 
     void setWaypoint(int slot, Location location, String text);
 
