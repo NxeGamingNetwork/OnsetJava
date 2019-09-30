@@ -183,6 +183,10 @@ public class SimpleVehicle implements Vehicle {
         this.dimension = (SimpleDimension) dimension;
     }
 
+    public Vector3d getVelocity() {
+        return JsonUtils.toVector(dimension.getServer().call("GetVehicleVelocity", id).get());
+    }
+
     public void setAttribute(String key, Object value) {
         attributes.put(key, value);
     }

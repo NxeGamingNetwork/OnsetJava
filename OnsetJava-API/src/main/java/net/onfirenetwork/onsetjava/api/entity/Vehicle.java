@@ -103,4 +103,6 @@ public interface Vehicle extends HitEntity {
     int getSeatCount();
 
     void setDimension(Dimension dimension);
+
+    Vector3d getVelocity();
 }
