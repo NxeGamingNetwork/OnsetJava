@@ -36,7 +36,7 @@ public class SimplePlayerInput implements PlayerInput {
 
     public Completable<Boolean> isChatFocused(){
         Completable<Boolean> completable = new Completable<>();
-        call("IsChatFocused").then(ret -> completable.complete(ret[0].getAsBoolean()));
+        call("IsChatFocus").then(ret -> completable.complete(ret[0].getAsBoolean()));
         return completable;
     }
 
