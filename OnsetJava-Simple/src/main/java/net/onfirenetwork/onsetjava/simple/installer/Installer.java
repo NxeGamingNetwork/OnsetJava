@@ -8,6 +8,7 @@ import net.onfirenetwork.onsetjava.simple.plugin.SimplePluginManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -96,14 +97,7 @@ public class Installer {
             mkdir(out.getAbsoluteFile().getParentFile());
             InputStream in = getClass().getClassLoader().getResourceAsStream(name);
             FileOutputStream fos = new FileOutputStream(out);
-            while (in.available() > 0) {
-                byte[] data = new byte[Math.min(4096, in.available())];
-                in.read(data);
-                fos.write(data);
-            }
-            in.close();
-            fos.flush();
-            fos.close();
+            transfer(in, fos);
         } catch (Exception ex) {
         }
     }
@@ -123,14 +117,7 @@ public class Installer {
                 mkdir(targetFile.getAbsoluteFile().getParentFile());
                 InputStream in = jf.getInputStream(element);
                 FileOutputStream fos = new FileOutputStream(targetFile);
-                while (in.available() > 0) {
-                    byte[] data = new byte[Math.min(4096, in.available())];
-                    in.read(data);
-                    fos.write(data);
-                }
-                in.close();
-                fos.flush();
-                fos.close();
+                transfer(in, fos);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -161,6 +148,19 @@ public class Installer {
             pluginFiles.add(file);
         }
         return pluginFiles;
+    }
+
+    private void transfer(InputStream in, OutputStream out){
+        try {
+            byte[] buffer = new byte[4096];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+                out.flush();
+            }
+            in.close();
+            out.close();
+        }catch (Exception ex){ex.printStackTrace();}
     }
 
 }
