@@ -106,10 +106,12 @@ public class SimpleOnsetServer implements OnsetServer {
         }
         for (Plugin plugin : pluginManager.getPlugins()) {
             plugin.onEnable();
+            print("Enabled "+pluginManager.getInfo(plugin));
         }
         adapter.startSync();
         for (Plugin plugin : pluginManager.getPlugins()) {
             plugin.onDisable();
+            print("Disabled "+pluginManager.getInfo(plugin));
         }
     }
 

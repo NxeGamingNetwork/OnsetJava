@@ -10,5 +10,7 @@ public interface PluginManager {
 
     File getFile(Plugin plugin);
 
+    PluginInfo getInfo(Plugin plugin);
+
     String getResourceId(Plugin plugin);
 }

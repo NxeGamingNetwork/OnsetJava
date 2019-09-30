@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.experimental.UtilityClass;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.Vector3i;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,10 @@ public class JsonUtils {
 
     public static Vector3d toVector(JsonElement[] elements) {
         return new Vector3d(elements[0].getAsDouble(), elements[1].getAsDouble(), elements[2].getAsDouble());
+    }
+
+    public static Vector3i toVector3i(JsonElement[] elements) {
+        return new Vector3i(elements[0].getAsInt(), elements[1].getAsInt(), elements[2].getAsInt());
     }
 
     public static <T> List<T> toList(JsonArray array, Function<JsonElement, ? extends T> transformer) {

@@ -9,6 +9,7 @@ import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.enums.HitType;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.event.Event;
+import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 
@@ -20,7 +21,7 @@ public class PlayerWeaponShotEvent extends Event {
     WeaponModel weapon;
     HitType hitType;
     HitEntity hitEntity;
-    Vector3d hitLocation;
+    Location hitLocation;
     Vector2d startPosition;
     Vector3d hitNormal;
 }

@@ -101,7 +101,7 @@ public class ClientEventTransformer {
                         hitEntity = server.getPlayer(hitId);
                         break;
                 }
-                Location hitLocation = new Location(action.getParams()[3].getAsDouble(), action.getParams()[4].getAsDouble(), action.getParams()[5].getAsDouble());
+                Location hitLocation = new Location(action.getParams()[3].getAsInt(), action.getParams()[4].getAsInt(), action.getParams()[5].getAsInt());
                 Vector3d normal = new Vector3d(action.getParams()[6].getAsDouble(), action.getParams()[7].getAsDouble(), action.getParams()[8].getAsDouble());
                 event = new ObjectHitEvent(object, hitType, hitEntity, hitLocation, normal);
                 break;

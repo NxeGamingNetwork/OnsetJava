@@ -30,7 +30,7 @@ public class SimpleWorldObject implements WorldObject {
     }
 
     public Location getLocation() {
-        return JsonUtils.toVector(dimension.getServer().call("GetObjectLocation", id).get()).toLocation();
+        return JsonUtils.toVector3i(dimension.getServer().call("GetObjectLocation", id).get()).toLocation();
     }
 
     public void setRotation(Vector3d rotation) {

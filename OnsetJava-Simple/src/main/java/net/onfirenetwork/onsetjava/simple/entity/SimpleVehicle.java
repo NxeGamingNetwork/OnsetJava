@@ -10,6 +10,7 @@ import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.Vector3i;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
@@ -38,7 +39,7 @@ public class SimpleVehicle implements Vehicle {
     }
 
     public Location getLocation() {
-        Vector3d loc = JsonUtils.toVector(dimension.getServer().call("GetVehicleLocation", id).get());
+        Vector3i loc = JsonUtils.toVector3i(dimension.getServer().call("GetVehicleLocation", id).get());
         double heading = dimension.getServer().call("GetVehicleHeading", id).get()[0].getAsDouble();
         return new Location(loc, heading);
     }

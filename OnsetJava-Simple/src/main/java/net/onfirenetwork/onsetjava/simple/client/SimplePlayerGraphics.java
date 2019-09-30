@@ -51,7 +51,7 @@ public class SimplePlayerGraphics implements PlayerGraphics {
 
     public Completable<Location> getCameraLocation() {
         Completable<Location> completable = new Completable<>();
-        call("GetPlayerCameraLocation").then(ret -> completable.complete(new Location(ret[0].getAsDouble(), ret[1].getAsDouble(), ret[2].getAsDouble())));
+        call("GetPlayerCameraLocation").then(ret -> completable.complete(new Location(ret[0].getAsInt(), ret[1].getAsInt(), ret[2].getAsInt())));
         return completable;
     }
 

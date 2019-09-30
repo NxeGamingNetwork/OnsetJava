@@ -81,7 +81,7 @@ public class SimplePlayer implements Player {
     }
 
     public Location getLocation() {
-        Vector3d loc = JsonUtils.toVector(dimension.getServer().call("GetPlayerLocation", id).get());
+        Vector3i loc = JsonUtils.toVector3i(dimension.getServer().call("GetPlayerLocation", id).get());
         double heading = dimension.getServer().call("GetPlayerHeading", id).get()[0].getAsDouble();
         return new Location(loc, heading);
     }

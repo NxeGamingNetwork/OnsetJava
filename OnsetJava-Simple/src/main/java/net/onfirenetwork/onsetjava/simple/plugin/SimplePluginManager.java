@@ -3,6 +3,7 @@ package net.onfirenetwork.onsetjava.simple.plugin;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.onfirenetwork.onsetjava.api.OnsetJava;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginInfo;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
@@ -24,6 +25,7 @@ public class SimplePluginManager implements PluginManager {
     private SimpleOnsetServer server;
     @Getter
     private List<Plugin> plugins = new ArrayList<>();
+    private Map<Plugin, PluginInfo> infos = new HashMap<>();
     private Map<Plugin, File> files = new HashMap<>();
 
     public void load(File pluginFolder) {
@@ -60,15 +62,51 @@ public class SimplePluginManager implements PluginManager {
                         Plugin instance = mainClass.getConstructor().newInstance();
                         plugins.add(instance);
                         files.put(instance, file);
-                        PluginInfo info = instance.info();
-                        instance.onLoad();
-                        server.print("Loaded " + info);
+                        infos.put(instance, instance.info());
                     }
                 } catch (Exception ex) {
                     server.print("Failed to load '" + file.getName() + "'!");
                 }
             }
         } catch (MalformedURLException ex) {
+        }
+        int lastSize = -1;
+        List<String> loaded = new ArrayList<>();
+        while (loaded.size() < plugins.size() && lastSize != loaded.size()){
+            for(Plugin plugin : plugins){
+                PluginInfo info = infos.get(plugin);
+                if(loaded.contains(info.getName()))
+                    continue;
+                boolean con = false;
+                for(String d : info.getDependencies()){
+                    if(!loaded.contains(d)){
+                        con = true;
+                        break;
+                    }
+                }
+                if(con)
+                    continue;
+                plugin.onLoad();
+                loaded.add(info.getName());
+            }
+            lastSize = loaded.size();
+        }
+        if(loaded.size() < plugins.size()){
+            for(Plugin plugin : new ArrayList<>(plugins)){
+                PluginInfo info = infos.get(plugin);
+                if(!loaded.contains(info.getName())){
+                    List<String> missing = new ArrayList<>();
+                    for(String d : info.getDependencies()){
+                        if(!loaded.contains(d)){
+                            missing.add(d);
+                        }
+                    }
+                    plugins.remove(plugin);
+                    infos.remove(plugin);
+                    files.remove(plugin);
+                    OnsetJava.getServer().print("Could not load '"+info.getName()+"' (missing: "+String.join(", ", missing)+")");
+                }
+            }
         }
     }
 
@@ -78,6 +116,10 @@ public class SimplePluginManager implements PluginManager {
 
     public File getFile(Plugin plugin) {
         return files.get(plugin);
+    }
+
+    public PluginInfo getInfo(Plugin plugin){
+        return infos.get(plugin);
     }
 
     public String getResourceId(Plugin plugin) {

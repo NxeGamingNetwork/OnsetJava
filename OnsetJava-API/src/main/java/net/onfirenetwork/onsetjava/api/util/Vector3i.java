@@ -10,8 +10,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
-public class Vector3d {
-    double x;
-    double y;
-    double z;
+public class Vector3i {
+    int x;
+    int y;
+    int z;
+    public Location toLocation() {
+        return new Location(x, y, z);
+    }
 }

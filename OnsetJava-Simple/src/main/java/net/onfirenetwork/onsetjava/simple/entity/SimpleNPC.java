@@ -35,7 +35,7 @@ public class SimpleNPC implements NPC {
     public Location getLocation() {
         JsonElement[] ret = dimension.getServer().call("GetNPCLocation", id).get();
         double heading = dimension.getServer().call("GetNPCHeading", id).get()[0].getAsDouble();
-        return new Location(ret[0].getAsDouble(), ret[1].getAsDouble(), ret[2].getAsDouble(), heading);
+        return new Location(ret[0].getAsInt(), ret[1].getAsInt(), ret[2].getAsInt(), heading);
     }
 
     public void setLocation(Location location) {
