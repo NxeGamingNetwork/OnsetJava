@@ -310,6 +310,8 @@ public class SimpleOnsetServer implements OnsetServer {
         //Server
         if (eventClass.equals(PlayerJoinEvent.class))
             enableEvents("OnPlayerJoin");
+        if (eventClass.equals(PlayerAuthEvent.class))
+            enableEvents("OnPlayerSteamAuth");
         else if (eventClass.equals(PlayerEnterVehicleEvent.class))
             enableEvents("OnPlayerEnterVehicle");
         else if (eventClass.equals(PlayerExitVehicleEvent.class))

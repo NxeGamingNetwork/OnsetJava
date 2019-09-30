@@ -44,7 +44,7 @@ public class ServerEventTransformer {
             }
             case "OnPlayerSteamAuth": {
                 Player player = server.getPlayer(action.getParams()[0].getAsInt());
-                event = new PlayerQuitEvent(player);
+                event = new PlayerAuthEvent(player);
                 break;
             }
             case "OnPlayerChat": {
