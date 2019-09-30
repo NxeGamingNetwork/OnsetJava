@@ -296,7 +296,15 @@ do
                 "OnKeyPress",
                 function(key)
                     if __TS__ArrayIndexOf(keys, key) > -1 then
-                        adapter:call("OnKeyPress", 0, {key})
+                        adapter:call(
+                            "OnKeyPress",
+                            0,
+                            {
+                                key,
+                                IsCtrlPressed(),
+                                IsShiftPressed()
+                            }
+                        )
                     end
                 end
             )
@@ -304,7 +312,15 @@ do
                 "OnKeyRelease",
                 function(key)
                     if __TS__ArrayIndexOf(keys, key) > -1 then
-                        adapter:call("OnKeyRelease", 0, {key})
+                        adapter:call(
+                            "OnKeyRelease",
+                            0,
+                            {
+                                key,
+                                IsCtrlPressed(),
+                                IsShiftPressed()
+                            }
+                        )
                     end
                 end
             )

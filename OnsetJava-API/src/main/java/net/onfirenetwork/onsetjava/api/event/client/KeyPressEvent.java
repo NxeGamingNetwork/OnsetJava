@@ -13,4 +13,6 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 public class KeyPressEvent extends Event {
     Player player;
     String key;
+    boolean ctrlPressed;
+    boolean shiftPressed;
 }

@@ -22,12 +22,12 @@ namespace OnsetJavaClient {
         if (keys.length === 0) {
             AddEvent("OnKeyPress", (key: string) => {
                 if (keys.indexOf(key) > -1) {
-                    adapter.call("OnKeyPress", 0, [key]);
+                    adapter.call("OnKeyPress", 0, [key, IsCtrlPressed(), IsShiftPressed()]);
                 }
             });
             AddEvent("OnKeyRelease", (key: string) => {
                 if (keys.indexOf(key) > -1) {
-                    adapter.call("OnKeyRelease", 0, [key]);
+                    adapter.call("OnKeyRelease", 0, [key, IsCtrlPressed(), IsShiftPressed()]);
                 }
             });
         }

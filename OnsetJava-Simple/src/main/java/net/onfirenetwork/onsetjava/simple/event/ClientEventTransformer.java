@@ -21,10 +21,10 @@ public class ClientEventTransformer {
 
         switch (action.getType()) {
             case "OnKeyPress":
-                event = new KeyPressEvent(player, action.getParams()[0].getAsString());
+                event = new KeyPressEvent(player, action.getParams()[0].getAsString(), action.getParams()[1].getAsBoolean(), action.getParams()[2].getAsBoolean());
                 break;
             case "OnKeyRelease":
-                event = new KeyReleaseEvent(player, action.getParams()[0].getAsString());
+                event = new KeyReleaseEvent(player, action.getParams()[0].getAsString(), action.getParams()[1].getAsBoolean(), action.getParams()[2].getAsBoolean());
                 break;
             case "OnSoundFinished":
                 event = new SoundFinishedEvent(player, player.getSound(action.getParams()[0].getAsInt()));
