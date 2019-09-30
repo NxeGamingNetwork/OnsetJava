@@ -28,7 +28,6 @@ public class SimplePluginManager implements PluginManager {
     private Map<Plugin, File> files = new HashMap<>();
 
     public void load(File pluginFolder) {
-        new Installer().install(pluginFolder);
         List<File> pluginFiles = new ArrayList<>();
         for (File file : pluginFolder.listFiles()) {
             if (file.isDirectory())

@@ -26,13 +26,13 @@ public class ServerEventTransformer {
             case "OnPlayerServerAuth": {
                 Player player = new SimplePlayer(OnsetJava.getServer().getDimension(0), action.getParams()[0].getAsInt());
                 server.getPlayers().add(player);
-                server.callClientAction(player.getId(), "RegisterEvents", 0, server.getEnabledClientEvents());
-                server.callClientAction(player.getId(), "RegisterKeys", 0, server.getRegisteredKeys());
                 event = new PlayerConnectEvent(player);
                 break;
             }
             case "OnPlayerJoin": {
                 Player player = server.getPlayer(action.getParams()[0].getAsInt());
+                server.callClientAction(player.getId(), "RegisterEvents", 0, server.getEnabledClientEvents());
+                server.callClientAction(player.getId(), "RegisterKeys", 0, server.getRegisteredKeys());
                 event = new PlayerJoinEvent(player);
                 break;
             }

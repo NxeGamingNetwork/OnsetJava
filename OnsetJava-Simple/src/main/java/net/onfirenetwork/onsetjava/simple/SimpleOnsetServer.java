@@ -149,7 +149,7 @@ public class SimpleOnsetServer implements OnsetServer {
 
     public void registerKeys(String... keys) {
         for (String key : keys) {
-            if (registeredKeys.contains(key)) {
+            if (!registeredKeys.contains(key)) {
                 registeredKeys.add(key);
             }
         }
