@@ -192,6 +192,8 @@ public interface Player extends HitEntity {
 
     PlayerInput getInput();
 
+    PlayerVehicle getClientVehicle(Vehicle vehicle);
+
     void setWaypoint(int slot, Location location, String text);
 
     void removeWaypoint(int slot);

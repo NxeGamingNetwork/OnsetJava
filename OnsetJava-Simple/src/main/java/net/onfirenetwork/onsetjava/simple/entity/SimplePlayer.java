@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.Dimension;
+import net.onfirenetwork.onsetjava.api.client.PlayerVehicle;
 import net.onfirenetwork.onsetjava.api.client.Sound;
 import net.onfirenetwork.onsetjava.api.client.TextBox;
 import net.onfirenetwork.onsetjava.api.client.WebUI;
@@ -44,6 +45,7 @@ public class SimplePlayer implements Player {
     @Getter
     List<TextBox> textBoxes = new ArrayList<>();
     Map<String, Object> attributes = new HashMap<>();
+    Map<Vehicle, PlayerVehicle> playerVehicles = new HashMap<>();
 
     public SimplePlayer(Dimension dimension, int id) {
         this.dimension = (SimpleDimension) dimension;
@@ -344,6 +346,15 @@ public class SimplePlayer implements Player {
 
     public List<Vehicle> getStreamedVehicles() {
         return JsonUtils.toList(dimension.getServer().call("GetStreamedVehiclesForPlayer", id).get()[0].getAsJsonArray(), e -> dimension.getServer().getVehicle(e.getAsInt()));
+    }
+
+    public PlayerVehicle getClientVehicle(Vehicle vehicle) {
+        if (playerVehicles.containsKey(vehicle)) {
+            return playerVehicles.get(vehicle);
+        }
+        SimplePlayerVehicle playerVehicle = new SimplePlayerVehicle(this, vehicle);
+        playerVehicles.put(vehicle, playerVehicle);
+        return playerVehicle;
     }
 
     public void setWaypoint(int slot, Location location, String text){
