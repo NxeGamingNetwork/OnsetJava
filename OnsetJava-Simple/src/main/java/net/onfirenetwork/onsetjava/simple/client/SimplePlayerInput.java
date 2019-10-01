@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.client.PlayerInput;
+import net.onfirenetwork.onsetjava.api.enums.InputMode;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import net.onfirenetwork.onsetjava.simple.entity.SimplePlayer;
@@ -50,8 +51,8 @@ public class SimplePlayerInput implements PlayerInput {
         return completable;
     }
 
-    public void setInputMode(int mode) {
-        call("SetInputMode", mode);
+    public void setInputMode(InputMode mode) {
+        call("SetInputMode", mode.getIdentifier());
     }
 
     public Completable<Vector2d> getMousePosition() {

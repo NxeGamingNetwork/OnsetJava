@@ -1,6 +1,7 @@
 package net.onfirenetwork.onsetjava.api.client;
 
 import net.onfirenetwork.onsetjava.api.entity.Player;
+import net.onfirenetwork.onsetjava.api.enums.InputMode;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
 
@@ -20,7 +21,7 @@ public interface PlayerInput {
 
     Completable<Boolean> isCursorEnabled();
 
-    void setInputMode(int mode);
+    void setInputMode(InputMode mode);
 
     Completable<Vector2d> getMousePosition();
 
