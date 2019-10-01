@@ -20,7 +20,6 @@ public class SimplePlayerGraphics implements PlayerGraphics {
     int fov = 90;
     @Getter
     double cameraDistance = 350;
-    Vector2d chatLocation;
 
     public SimplePlayerGraphics(SimplePlayer player) {
         this.player = player;
@@ -35,9 +34,12 @@ public class SimplePlayerGraphics implements PlayerGraphics {
         call("SetPlayerFOV", fov);
     }
 
-    public Vector2d getScreenSize() {
-        JsonElement[] returns = call("GetScreenSize").get();
-        return new Vector2d(returns[0].getAsInt(), returns[1].getAsInt());
+    public Completable<Vector2d> getScreenSize() {
+        Completable<Vector2d> completable = new Completable<>();
+        call("GetScreenSize").then(ret -> {
+            completable.complete(new Vector2d(ret[0].getAsInt(), ret[1].getAsInt()));
+        });
+        return completable;
     }
 
     public void setCameraDistance(double distance) {

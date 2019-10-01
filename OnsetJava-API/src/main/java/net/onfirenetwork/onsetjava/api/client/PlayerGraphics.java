@@ -15,7 +15,7 @@ public interface PlayerGraphics {
 
     void setFOV(int fov);
 
-    Vector2d getScreenSize();
+    Completable<Vector2d> getScreenSize();
 
     void setCameraDistance(double distance);
 
