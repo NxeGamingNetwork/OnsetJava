@@ -1,7 +1,9 @@
 package net.onfirenetwork.onsetjava.api;
 
 import net.onfirenetwork.onsetjava.api.entity.*;
+import net.onfirenetwork.onsetjava.api.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
+import net.onfirenetwork.onsetjava.api.event.ServerEventTransformer;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.api.util.NetworkStats;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -78,4 +80,9 @@ public interface OnsetServer {
     void registerKeys(String... keys);
 
     PluginManager getPluginManager();
+
+    void addClientEventTransformer(ClientEventTransformer transformer);
+
+    void addServerEventTransformer(ServerEventTransformer transformer);
+
 }
