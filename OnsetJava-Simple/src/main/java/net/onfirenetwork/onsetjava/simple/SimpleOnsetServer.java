@@ -11,8 +11,8 @@ import net.onfirenetwork.onsetjava.api.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.EventBus;
 import net.onfirenetwork.onsetjava.api.event.ServerEventTransformer;
-import net.onfirenetwork.onsetjava.api.event.client.*;
-import net.onfirenetwork.onsetjava.api.event.server.*;
+import net.onfirenetwork.onsetjava.api.event.client.UnknownClientEvent;
+import net.onfirenetwork.onsetjava.api.event.server.UnknownServerEvent;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
 import net.onfirenetwork.onsetjava.api.util.Completable;
@@ -82,10 +82,10 @@ public class SimpleOnsetServer implements OnsetServer {
                         break;
                     }
                 }
-                if (event != null) {
-                    eventBus.fire(event);
-                    return;
+                if (event == null) {
+                    event = new UnknownServerEvent(action.getType(), action.getNonce(), action.getParams());
                 }
+                eventBus.fire(event);
             }
 
             public void onClientAction(Player player, InboundAction action) {
@@ -100,10 +100,10 @@ public class SimpleOnsetServer implements OnsetServer {
                         break;
                     }
                 }
-                if (event != null) {
-                    eventBus.fire(event);
-                    return;
+                if (event == null) {
+                    event = new UnknownClientEvent(player, action.getType(), action.getNonce(), action.getParams());
                 }
+                eventBus.fire(event);
             }
         });
         addServerEventTransformer(new DefaultServerEventTransformer());
@@ -113,7 +113,7 @@ public class SimpleOnsetServer implements OnsetServer {
     public void run() {
         adapter.prepare();
         createDimension();
-        enableEvents("OnPlayerServerAuth", "OnPlayerJoin", "OnPlayerQuit");
+        registerServerEvent("OnPlayerServerAuth", "OnPlayerJoin", "OnPlayerQuit");
         File pluginFolder = new File("java_plugins");
         if (!pluginFolder.exists()) {
             pluginFolder.mkdir();
@@ -176,13 +176,13 @@ public class SimpleOnsetServer implements OnsetServer {
         }
     }
 
-    public void enableEvents(String... eventNames) {
+    public void registerServerEvent(String... eventNames) {
         if(eventNames.length == 0)
             return;
         callAction("RegisterEvents", 0, (Object) eventNames);
     }
 
-    public void enableClientEvents(String... eventNames) {
+    public void registerClientEvent(String... eventNames) {
         if(eventNames.length == 0)
             return;
         enabledClientEvents.addAll(Arrays.asList(eventNames));
@@ -338,10 +338,10 @@ public class SimpleOnsetServer implements OnsetServer {
 
     private void registerHandler(Class<Event> eventClass) {
         for(ServerEventTransformer transformer : serverEventTransformers){
-            enableEvents(transformer.register(eventClass));
+            registerServerEvent(transformer.register(eventClass));
         }
         for(ClientEventTransformer transformer : clientEventTransformers){
-            enableClientEvents(transformer.register(eventClass));
+            registerClientEvent(transformer.register(eventClass));
         }
     }
 }

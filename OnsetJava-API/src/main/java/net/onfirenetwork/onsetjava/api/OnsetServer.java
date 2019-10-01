@@ -90,4 +90,8 @@ public interface OnsetServer {
 
     void addServerEventTransformer(ServerEventTransformer transformer);
 
+    void registerServerEvent(String... eventNames);
+
+    void registerClientEvent(String... eventNames);
+
 }
