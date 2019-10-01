@@ -105,4 +105,9 @@ public interface Vehicle extends HitEntity {
     void setDimension(Dimension dimension);
 
     Vector3d getVelocity();
+
+    void setAttribute(String key, Object value);
+
+    <T> T getAttribute(String key);
+
 }

@@ -11,7 +11,9 @@ import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
-@AllArgsConstructor
+import java.util.HashMap;
+import java.util.Map;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SimpleWorldObject implements WorldObject {
     @Getter
@@ -20,6 +22,13 @@ public class SimpleWorldObject implements WorldObject {
     int id;
     @Getter
     int model;
+    Map<String, Object> attributes = new HashMap<>();
+
+    public SimpleWorldObject(SimpleDimension dimension, int id, int model){
+        this.dimension = dimension;
+        this.id = id;
+        this.model = model;
+    }
 
     public void setStreamDistance(double distance) {
         dimension.getServer().call("SetObjectStreamDistance", id, distance);
@@ -101,5 +110,13 @@ public class SimpleWorldObject implements WorldObject {
 
     public void setRotateAxis(Vector3d rotateAxis) {
         dimension.getServer().call("SetObjectRotateAxis", id, rotateAxis.getX(), rotateAxis.getY(), rotateAxis.getZ());
+    }
+
+    public void setAttribute(String key, Object value) {
+        attributes.put(key, value);
+    }
+
+    public <T> T getAttribute(String key) {
+        return (T) attributes.get(key);
     }
 }

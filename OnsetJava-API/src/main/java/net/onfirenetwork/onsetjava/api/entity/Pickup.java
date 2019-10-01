@@ -15,4 +15,9 @@ public interface Pickup {
     void remove();
 
     void setDimension(Dimension dimension);
+
+    void setAttribute(String key, Object value);
+
+    <T> T getAttribute(String key);
+
 }

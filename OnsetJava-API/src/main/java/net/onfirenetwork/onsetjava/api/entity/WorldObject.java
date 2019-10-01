@@ -50,4 +50,9 @@ public interface WorldObject extends HitEntity {
     boolean isAttached();
 
     void setRotateAxis(Vector3d rotateAxis);
+
+    void setAttribute(String key, Object value);
+
+    <T> T getAttribute(String key);
+
 }
