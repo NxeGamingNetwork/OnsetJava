@@ -5,7 +5,13 @@ namespace OnsetJavaClient {
     let keys: string[] = [];
     adapter = new ActionAdapter((type, nonce, params) => {
         if (type === "Call") {
-            let ret = pcall_array(get_global(params[0]), params.splice(1));
+            let parr = [];
+            if(params.length > 1){
+                for(let i=1; i<params.length; i++){
+                    parr.push(params[i]);
+                }
+            }
+            let ret = pcall_array(get_global(params[0]), parr);
             adapter.call("Return", nonce, ret);
         }
         if (type === "RegisterEvents") {

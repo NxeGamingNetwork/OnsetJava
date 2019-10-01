@@ -10,7 +10,13 @@ namespace OnsetJavaServer {
             pcall(result[0]);
         }
         if (type === "Call") {
-            let ret = pcall_array(get_global(params[0]), params.splice(1));
+            let parr = [];
+            if(params.length > 1){
+                for(let i=1; i<params.length; i++){
+                    parr.push(params[i]);
+                }
+            }
+            let ret = pcall_array(get_global(params[0]), parr);
             if (params[0] === "GetPlayerSteamId") {
                 ret[0] = ret[0].toString();
             }

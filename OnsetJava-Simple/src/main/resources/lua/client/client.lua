@@ -129,87 +129,12 @@ do
         CallRemoteEvent("Action", text)
     end
 end
-function __TS__ArraySplice(list, start, deleteCount, ...)
+function __TS__ArrayPush(arr, ...)
     local items = ({...})
-    local len = #list
-    local actualStart
-    if start < 0 then
-        actualStart = math.max(len + start, 0)
-    else
-        actualStart = math.min(start, len)
+    for ____, item in ipairs(items) do
+        arr[#arr + 1] = item
     end
-    local itemCount = #items
-    local actualDeleteCount
-    if not start then
-        actualDeleteCount = 0
-    elseif not deleteCount then
-        actualDeleteCount = len - actualStart
-    else
-        actualDeleteCount = math.min(
-            math.max(deleteCount, 0),
-            len - actualStart
-        )
-    end
-    local out = {}
-    do
-        local k = 0
-        while k < actualDeleteCount do
-            local from = actualStart + k
-            if list[from + 1] then
-                out[k + 1] = list[from + 1]
-            end
-            k = k + 1
-        end
-    end
-    if itemCount < actualDeleteCount then
-        do
-            local k = actualStart
-            while k < len - actualDeleteCount do
-                local from = k + actualDeleteCount
-                local to = k + itemCount
-                if list[from + 1] then
-                    list[to + 1] = list[from + 1]
-                else
-                    list[to + 1] = nil
-                end
-                k = k + 1
-            end
-        end
-        do
-            local k = len
-            while k > len - actualDeleteCount + itemCount do
-                list[k] = nil
-                k = k - 1
-            end
-        end
-    elseif itemCount > actualDeleteCount then
-        do
-            local k = len - actualDeleteCount
-            while k > actualStart do
-                local from = k + actualDeleteCount - 1
-                local to = k + itemCount - 1
-                if list[from + 1] then
-                    list[to + 1] = list[from + 1]
-                else
-                    list[to + 1] = nil
-                end
-                k = k - 1
-            end
-        end
-    end
-    local j = actualStart
-    for ____, e in ipairs(items) do
-        list[j + 1] = e
-        j = j + 1
-    end
-    do
-        local k = #list - 1
-        while k >= len - actualDeleteCount + itemCount do
-            list[k + 1] = nil
-            k = k - 1
-        end
-    end
-    return out
+    return #arr
 end
 local ____symbolMetatable = {
     __tostring = function(self)
@@ -280,13 +205,6 @@ function __TS__ArrayIndexOf(arr, searchElement, fromIndex)
     end
     return -1
 end
-function __TS__ArrayPush(arr, ...)
-    local items = ({...})
-    for ____, item in ipairs(items) do
-        arr[#arr + 1] = item
-    end
-    return #arr
-end
 OnsetJavaClient = OnsetJavaClient or {}
 do
     local adapter, keys, registerKeys, registerEvent
@@ -344,10 +262,20 @@ do
     adapter = OnsetJavaClient.ActionAdapter.new(
         function(____type, nonce, params)
             if ____type == "Call" then
+                local parr = {}
+                if #params > 1 then
+                    do
+                        local i = 1
+                        while i < #params do
+                            __TS__ArrayPush(parr, params[i + 1])
+                            i = i + 1
+                        end
+                    end
+                end
                 local ret = pcall_array(
                     nil,
                     get_global(nil, params[1]),
-                    __TS__ArraySplice(params, 1)
+                    parr
                 )
                 adapter:call("Return", nonce, ret)
             end
