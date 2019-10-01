@@ -113,7 +113,7 @@ public class SimpleOnsetServer implements OnsetServer {
     public void run() {
         adapter.prepare();
         createDimension();
-        enableEvents("OnPlayerServerAuth", "OnPlayerQuit");
+        enableEvents("OnPlayerServerAuth", "OnPlayerJoin", "OnPlayerQuit");
         File pluginFolder = new File("java_plugins");
         if (!pluginFolder.exists()) {
             pluginFolder.mkdir();

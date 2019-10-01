@@ -202,8 +202,6 @@ public class DefaultServerEventTransformer implements ServerEventTransformer {
     }
 
     public String[] register(Class<Event> eventClass){
-        if (eventClass.equals(PlayerJoinEvent.class))
-            return new String[]{"OnPlayerJoin"};
         if (eventClass.equals(PlayerAuthEvent.class))
             return new String[]{"OnPlayerSteamAuth"};
         else if (eventClass.equals(PlayerEnterVehicleEvent.class))
