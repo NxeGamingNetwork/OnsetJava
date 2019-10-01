@@ -11,7 +11,12 @@ import net.onfirenetwork.onsetjava.api.util.Vector2d;
 import java.util.List;
 
 public interface OnsetServer {
+
     void broadcast(String message);
+
+    default void broadcast(String message, String color){
+        broadcast("<span color=\""+color+"\">"+message+"</>");
+    }
 
     void broadcastRange(Vector2d location, int range, String message);
 

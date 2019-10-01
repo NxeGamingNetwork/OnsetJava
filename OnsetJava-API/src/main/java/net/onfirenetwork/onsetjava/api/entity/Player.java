@@ -49,6 +49,10 @@ public interface Player extends HitEntity {
 
     void sendMessage(String message);
 
+    default void sendMessage(String message, String color){
+        sendMessage("<span color=\""+color+"\">"+message+"</>");
+    }
+
     void setSpawnLocation(Location location);
 
     Vehicle getVehicle();
