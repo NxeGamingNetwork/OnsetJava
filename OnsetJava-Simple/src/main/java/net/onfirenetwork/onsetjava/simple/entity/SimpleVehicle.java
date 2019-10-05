@@ -66,7 +66,7 @@ public class SimpleVehicle implements Vehicle {
     }
 
     public void setLicensePlate(String licensePlate) {
-        dimension.getServer().call("SetLicensePlate", id, licensePlate);
+        dimension.getServer().call("SetVehicleLicensePlate", id, licensePlate);
     }
 
     public void enterPlayer(Player player, int seat) {
