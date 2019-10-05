@@ -7,6 +7,7 @@ import net.onfirenetwork.onsetjava.api.event.client.KeyPressEvent;
 import net.onfirenetwork.onsetjava.api.event.server.PlayerJoinEvent;
 import net.onfirenetwork.onsetjava.api.event.server.PlayerQuitEvent;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
+import net.onfirenetwork.onsetjava.api.util.Vector2i;
 import net.onfirenetwork.onsetjava.testplugin.TestPlugin;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class ATMListener {
     }
 
     public void onJoin(PlayerJoinEvent e) {
-        e.getPlayer().createWebUI(new Vector2d(0, 0), new Vector2d(800, 600)).then(webUI -> {
+        e.getPlayer().createWebUI(new Vector2i(0, 0), new Vector2i(800, 600)).then(webUI -> {
             webUI.setVisibility(WebVisibility.HIDDEN);
             webUI.setAlignment(0.5, 0.5);
             webUI.setAnchors(0.5, 0.5, 0.5, 0.5);

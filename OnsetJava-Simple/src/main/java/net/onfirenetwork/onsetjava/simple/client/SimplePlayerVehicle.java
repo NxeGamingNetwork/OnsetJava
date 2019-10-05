@@ -23,40 +23,76 @@ public class SimplePlayerVehicle implements PlayerVehicle {
         this.vehicle = vehicle;
     }
 
-    public int getRPM() {
-        return call("GetVehicleEngineRPM", vehicle.getId()).get()[0].getAsInt();
+    public Completable<Integer> getRPM() {
+        Completable<Integer> completable = new Completable<>();
+        call("GetVehicleEngineRPM", vehicle.getId()).then(ret -> {
+            completable.complete(ret[0].getAsInt());
+        });
+        return completable;
     }
 
-    public int getForwardSpeed() {
-        return call("GetVehicleForwardSpeed", vehicle.getId()).get()[0].getAsInt();
+    public Completable<Integer> getForwardSpeed() {
+        Completable<Integer> completable = new Completable<>();
+        call("GetVehicleForwardSpeed", vehicle.getId()).then(ret -> {
+            completable.complete(ret[0].getAsInt());
+        });
+        return completable;
     }
 
-    public String getWheelSurface(int wheel) {
-        return call("GetVehicleWheelSurface", vehicle.getId(), wheel).get()[0].getAsString();
+    public Completable<String> getWheelSurface(int wheel) {
+        Completable<String> completable = new Completable<>();
+        call("GetVehicleWheelSurface", vehicle.getId(), wheel).then(ret -> {
+            completable.complete(ret[0].getAsString());
+        });
+        return completable;
     }
 
-    public double getSteerAngle(int wheel) {
-        return call("GetVehicleWheelSteerAngle", vehicle.getId(), wheel).get()[0].getAsDouble();
+    public Completable<Double> getSteerAngle(int wheel) {
+        Completable<Double> completable = new Completable<>();
+        call("GetVehicleWheelSteerAngle", vehicle.getId(), wheel).then(ret -> {
+            completable.complete(ret[0].getAsDouble());
+        });
+        return completable;
     }
 
-    public boolean isWheelInAir(int wheel) {
-        return call("IsVehicleWheelInAir", vehicle.getId(), wheel).get()[0].getAsBoolean();
+    public Completable<Boolean> isWheelInAir(int wheel) {
+        Completable<Boolean> completable = new Completable<>();
+        call("IsVehicleWheelInAir", vehicle.getId(), wheel).then(ret -> {
+            completable.complete(ret[0].getAsBoolean());
+        });
+        return completable;
     }
 
-    public boolean isInAir() {
-        return call("IsVehicleInAir", vehicle.getId()).get()[0].getAsBoolean();
+    public Completable<Boolean> isInAir() {
+        Completable<Boolean> completable = new Completable<>();
+        call("IsVehicleInAir", vehicle.getId()).then(ret -> {
+            completable.complete(ret[0].getAsBoolean());
+        });
+        return completable;
     }
 
-    public boolean isHornActive() {
-        return call("IsVehicleHornActive", vehicle.getId()).get()[0].getAsBoolean();
+    public Completable<Boolean> isHornActive() {
+        Completable<Boolean> completable = new Completable<>();
+        call("IsVehicleHornActive", vehicle.getId()).then(ret -> {
+            completable.complete(ret[0].getAsBoolean());
+        });
+        return completable;
     }
 
-    public boolean isInWater() {
-        return call("IsVehicleInWater", vehicle.getId()).get()[0].getAsBoolean();
+    public Completable<Boolean> isInWater() {
+        Completable<Boolean> completable = new Completable<>();
+        call("IsVehicleInWater", vehicle.getId()).then(ret -> {
+            completable.complete(ret[0].getAsBoolean());
+        });
+        return completable;
     }
 
-    public boolean isSeatOccupied(int seat) {
-        return call("IsVehicleSeatOccupied", vehicle.getId(), seat).get()[0].getAsBoolean();
+    public Completable<Boolean> isSeatOccupied(int seat) {
+        Completable<Boolean> completable = new Completable<>();
+        call("IsVehicleSeatOccupied", vehicle.getId(), seat).then(ret -> {
+            completable.complete(ret[0].getAsBoolean());
+        });
+        return completable;
     }
 
     public Vector3d getDoorLocation(int door) {
