@@ -65,19 +65,19 @@ public interface Player extends HitEntity {
 
     List<WebUI> getWebUIs();
 
-    Completable<WebUI> createWebUI(Vector2d position, Vector2d size, int zOrder, int frameRate);
+    Completable<WebUI> createWebUI(Vector2i position, Vector2i size, int zOrder, int frameRate);
 
-    default Completable<WebUI> createWebUI(Vector2d position, Vector2d size, int zOrder) {
+    default Completable<WebUI> createWebUI(Vector2i position, Vector2i size, int zOrder) {
         return createWebUI(position, size, zOrder, 16);
     }
 
-    default Completable<WebUI> createWebUI(Vector2d position, Vector2d size) {
+    default Completable<WebUI> createWebUI(Vector2i position, Vector2i size) {
         return createWebUI(position, size, 0);
     }
 
-    Completable<WebUI> create3DWebUI(Location location, Vector3d rotation, Vector2d size, int frameRate);
+    Completable<WebUI> create3DWebUI(Location location, Vector3d rotation, Vector2i size, int frameRate);
 
-    default Completable<WebUI> create3DWebUI(Location location, Vector3d rotation, Vector2d size) {
+    default Completable<WebUI> create3DWebUI(Location location, Vector3d rotation, Vector2i size) {
         return create3DWebUI(location, rotation, size, 16);
     }
 

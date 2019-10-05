@@ -2,6 +2,7 @@ package net.onfirenetwork.onsetjava.api.client;
 
 import net.onfirenetwork.onsetjava.api.enums.WebVisibility;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
+import net.onfirenetwork.onsetjava.api.util.Vector2i;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 
 public interface WebUI {
@@ -27,12 +28,10 @@ public interface WebUI {
 
     void setLocation(double x, double y, double z);
 
-    default void setLocation(double x, double y) {
-        setLocation(x, y, 0);
-    }
+    void setLocation(int x, int y);
 
-    default void setLocation(Vector2d location) {
-        setLocation(location.getX(), location.getY());
+    default void setLocation(Vector2i position) {
+        setLocation(position.getX(), position.getY());
     }
 
     default void setLocation(Vector3d location) {
@@ -45,9 +44,9 @@ public interface WebUI {
         setRotation(rotation.getX(), rotation.getY(), rotation.getZ());
     }
 
-    void setSize(double x, double y);
+    void setSize(int x, int y);
 
-    default void setSize(Vector2d size) {
+    default void setSize(Vector2i size) {
         setSize(size.getX(), size.getY());
     }
 

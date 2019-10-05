@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.client.PlayerGraphics;
 import net.onfirenetwork.onsetjava.api.enums.PostEffect;
-import net.onfirenetwork.onsetjava.api.util.Completable;
-import net.onfirenetwork.onsetjava.api.util.Location;
-import net.onfirenetwork.onsetjava.api.util.Vector2d;
-import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.*;
 import net.onfirenetwork.onsetjava.simple.entity.SimplePlayer;
 import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
@@ -34,10 +31,10 @@ public class SimplePlayerGraphics implements PlayerGraphics {
         call("SetPlayerFOV", fov);
     }
 
-    public Completable<Vector2d> getScreenSize() {
-        Completable<Vector2d> completable = new Completable<>();
+    public Completable<Vector2i> getScreenSize() {
+        Completable<Vector2i> completable = new Completable<>();
         call("GetScreenSize").then(ret -> {
-            completable.complete(new Vector2d(ret[0].getAsInt(), ret[1].getAsInt()));
+            completable.complete(new Vector2i(ret[0].getAsInt(), ret[1].getAsInt()));
         });
         return completable;
     }

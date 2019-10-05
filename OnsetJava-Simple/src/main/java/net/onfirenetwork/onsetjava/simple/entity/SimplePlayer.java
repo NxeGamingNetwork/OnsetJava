@@ -153,7 +153,7 @@ public class SimplePlayer implements Player {
         return webuis;
     }
 
-    public Completable<WebUI> createWebUI(Vector2d position, Vector2d size, int zOrder, int frameRate) {
+    public Completable<WebUI> createWebUI(Vector2i position, Vector2i size, int zOrder, int frameRate) {
         Completable<WebUI> completable = new Completable<>();
         dimension.getServer().callClient(id, "CreateWebUI", position.getX(), position.getY(), size.getX(), size.getY(), zOrder, frameRate).then(ret -> {
             WebUI ui = new SimpleWebUI(this, ret[0].getAsInt());
@@ -163,7 +163,7 @@ public class SimplePlayer implements Player {
         return completable;
     }
 
-    public Completable<WebUI> create3DWebUI(Location location, Vector3d rotation, Vector2d size, int frameRate) {
+    public Completable<WebUI> create3DWebUI(Location location, Vector3d rotation, Vector2i size, int frameRate) {
         Completable<WebUI> completable = new Completable<>();
         dimension.getServer().callClient(id, "CreateWebUI3D", location.getX(), location.getY(), location.getY(), rotation.getX(), rotation.getY(), rotation.getZ(), size.getX(), size.getY(), frameRate).then(ret -> {
             WebUI ui = new SimpleWebUI(this, ret[0].getAsInt());

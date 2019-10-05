@@ -2,10 +2,7 @@ package net.onfirenetwork.onsetjava.api.client;
 
 import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.enums.PostEffect;
-import net.onfirenetwork.onsetjava.api.util.Completable;
-import net.onfirenetwork.onsetjava.api.util.Location;
-import net.onfirenetwork.onsetjava.api.util.Vector2d;
-import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.*;
 
 public interface PlayerGraphics {
 
@@ -15,7 +12,7 @@ public interface PlayerGraphics {
 
     void setFOV(int fov);
 
-    Completable<Vector2d> getScreenSize();
+    Completable<Vector2i> getScreenSize();
 
     void setCameraDistance(double distance);
 

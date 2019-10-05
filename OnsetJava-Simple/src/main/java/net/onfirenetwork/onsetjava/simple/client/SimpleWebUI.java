@@ -43,19 +43,19 @@ public class SimpleWebUI implements WebUI {
         call("LoadWebFile", id, file);
     }
 
+    public void setLocation(int x, int y) {
+        call("SetWebLocation", id, x, y);
+    }
+
     public void setLocation(double x, double y, double z) {
-        if (z == 0) {
-            call("SetWebLocation", id, x, y);
-        } else {
-            call("SetWebLocation", id, x, y, z);
-        }
+        call("SetWebLocation", id, x, y, z);
     }
 
     public void setRotation(double rx, double ry, double rz) {
         call("SetWebRotation", rx, ry, rz);
     }
 
-    public void setSize(double x, double y) {
+    public void setSize(int x, int y) {
         call("SetWebSize", id, x, y);
     }
 
