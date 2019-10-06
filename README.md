@@ -1,5 +1,6 @@
 # OnsetJava
 [![Maintainability](https://api.codeclimate.com/v1/badges/d783e4c561d7b5596253/maintainability)](https://codeclimate.com/github/OnfireNetwork/OnsetJava/maintainability)
+[![Travis](https://travis-ci.org/OnfireNetwork/OnsetJava.svg?branch=master)](https://travis-ci.org/OnfireNetwork/OnsetJava/)
 
 A java api and simple implementation for Onset
 
