@@ -1,0 +1,15 @@
+
+sudo: false
+language: java
+services:
+  - docker
+cache:
+  directories:
+    - "$HOME/.cache"
+
+deploy:
+  provider: script
+  script: "mvn clean package deploy -Dregistry=https://maven.pkg.github.com/OnfireNetwork -Dtoken=$GH_TOKEN"
+  skip_cleanup: true
+  on:
+    tags: true
