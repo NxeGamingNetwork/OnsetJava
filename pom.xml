@@ -22,7 +22,7 @@
         <repository>
             <id>github</id>
             <name>Github repo</name>
-            <url>https://maven.pkg.github.com/OnfireNetwork</url>
+            <url>https://maven.pkg.github.com/OnfireNetwork/OnsetJava</url>
         </repository>
     </distributionManagement>
 </project>
