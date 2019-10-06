@@ -8,7 +8,6 @@ services:
 cache:
   directories:
     - "$HOME/.cache"
-
 deploy:
   provider: script
   script: "mvn clean package deploy -Dregistry=https://maven.pkg.github.com/OnfireNetwork -Dtoken=$GH_TOKEN"
