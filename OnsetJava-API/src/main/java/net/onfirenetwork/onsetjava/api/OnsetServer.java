@@ -72,6 +72,10 @@ public interface OnsetServer {
 
     List<Light> getLights();
 
+    Door getDoor(int id);
+
+    List<Door> getDoors();
+
     EventBus getEventBus();
 
     Dimension getDimension(int id);

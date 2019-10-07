@@ -4,6 +4,7 @@ import net.onfirenetwork.onsetjava.api.entity.Player;
 import net.onfirenetwork.onsetjava.api.enums.InputMode;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
+import net.onfirenetwork.onsetjava.api.util.Vector2i;
 
 public interface PlayerInput {
 
@@ -23,11 +24,21 @@ public interface PlayerInput {
 
     void setInputMode(InputMode mode);
 
-    Completable<Vector2d> getMousePosition();
+    Completable<Vector2i> getMousePosition();
+
+    void setMousePosition(int x, int z);
+
+    default void setMousePosition(Vector2i position){
+        setMousePosition(position.getX(), position.getY());
+    }
 
     Completable<Boolean> isCtrlPressed();
 
     Completable<Boolean> isShiftPressed();
+
+    Completable<Boolean> isCmdPressed();
+
+    Completable<Boolean> isAltPressed();
 
     void setIgnoreMoveInput(boolean ignore);
 

@@ -69,6 +69,10 @@ public class SimpleVehicle implements Vehicle {
         dimension.getServer().call("SetVehicleLicensePlate", id, licensePlate);
     }
 
+    public String getLicensePlate(){
+        return dimension.getServer().call("GetVehicleLicensePlate", id).get()[0].getAsString();
+    }
+
     public void enterPlayer(Player player, int seat) {
         player.enterVehicle(this, seat);
     }

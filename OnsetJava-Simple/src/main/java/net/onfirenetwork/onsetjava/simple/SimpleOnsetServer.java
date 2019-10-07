@@ -51,6 +51,8 @@ public class SimpleOnsetServer implements OnsetServer {
     @Getter
     private List<Light> lights = new ArrayList<>();
     @Getter
+    private List<Door> doors = new ArrayList<>();
+    @Getter
     private EventBus eventBus;
     @Getter
     private PluginManager pluginManager;
@@ -326,6 +328,10 @@ public class SimpleOnsetServer implements OnsetServer {
 
     public Light getLight(int id) {
         return lights.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
+    }
+
+    public Door getDoor(int id){
+        return doors.stream().filter(s -> s.getId() == id).findFirst().orElse(null);
     }
 
     public void addClientEventTransformer(ClientEventTransformer transformer){

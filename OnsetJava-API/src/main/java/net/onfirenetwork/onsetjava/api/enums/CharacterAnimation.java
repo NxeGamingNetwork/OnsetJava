@@ -106,5 +106,8 @@ public enum CharacterAnimation {
     DANCE17,
     DANCE18,
     DANCE19,
-    DANCE20
+    DANCE20,
+    REVIVE,
+    CUFF,
+    CUFF2
 }

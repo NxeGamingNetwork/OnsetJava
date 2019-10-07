@@ -33,6 +33,7 @@ public class CharacterModel {
     public static final CharacterModel SOLDIER_NIGHT_VISION = new CharacterModel(27, false);
     public static final CharacterModel SOLDIER_GOOGLES = new CharacterModel(28, false);
     public static final CharacterModel SOLDIER = new CharacterModel(29, false);
+    public static final CharacterModel PRISONER = new CharacterModel(30, false);
 
     @Getter
     private int id;

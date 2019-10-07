@@ -8,6 +8,7 @@ import net.onfirenetwork.onsetjava.api.client.PlayerInput;
 import net.onfirenetwork.onsetjava.api.enums.InputMode;
 import net.onfirenetwork.onsetjava.api.util.Completable;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
+import net.onfirenetwork.onsetjava.api.util.Vector2i;
 import net.onfirenetwork.onsetjava.simple.entity.SimplePlayer;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -55,10 +56,14 @@ public class SimplePlayerInput implements PlayerInput {
         call("SetInputMode", mode.getIdentifier());
     }
 
-    public Completable<Vector2d> getMousePosition() {
-        Completable<Vector2d> completable = new Completable<>();
-        call("GetMouseLocation").then(ret -> completable.complete(new Vector2d(ret[0].getAsDouble(), ret[1].getAsDouble())));
+    public Completable<Vector2i> getMousePosition() {
+        Completable<Vector2i> completable = new Completable<>();
+        call("GetMouseLocation").then(ret -> completable.complete(new Vector2i(ret[0].getAsInt(), ret[1].getAsInt())));
         return completable;
+    }
+
+    public void setMousePosition(int x, int y){
+        call("SetMouseLocation", x, y);
     }
 
     public Completable<Boolean> isCtrlPressed() {
@@ -70,6 +75,18 @@ public class SimplePlayerInput implements PlayerInput {
     public Completable<Boolean> isShiftPressed() {
         Completable<Boolean> completable = new Completable<>();
         call("IsShiftPressed").then(ret -> completable.complete(ret[0].getAsBoolean()));
+        return completable;
+    }
+
+    public Completable<Boolean> isCmdPressed() {
+        Completable<Boolean> completable = new Completable<>();
+        call("IsCmdPressed").then(ret -> completable.complete(ret[0].getAsBoolean()));
+        return completable;
+    }
+
+    public Completable<Boolean> isAltPressed() {
+        Completable<Boolean> completable = new Completable<>();
+        call("IsAltPressed").then(ret -> completable.complete(ret[0].getAsBoolean()));
         return completable;
     }
 

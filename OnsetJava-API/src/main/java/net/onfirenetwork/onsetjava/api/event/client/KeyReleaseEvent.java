@@ -15,4 +15,6 @@ public class KeyReleaseEvent extends Event {
     String key;
     boolean ctrlPressed;
     boolean shiftPressed;
+    boolean cmdPressed;
+    boolean altPressed;
 }

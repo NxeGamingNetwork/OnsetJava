@@ -26,7 +26,7 @@ public interface Plugin {
     }
 
     default String getResourcePath(String name) {
-        return getResourceId() + "/" + name;
+        return "plugin/" + getResourceId() + "/" + name;
     }
 
     default String getResourceUrl(String name) {

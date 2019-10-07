@@ -220,7 +220,9 @@ do
                             {
                                 key,
                                 IsCtrlPressed(),
-                                IsShiftPressed()
+                                IsShiftPressed(),
+                                IsCmdPressed(),
+                                IsAltPressed()
                             }
                         )
                     end
@@ -236,7 +238,9 @@ do
                             {
                                 key,
                                 IsCtrlPressed(),
-                                IsShiftPressed()
+                                IsShiftPressed(),
+                                IsCmdPressed(),
+                                IsAltPressed()
                             }
                         )
                     end

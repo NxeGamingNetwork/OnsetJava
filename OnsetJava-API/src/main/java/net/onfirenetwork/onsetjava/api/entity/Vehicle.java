@@ -26,6 +26,8 @@ public interface Vehicle extends HitEntity {
 
     void setLicensePlate(String licensePlate);
 
+    String getLicensePlate();
+
     void enterPlayer(Player player, int seat);
 
     void enterPlayer(Player player);

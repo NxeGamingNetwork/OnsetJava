@@ -11,7 +11,7 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
-public class PlayerExitVehicleEvent extends Event {
+public class PlayerEnteredVehicleEvent extends Event {
     Player player;
     Vehicle vehicle;
     int seat;

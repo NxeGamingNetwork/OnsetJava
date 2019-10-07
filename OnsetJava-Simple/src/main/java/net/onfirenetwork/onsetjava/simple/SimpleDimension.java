@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.entity.*;
-import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
-import net.onfirenetwork.onsetjava.api.enums.ExplosionType;
-import net.onfirenetwork.onsetjava.api.enums.LightType;
-import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
+import net.onfirenetwork.onsetjava.api.enums.*;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 import net.onfirenetwork.onsetjava.simple.entity.*;
@@ -29,6 +26,9 @@ public class SimpleDimension implements Dimension {
 
     public Vehicle spawnVehicle(Location location, VehicleModel model) {
         Vehicle vehicle = new SimpleVehicle(this, server.call("CreateVehicle", model.getId(), location.getX(), location.getY(), location.getZ()).get()[0].getAsInt(), model);
+        if(this.id != 0){
+            server.call("SetVehicleDimension", id, this.id);
+        }
         server.getVehicles().add(vehicle);
         return vehicle;
     }
@@ -39,6 +39,9 @@ public class SimpleDimension implements Dimension {
 
     public NPC spawnNPC(Location location, CharacterModel model) {
         NPC npc = new SimpleNPC(this, server.call("CreateNPC", model.getId(), location.getX(), location.getY(), location.getZ(), location.getHeading()).get()[0].getAsInt(), model);
+        if(this.id != 0){
+            server.call("SetNPCDimension", id, this.id);
+        }
         server.getNPCs().add(npc);
         return npc;
     }
@@ -47,7 +50,7 @@ public class SimpleDimension implements Dimension {
         return server.getNPCs().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
 
-    public WorldObject spawnObject(Location location, int model, Vector3d rotation, Vector3d scale) {
+    public WorldObject createObject(Location location, int model, Vector3d rotation, Vector3d scale) {
         int id;
         if (rotation != null) {
             if (scale != null) {
@@ -57,6 +60,9 @@ public class SimpleDimension implements Dimension {
             }
         } else {
             id = server.call("CreateObject", model, location.getX(), location.getY(), location.getZ()).get()[0].getAsInt();
+        }
+        if(this.id != 0){
+            server.call("SetObjectDimension", id, this.id);
         }
         WorldObject object = new SimpleWorldObject(this, id, model);
         server.getObjects().add(object);
@@ -69,6 +75,9 @@ public class SimpleDimension implements Dimension {
 
     public Text3D spawnText3D(Location location, Vector3d rotation, double size, String text) {
         Text3D text3d = new SimpleText3D(this, server.call("CreateText3D", text, size, location.getX(), location.getY(), location.getZ(), rotation.getX(), rotation.getY(), rotation.getZ()).get()[0].getAsInt());
+        if(this.id != 0){
+            server.call("SetText3DDimension", id, this.id);
+        }
         server.getText3Ds().add(text3d);
         return text3d;
     }
@@ -79,6 +88,9 @@ public class SimpleDimension implements Dimension {
 
     public Pickup spawnPickup(Location location, int model) {
         Pickup pickup = new SimplePickup(this, server.call("CreatePickup", model, location.getX(), location.getY(), location.getZ()).get()[0].getAsInt());
+        if(this.id != 0){
+            server.call("SetPickupDimension", id, this.id);
+        }
         server.getPickups().add(pickup);
         return pickup;
     }
@@ -94,6 +106,9 @@ public class SimpleDimension implements Dimension {
         } else {
             id = server.call("CreateLight", type.getValue(), intensity, location.getX(), location.getY(), location.getZ()).get()[0].getAsInt();
         }
+        if(this.id != 0){
+            server.call("SetLightDimension", id, this.id);
+        }
         Light light = new SimpleLight(this, id);
         server.getLights().add(light);
         return light;
@@ -101,6 +116,20 @@ public class SimpleDimension implements Dimension {
 
     public List<Light> getLights() {
         return server.getLights().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
+    }
+
+    public Door createDoor(Location location, DoorModel model, boolean interactable){
+        int id = server.call("CreateDoor", model.getId(), location.getX(), location.getY(), location.getZ(), location.getHeading(), interactable).get()[0].getAsInt();
+        if(this.id != 0){
+            server.call("SetDoorDimension", id, this.id);
+        }
+        Door door = new SimpleDoor(this, id, model, location);
+        server.getDoors().add(door);
+        return door;
+    }
+
+    public List<Door> getDoors(){
+        return server.getDoors().stream().filter(entity -> entity.getDimension().getId() == id).collect(Collectors.toList());
     }
 
     public void createExplosion(Location location, ExplosionType type, boolean sound, double camShakeRadius, double radialForce) {

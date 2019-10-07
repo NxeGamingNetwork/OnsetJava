@@ -5,6 +5,7 @@ import net.onfirenetwork.onsetjava.api.OnsetJava;
 import net.onfirenetwork.onsetjava.api.OnsetServer;
 import net.onfirenetwork.onsetjava.api.entity.HitEntity;
 import net.onfirenetwork.onsetjava.api.entity.Player;
+import net.onfirenetwork.onsetjava.api.entity.Vehicle;
 import net.onfirenetwork.onsetjava.api.entity.WorldObject;
 import net.onfirenetwork.onsetjava.api.enums.HitType;
 import net.onfirenetwork.onsetjava.api.event.ClientEventTransformer;
@@ -20,10 +21,10 @@ public class DefaultClientEventTransformer implements ClientEventTransformer {
         Event event = null;
         switch (type) {
             case "OnKeyPress":
-                event = new KeyPressEvent(player, params[0].getAsString(), params[1].getAsBoolean(), params[2].getAsBoolean());
+                event = new KeyPressEvent(player, params[0].getAsString(), params[1].getAsBoolean(), params[2].getAsBoolean(), params[3].getAsBoolean(), params[4].getAsBoolean());
                 break;
             case "OnKeyRelease":
-                event = new KeyReleaseEvent(player, params[0].getAsString(), params[1].getAsBoolean(), params[2].getAsBoolean());
+                event = new KeyReleaseEvent(player, params[0].getAsString(), params[1].getAsBoolean(), params[2].getAsBoolean(), params[3].getAsBoolean(), params[4].getAsBoolean());
                 break;
             case "OnSoundFinished":
                 event = new SoundFinishedEvent(player, player.getSound(params[0].getAsInt()));
@@ -125,6 +126,16 @@ public class DefaultClientEventTransformer implements ClientEventTransformer {
             case "OnText3DStreamIn":
                 event = new Text3DStreamInEvent(player, server.getText3D(params[0].getAsInt()));
                 break;
+            case "OnPlayerStartExitVehicle": {
+                Vehicle vehicle = server.getVehicle(params[0].getAsInt());
+                event = new PlayerExitVehicleEvent(player, vehicle, params[1].getAsInt());
+                break;
+            }
+            case "OnPlayerStartEnterVehicle": {
+                Vehicle vehicle = server.getVehicle(params[0].getAsInt());
+                event = new PlayerEnterVehicleEvent(player, vehicle, params[1].getAsInt());
+                break;
+            }
         }
         return event;
     }
@@ -132,6 +143,10 @@ public class DefaultClientEventTransformer implements ClientEventTransformer {
     public String[] register(Class<Event> eventClass){
         if (eventClass.equals(SoundFinishedEvent.class))
             return new String[]{"OnSoundFinished"};
+        else if (eventClass.equals(PlayerEnterVehicleEvent.class))
+            return new String[]{"OnPlayerStartEnterVehicle"};
+        else if (eventClass.equals(PlayerExitVehicleEvent.class))
+            return new String[]{"OnPlayerStartExitVehicle"};
         else if (eventClass.equals(WebReadyEvent.class))
             return new String[]{"OnWebLoadComplete"};
         else if (eventClass.equals(PlayerCrouchStateEvent.class))

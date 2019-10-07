@@ -1,4 +1,4 @@
-package net.onfirenetwork.onsetjava.api.event.server;
+package net.onfirenetwork.onsetjava.api.event.client;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import net.onfirenetwork.onsetjava.api.event.Event;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @AllArgsConstructor
-public class PlayerEnterVehicleEvent extends Event {
+public class PlayerExitVehicleEvent extends Event {
     Player player;
     Vehicle vehicle;
     int seat;

@@ -9,6 +9,8 @@ import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.ServerEventTransformer;
+import net.onfirenetwork.onsetjava.api.event.client.PlayerEnterVehicleEvent;
+import net.onfirenetwork.onsetjava.api.event.client.PlayerExitVehicleEvent;
 import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -65,13 +67,19 @@ public class DefaultServerEventTransformer implements ServerEventTransformer {
             case "OnPlayerEnterVehicle": {
                 Player player = server.getPlayer(params[0].getAsInt());
                 Vehicle vehicle = server.getVehicle(params[1].getAsInt());
-                event = new PlayerEnterVehicleEvent(player, vehicle, params[2].getAsInt());
+                event = new PlayerEnteredVehicleEvent(player, vehicle, params[2].getAsInt());
                 break;
             }
             case "OnPlayerLeaveVehicle": {
                 Player player = server.getPlayer(params[0].getAsInt());
                 Vehicle vehicle = server.getVehicle(params[1].getAsInt());
-                event = new PlayerExitVehicleEvent(player, vehicle, params[2].getAsInt());
+                event = new PlayerExitedVehicleEvent(player, vehicle, params[2].getAsInt());
+                break;
+            }
+            case "OnPlayerInteractDoor": {
+                Player player = server.getPlayer(params[0].getAsInt());
+                Door door = server.getDoor(params[1].getAsInt());
+                event = new PlayerInteractDoorEvent(player, door);
                 break;
             }
             case "OnPlayerDamage": {
@@ -95,12 +103,6 @@ public class DefaultServerEventTransformer implements ServerEventTransformer {
                 Player player = server.getPlayer(params[0].getAsInt());
                 Pickup pickup = server.getPickup(params[1].getAsInt());
                 event = new PlayerPickupEvent(player, pickup);
-                break;
-            }
-            case "OnVehiclePickupHit": {
-                Vehicle vehicle = server.getVehicle(params[0].getAsInt());
-                Pickup pickup = server.getPickup(params[1].getAsInt());
-                event = new VehiclePickupEvent(vehicle, pickup);
                 break;
             }
             case "OnPlayerStateChange": {
@@ -204,18 +206,18 @@ public class DefaultServerEventTransformer implements ServerEventTransformer {
     public String[] register(Class<Event> eventClass){
         if (eventClass.equals(PlayerAuthEvent.class))
             return new String[]{"OnPlayerSteamAuth"};
-        else if (eventClass.equals(PlayerEnterVehicleEvent.class))
+        else if (eventClass.equals(PlayerEnteredVehicleEvent.class))
             return new String[]{"OnPlayerEnterVehicle"};
-        else if (eventClass.equals(PlayerExitVehicleEvent.class))
+        else if (eventClass.equals(PlayerExitedVehicleEvent.class))
             return new String[]{"OnPlayerLeaveVehicle"};
+        else if (eventClass.equals(PlayerInteractDoorEvent.class))
+            return new String[]{"OnPlayerInteractDoor"};
         else if (eventClass.equals(PlayerDeathEvent.class))
             return new String[]{"OnPlayerDeath"};
         else if (eventClass.equals(PlayerSpawnEvent.class))
             return new String[]{"OnPlayerSpawn"};
         else if (eventClass.equals(PlayerPickupEvent.class))
             return new String[]{"OnPlayerPickupHit"};
-        else if (eventClass.equals(VehiclePickupEvent.class))
-            return new String[]{"OnVehiclePickupHit"};
         else if (eventClass.equals(PlayerStateChangeEvent.class))
             return new String[]{"OnPlayerStateChange"};
         else if (eventClass.equals(NPCDeathEvent.class))

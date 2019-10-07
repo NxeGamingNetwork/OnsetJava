@@ -27,8 +27,8 @@ public class Installer {
         JsonArray files = new JsonArray();
         for (File file : getPlugins(pluginFolder)) {
             String id = SimplePluginManager.makeResourceId(file.getName());
-            extract(file, new File(packageFolder, "" + id)).forEach(name -> {
-                files.add("" + id + "/" + name);
+            extract(file, new File(packageFolder, "plugin/" + id)).forEach(name -> {
+                files.add("plugin/" + id + "/" + name);
             });
         }
         makePackageConfig(packageFolder, files);
@@ -39,7 +39,6 @@ public class Installer {
         client.add("common/json.lua");
         client.add("common/helper.lua");
         client.add("client/get_global.lua");
-        client.add("client/pcall.lua");
         client.add("client/client.lua");
         JsonArray server = new JsonArray();
         server.add("common/json.lua");
@@ -66,7 +65,6 @@ public class Installer {
 
     private void extractBins(File packageFolder) {
         extractBin(packageFolder, "client/get_global.lua");
-        extractBin(packageFolder, "client/pcall.lua");
         extractBin(packageFolder, "client/client.lua");
         extractBin(packageFolder, "common/helper.lua");
         extractBin(packageFolder, "common/json.lua");

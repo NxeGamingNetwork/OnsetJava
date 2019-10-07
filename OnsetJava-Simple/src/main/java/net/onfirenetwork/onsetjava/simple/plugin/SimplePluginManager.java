@@ -139,7 +139,7 @@ public class SimplePluginManager implements PluginManager {
                 break;
             }
         }
-        id = md5(id).substring(0, 6);
+        id = md5(id).substring(0, 8);
         return id;
     }
 
