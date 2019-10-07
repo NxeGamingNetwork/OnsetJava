@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface OnsetServer {
 
+    Scheduler getScheduler();
+
     void broadcast(String message);
 
     default void broadcast(String message, String color){

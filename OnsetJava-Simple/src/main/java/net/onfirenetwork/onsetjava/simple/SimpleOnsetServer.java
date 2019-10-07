@@ -34,6 +34,8 @@ public class SimpleOnsetServer implements OnsetServer {
 
     private int nextNonce = 1;
     private int nextDimId = 0;
+    @Getter
+    private SimpleScheduler scheduler;
     private ActionAdapter adapter;
     private Map<Integer, Completable<JsonElement[]>> returnFutures = new HashMap<>();
     @Getter
@@ -65,6 +67,7 @@ public class SimpleOnsetServer implements OnsetServer {
     private List<ServerEventTransformer> serverEventTransformers = new ArrayList<>();
 
     public SimpleOnsetServer() {
+        scheduler = new SimpleScheduler();
         eventBus = new EventBus(this::registerHandler);
         pluginManager = new SimplePluginManager(this);
         adapter = new ActionAdapter(System.in, System.out, new ActionAdapterListener() {
@@ -114,6 +117,7 @@ public class SimpleOnsetServer implements OnsetServer {
 
     public void run() {
         adapter.prepare();
+        scheduler.start();
         createDimension();
         registerServerEvent("OnPlayerServerAuth", "OnPlayerJoin", "OnPlayerQuit");
         File pluginFolder = new File("java_plugins");
