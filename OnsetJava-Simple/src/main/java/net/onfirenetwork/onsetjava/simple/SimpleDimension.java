@@ -148,4 +148,8 @@ public class SimpleDimension implements Dimension {
         server.call("CreateExplosion", type.getIdentifier(), location.getX(), location.getY(), location.getZ(), id);
     }
 
+    public void spawnFirework(Location location, Vector3d rotation, int type){
+        getPlayers().forEach(player -> player.spawnFirework(location, rotation, type));
+    }
+
 }

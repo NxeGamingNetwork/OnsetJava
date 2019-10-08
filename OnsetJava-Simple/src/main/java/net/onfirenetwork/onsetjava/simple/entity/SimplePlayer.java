@@ -373,6 +373,10 @@ public class SimplePlayer implements Player {
         dimension.getServer().callClient(id, "ShowHealthHUD", show);
     }
 
+    public void spawnFirework(Location location, Vector3d rotation, int type){
+        dimension.getServer().callClient(id, "CreateFireworks", type, location.getX(), location.getY(), location.getZ(), rotation.getX(), rotation.getY(), rotation.getZ());
+    }
+
     public void setAttribute(String key, Object value) {
         attributes.put(key, value);
     }

@@ -64,4 +64,10 @@ public interface Dimension {
 
     void createExplosion(Location location, ExplosionType type);
 
+    void spawnFirework(Location location, Vector3d rotation, int type);
+
+    default void spawnFirework(Location location, int type){
+        spawnFirework(location, new Vector3d(90, 0, 0), type);
+    }
+
 }

@@ -205,4 +205,10 @@ public interface Player extends HitEntity {
 
     void showHealthInfo(boolean show);
 
+    void spawnFirework(Location location, Vector3d rotation, int type);
+
+    default void spawnFirework(Location location, int type){
+        spawnFirework(location, new Vector3d(90, 0, 0), type);
+    }
+
 }
