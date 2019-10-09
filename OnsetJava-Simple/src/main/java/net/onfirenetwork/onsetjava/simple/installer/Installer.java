@@ -39,6 +39,7 @@ public class Installer {
         client.add("common/json.lua");
         client.add("common/helper.lua");
         client.add("client/get_global.lua");
+        client.add("client/pcall.lua");
         client.add("client/client.lua");
         JsonArray server = new JsonArray();
         server.add("common/json.lua");
@@ -65,6 +66,7 @@ public class Installer {
 
     private void extractBins(File packageFolder) {
         extractBin(packageFolder, "client/get_global.lua");
+        extractBin(packageFolder, "client/pcall.lua");
         extractBin(packageFolder, "client/client.lua");
         extractBin(packageFolder, "common/helper.lua");
         extractBin(packageFolder, "common/json.lua");
