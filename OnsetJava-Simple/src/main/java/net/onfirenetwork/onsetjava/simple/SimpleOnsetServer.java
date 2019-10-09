@@ -7,11 +7,10 @@ import net.onfirenetwork.onsetjava.api.CommandExecutor;
 import net.onfirenetwork.onsetjava.api.Dimension;
 import net.onfirenetwork.onsetjava.api.OnsetServer;
 import net.onfirenetwork.onsetjava.api.entity.*;
-import net.onfirenetwork.onsetjava.api.event.ClientEventTransformer;
-import net.onfirenetwork.onsetjava.api.event.Event;
-import net.onfirenetwork.onsetjava.api.event.EventBus;
-import net.onfirenetwork.onsetjava.api.event.ServerEventTransformer;
+import net.onfirenetwork.onsetjava.api.event.*;
 import net.onfirenetwork.onsetjava.api.event.client.UnknownClientEvent;
+import net.onfirenetwork.onsetjava.api.event.client.PlayerEnterVehicleEvent;
+import net.onfirenetwork.onsetjava.api.event.client.PlayerExitVehicleEvent;
 import net.onfirenetwork.onsetjava.api.event.server.UnknownServerEvent;
 import net.onfirenetwork.onsetjava.api.plugin.Plugin;
 import net.onfirenetwork.onsetjava.api.plugin.PluginManager;
@@ -109,6 +108,20 @@ public class SimpleOnsetServer implements OnsetServer {
                     event = new UnknownClientEvent(player, action.getType(), action.getNonce(), action.getParams());
                 }
                 eventBus.fire(event);
+                if(event instanceof Cancellable){
+                    if(event instanceof PlayerEnterVehicleEvent ){
+                        PlayerEnterVehicleEvent e = (PlayerEnterVehicleEvent) event;
+                        if(!e.isCancelled()){
+                            e.getPlayer().enterVehicle(e.getVehicle());
+                        }
+                    }
+                    if(event instanceof PlayerExitVehicleEvent){
+                        PlayerExitVehicleEvent e = (PlayerExitVehicleEvent) event;
+                        if(!e.isCancelled()){
+                            e.getPlayer().exitVehicle();
+                        }
+                    }
+                }
             }
         });
         addServerEventTransformer(new DefaultServerEventTransformer());

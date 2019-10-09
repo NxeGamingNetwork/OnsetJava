@@ -11,6 +11,8 @@ import net.onfirenetwork.onsetjava.api.enums.HitType;
 import net.onfirenetwork.onsetjava.api.event.ClientEventTransformer;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.client.*;
+import net.onfirenetwork.onsetjava.api.event.client.PlayerEnterVehicleEvent;
+import net.onfirenetwork.onsetjava.api.event.client.PlayerExitVehicleEvent;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 
@@ -128,7 +130,7 @@ public class DefaultClientEventTransformer implements ClientEventTransformer {
                 break;
             case "OnPlayerStartExitVehicle": {
                 Vehicle vehicle = server.getVehicle(params[0].getAsInt());
-                event = new PlayerExitVehicleEvent(player, vehicle, params[1].getAsInt());
+                event = new PlayerExitVehicleEvent(player, vehicle);
                 break;
             }
             case "OnPlayerStartEnterVehicle": {

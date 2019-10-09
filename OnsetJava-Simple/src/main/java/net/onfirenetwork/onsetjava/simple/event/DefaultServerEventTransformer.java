@@ -9,8 +9,6 @@ import net.onfirenetwork.onsetjava.api.enums.PlayerState;
 import net.onfirenetwork.onsetjava.api.enums.WeaponModel;
 import net.onfirenetwork.onsetjava.api.event.Event;
 import net.onfirenetwork.onsetjava.api.event.ServerEventTransformer;
-import net.onfirenetwork.onsetjava.api.event.client.PlayerEnterVehicleEvent;
-import net.onfirenetwork.onsetjava.api.event.client.PlayerExitVehicleEvent;
 import net.onfirenetwork.onsetjava.api.event.server.*;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector2d;
@@ -62,18 +60,6 @@ public class DefaultServerEventTransformer implements ServerEventTransformer {
             case "OnPlayerSpawn": {
                 Player player = server.getPlayer(params[0].getAsInt());
                 event = new PlayerSpawnEvent(player);
-                break;
-            }
-            case "OnPlayerEnterVehicle": {
-                Player player = server.getPlayer(params[0].getAsInt());
-                Vehicle vehicle = server.getVehicle(params[1].getAsInt());
-                event = new PlayerEnteredVehicleEvent(player, vehicle, params[2].getAsInt());
-                break;
-            }
-            case "OnPlayerLeaveVehicle": {
-                Player player = server.getPlayer(params[0].getAsInt());
-                Vehicle vehicle = server.getVehicle(params[1].getAsInt());
-                event = new PlayerExitedVehicleEvent(player, vehicle, params[2].getAsInt());
                 break;
             }
             case "OnPlayerInteractDoor": {
@@ -206,10 +192,6 @@ public class DefaultServerEventTransformer implements ServerEventTransformer {
     public String[] register(Class<Event> eventClass){
         if (eventClass.equals(PlayerAuthEvent.class))
             return new String[]{"OnPlayerSteamAuth"};
-        else if (eventClass.equals(PlayerEnteredVehicleEvent.class))
-            return new String[]{"OnPlayerEnterVehicle"};
-        else if (eventClass.equals(PlayerExitedVehicleEvent.class))
-            return new String[]{"OnPlayerLeaveVehicle"};
         else if (eventClass.equals(PlayerInteractDoorEvent.class))
             return new String[]{"OnPlayerInteractDoor"};
         else if (eventClass.equals(PlayerDeathEvent.class))

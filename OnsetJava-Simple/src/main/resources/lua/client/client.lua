@@ -258,7 +258,14 @@ do
             name,
             function(...)
                 local params = ({...})
+                if name == "OnPlayerStartEnterVehicle" then
+                    adapter:call(name, 0, {params[1], -1})
+                    return false
+                end
                 adapter:call(name, 0, params)
+                if name == "OnPlayerStartExitVehicle" then
+                    return false
+                end
             end
         )
     end

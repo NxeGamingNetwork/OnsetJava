@@ -46,8 +46,16 @@ namespace OnsetJavaClient {
 
     function registerEvent(name: string) {
         AddEvent(name, (...params: any[]) => {
+            if(name === "OnPlayerStartEnterVehicle"){
+                adapter.call(name, 0, [params[0], -1]);
+                return false;
+            }
             adapter.call(name, 0, params);
+            if(name === "OnPlayerStartExitVehicle"){
+                return false;
+            }
         });
     }
+
 }
 
