@@ -5,7 +5,7 @@ import net.onfirenetwork.onsetjava.api.enums.CharacterAnimation;
 import net.onfirenetwork.onsetjava.api.enums.CharacterModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
 
-public interface NPC extends HitEntity {
+public interface NPC extends HitEntity, StickyEntity {
     int getId();
 
     Dimension getDimension();

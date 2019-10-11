@@ -10,7 +10,7 @@ import net.onfirenetwork.onsetjava.api.util.*;
 
 import java.util.List;
 
-public interface Player extends HitEntity {
+public interface Player extends HitEntity, StickyEntity {
     int getId();
 
     Dimension getDimension();

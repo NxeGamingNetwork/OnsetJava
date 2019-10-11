@@ -1,13 +1,17 @@
 package net.onfirenetwork.onsetjava.simple.entity;
 
+import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 import net.onfirenetwork.onsetjava.api.Dimension;
+import net.onfirenetwork.onsetjava.api.entity.StickyEntity;
 import net.onfirenetwork.onsetjava.api.entity.WorldObject;
+import net.onfirenetwork.onsetjava.api.enums.AttachType;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
+import net.onfirenetwork.onsetjava.api.util.Vector3i;
 import net.onfirenetwork.onsetjava.simple.SimpleDimension;
 import net.onfirenetwork.onsetjava.simple.util.JsonUtils;
 
@@ -106,6 +110,41 @@ public class SimpleWorldObject implements WorldObject {
 
     public boolean isAttached() {
         return dimension.getServer().call("IsObjectAttached", id).get()[0].getAsBoolean();
+    }
+
+    public void attachTo(AttachType type, int id, Vector3i position, Vector3d rotation, String socket){
+        dimension.getServer().call("SetObjectAttached", this.id, type.getIdentifier(), id, position.getX(), position.getY(), position.getZ(), rotation.getX(), rotation.getY(), rotation.getZ(), socket);
+    }
+
+    public void attachTo(AttachType type, int id, Vector3i position, Vector3d rotation){
+        dimension.getServer().call("SetObjectAttached", this.id, type.getIdentifier(), id, position.getX(), position.getY(), position.getZ(), rotation.getX(), rotation.getY(), rotation.getZ());
+    }
+
+    public void attachTo(AttachType type, int id, Vector3i position){
+        dimension.getServer().call("SetObjectAttached", this.id, type.getIdentifier(), id, position.getX(), position.getY(), position.getZ());
+    }
+
+    public void detach(){
+        dimension.getServer().call("SetObjectDetached", this.id);
+    }
+
+    public StickyEntity getAttachment(){
+        JsonElement[] ret = dimension.getServer().call("GetObjectAttachmentInfo", this.id).get();
+        int type = ret[0].getAsInt();
+        int id = ret[1].getAsInt();
+        if(type == AttachType.PLAYER.getIdentifier()){
+            return dimension.getServer().getPlayer(id);
+        }
+        if(type == AttachType.VEHICLE.getIdentifier()){
+            return dimension.getServer().getVehicle(id);
+        }
+        if(type == AttachType.NPC.getIdentifier()){
+            return dimension.getServer().getNPC(id);
+        }
+        if(type == AttachType.OBJECT.getIdentifier()){
+            return dimension.getServer().getObject(id);
+        }
+        return null;
     }
 
     public void setRotateAxis(Vector3d rotateAxis) {

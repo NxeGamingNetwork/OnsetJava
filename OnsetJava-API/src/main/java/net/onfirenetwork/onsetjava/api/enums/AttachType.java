@@ -9,11 +9,11 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @AllArgsConstructor
 public enum AttachType {
-    ATTACH_NONE(0),
-    ATTACH_PLAYER(1),
-    ATTACH_VEHICLE(2),
-    ATTACH_OBJECT(3),
-    ATTACH_NPC(4);
+    NONE(0),
+    PLAYER(1),
+    VEHICLE(2),
+    OBJECT(3),
+    NPC(4);
     int identifier;
 
     public static AttachType get(int value) {

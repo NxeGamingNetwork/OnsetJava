@@ -5,7 +5,7 @@ import net.onfirenetwork.onsetjava.api.enums.VehicleModel;
 import net.onfirenetwork.onsetjava.api.util.Location;
 import net.onfirenetwork.onsetjava.api.util.Vector3d;
 
-public interface Vehicle extends HitEntity {
+public interface Vehicle extends HitEntity, StickyEntity {
     int getId();
 
     Dimension getDimension();
